@@ -11,6 +11,10 @@ body {
 img {
     max-width: 100%;
 }
+.brand {
+    padding: 10px 0;
+    background-color: #a6172b;
+}
 .navbar-custom .nav-link.button-menu-mobile {
     color: var(--white) !important;
     background-color: #ee3c35;
