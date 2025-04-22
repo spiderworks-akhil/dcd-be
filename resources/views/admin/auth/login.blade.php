@@ -14,7 +14,11 @@
         <link href="{{asset('admin/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('admin/assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('admin/assets/css/custom.css')}}" rel="stylesheet" type="text/css" />
-
+<style>
+    img {
+        max-width: 100%;
+    }
+</style>
     </head>
 
     <body class="account-body accountbg">
