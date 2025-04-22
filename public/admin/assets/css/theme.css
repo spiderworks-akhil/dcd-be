@@ -16,7 +16,7 @@ img {
     background-color: #000;
 }
 .brand img {
-    padding: 10px;
+    padding: 30px;
 }
 .navbar-custom .nav-link.button-menu-mobile {
     color: var(--white) !important;
