@@ -65,6 +65,7 @@ class EventController extends Controller
         $data = request()->all();
         $data['status'] = isset($data['status'])?1:0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
+        $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
         $data['start_time'] = !empty($data['start_time'])?$this->parse_date_time($data['start_time']):null;
         $data['end_time'] = !empty($data['end_time'])?$this->parse_date_time($data['end_time']):null;
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
@@ -119,6 +120,7 @@ class EventController extends Controller
          if($obj = $this->model->find($id)){
             $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
+            $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
             $data['start_time'] = !empty($data['start_time'])?$this->parse_date_time($data['start_time']):null;
             $data['end_time'] = !empty($data['end_time'])?$this->parse_date_time($data['end_time']):null;
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
