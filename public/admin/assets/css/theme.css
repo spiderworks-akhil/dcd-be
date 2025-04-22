@@ -13,14 +13,14 @@ img {
 }
 .brand {
     height: 85px !important;
-    background-color: #a6172b;
+    background-color: #000;
 }
 .brand img {
     padding: 10px;
 }
 .navbar-custom .nav-link.button-menu-mobile {
     color: var(--white) !important;
-    background-color: #ee3c35;
+    background-color: #000;
     margin: 10px;
     height: 30px;
     line-height: 30px;
@@ -111,7 +111,7 @@ thead {
 } */
 .btn-primary {
     color: #fff;
-    background-color: #ee3c35;
+    background-color: #000;
     border-color: transparent;
     padding: 8px 20px;
     font-size: 14px;
