@@ -196,7 +196,9 @@
                                                                             <input type="number" name="event_schedules[{{$key}}][priority]" class="form-control" value="{{$schedule['priority'] ?? ''}}">
                                                                         </div>
 
-                                                                        <button type="button" class="btn btn-danger mt-2 remove-schedule">Remove</button>
+                                                                        <div class="col-md-12 text-right mt-2">
+                                                                            <button type="button" class="btn btn-danger remove-schedule">Remove</button>
+                                                                        </div>
                                                                     </div>
                                                                 @endforeach
                                                             @endif
