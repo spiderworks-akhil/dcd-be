@@ -182,15 +182,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <script>
-                                                $(document).on('change', 'select[name="is_scheduled"]', function() {
-                                                    if ($(this).val() == "1") {
-                                                        $('.scheduled-fields').show();
-                                                    } else {
-                                                        $('.scheduled-fields').hide();
-                                                    }
-                                                });
-                                            </script>
+                            
                                             @fieldshow(events-media)
                                             <div class="card">
                                                 <div class="card-header">
@@ -579,6 +571,14 @@
                   remote: "Slug is already in use",
                 },
               },
+            });
+
+            $(document).on('change', 'select[name="is_scheduled"]', function() {
+                if ($(this).val() == "1") {
+                    $('.scheduled-fields').show();
+                } else {
+                    $('.scheduled-fields').hide();
+                }
             });
     </script>
 @parent
