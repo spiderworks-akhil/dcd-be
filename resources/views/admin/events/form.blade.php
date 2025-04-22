@@ -180,15 +180,21 @@
                                                        <div id="schedule-container">
                                                             @if(isset($obj->schedules) && count($obj->schedules) > 0)
                                                                 @foreach($obj->schedules as $key => $schedule)
-                                                                    <div class="schedule-item mb-3">
-                                                                        <label>Schedule Title</label>
-                                                                        <input type="text" name="event_schedules[{{$key}}][title]" class="form-control" value="{{$schedule['title'] ?? ''}}">
+                                                                    <div class="schedule-item row">
+                                                                        <div class="col-md-12">
+                                                                            <label>Schedule Title</label>
+                                                                            <input type="text" name="event_schedules[{{$key}}][title]" class="form-control" value="{{$schedule['title'] ?? ''}}">
+                                                                        </div>
 
-                                                                        <label>Schedule Time</label>
-                                                                        <input type="text" name="event_schedules[{{$key}}][time]" class="form-control datetimepicker" value="{{$schedule['time'] ?? ''}}">
+                                                                        <div class="col-md-6">
+                                                                            <label>Schedule Time</label>
+                                                                            <input type="text" name="event_schedules[{{$key}}][time]" class="form-control datetimepicker" value="{{$schedule['time'] ?? ''}}">
+                                                                        </div>
 
-                                                                        <label>Schedule Priority</label>
-                                                                        <input type="number" name="event_schedules[{{$key}}][priority]" class="form-control" value="{{$schedule['priority'] ?? ''}}">
+                                                                        <div class="col-md-6">
+                                                                            <label>Schedule Priority</label>
+                                                                            <input type="number" name="event_schedules[{{$key}}][priority]" class="form-control" value="{{$schedule['priority'] ?? ''}}">
+                                                                        </div>
 
                                                                         <button type="button" class="btn btn-danger mt-2 remove-schedule">Remove</button>
                                                                     </div>
@@ -605,17 +611,25 @@
 
         $('#add-schedule').on('click', function() {
             const scheduleHtml = `
-                <div class="schedule-item mb-3">
-                    <label>Schedule Title</label>
-                    <input type="text" name="event_schedules[${scheduleIndex}][title]" class="form-control">
+                <div class="schedule-item mb-3 row">
+                    <div class="col-md-12">
+                        <label>Schedule Title</label>
+                        <input type="text" name="event_schedules[${scheduleIndex}][title]" class="form-control">
+                    </div>
 
-                    <label>Schedule Time</label>
-                    <input type="text" name="event_schedules[${scheduleIndex}][time]" class="form-control ">
+                    <div class="col-md-6">
+                        <label>Schedule Time</label>
+                        <input type="text" name="event_schedules[${scheduleIndex}][time]" class="form-control datetimepicker">
+                    </div>
 
-                    <label>Schedule Priority</label>
-                    <input type="number" name="event_schedules[${scheduleIndex}][priority]" class="form-control">
+                    <div class="col-md-6">
+                        <label>Schedule Priority</label>
+                        <input type="number" name="event_schedules[${scheduleIndex}][priority]" class="form-control">
+                    </div>
 
-                    <button type="button" class="btn btn-danger mt-2 remove-schedule">Remove</button>
+                    <div class="col-md-12 text-right mt-2">
+                        <button type="button" class="btn btn-danger remove-schedule">Remove</button>
+                    </div>
                 </div>
             `;
 
