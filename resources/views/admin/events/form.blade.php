@@ -276,7 +276,7 @@
                                                                 <label class="custom-control-label" for="is_featured">Featured</label>
                                                             </div>
                                                             @endfieldshow
-                                                            <div class="custom-control custom-switch switch-primary float-right">
+                                                            <div style="margin-right: 5px;" class="custom-control custom-switch switch-primary float-right">
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="is_must_attend" name="is_must_attend" @if($obj->is_must_attend == 1) checked="checked" @endif>
                                                                 <label class="custom-control-label" for="is_must_attend">Must Attend</label>
                                                             </div>
