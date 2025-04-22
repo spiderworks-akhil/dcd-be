@@ -143,17 +143,16 @@ class EventController extends Controller
             if($obj->update($data))
             {
                 if (isset($data['event_schedules']) && is_array($data['event_schedules'])) {
-                    $schedules = [];
+                    $obj->schedules()->delete(); // Clear existing schedules
                     foreach ($data['event_schedules'] as $schedule) {
                         if (!empty($schedule['time']) && !empty($schedule['title'])) {
-                            $schedules[] = [
+                            $obj->schedules()->create([
                                 'priority' => $schedule['priority'] ?? 0,
                                 'time' => $schedule['time'],
                                 'title' => $schedule['title'] ?? null,
-                            ];
+                            ]);
                         }
                     }
-                    $obj->schedules()->sync($schedules);
                 }
                 $this->saveGalleryMedia($obj, $data);
                 $this->saveYoutube($obj, $data);
