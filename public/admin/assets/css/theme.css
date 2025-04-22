@@ -17,6 +17,7 @@ img {
 }
 .brand img {
     padding: 5px;
+    object-fit: contain;
 }
 .navbar-custom .nav-link.button-menu-mobile {
     color: var(--white) !important;
