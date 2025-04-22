@@ -164,6 +164,33 @@
                                                     </div>                                           
                                                 </div><!--end card-body-->
                                             </div><!--end card-->
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Schedule
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Is Scheduled?</label>
+                                                        <select name="is_scheduled" class="form-control">
+                                                            <option value="1" @if($obj->is_scheduled == 1) selected @endif>Yes</option>
+                                                            <option value="0" @if($obj->is_scheduled == 0) selected @endif>No</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group scheduled-fields" @if($obj->is_scheduled != 1) style="display: none;" @endif>
+                                                        <label>Schedule Date</label>
+                                                        <input type="text" name="schedule_date" class="form-control datetimepicker" value="@if($obj->schedule_date) {{date('d/m/Y H:i', strtotime($obj->schedule_date))}} @endif">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                $(document).on('change', 'select[name="is_scheduled"]', function() {
+                                                    if ($(this).val() == "1") {
+                                                        $('.scheduled-fields').show();
+                                                    } else {
+                                                        $('.scheduled-fields').hide();
+                                                    }
+                                                });
+                                            </script>
                                             @fieldshow(events-media)
                                             <div class="card">
                                                 <div class="card-header">
