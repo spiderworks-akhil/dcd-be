@@ -1,0 +1,90 @@
+:root {
+    --primary-color: #aa182c;
+    --secondary-color: #2ecc71;
+    --background-color: #f4f4f4;
+    --text-color: #333333;
+}
+
+body{
+    background: #FFF !important;
+    color: black;
+}
+.card{
+    background: #f1f1f1 !important;
+}
+.button-menu-mobile{background: var(--primary-color) !important;}
+.btn {background: var(--primary-color) !important;} 
+.btn-primary{background: var(--primary-color) !important;}
+.dataTables_empty{
+    background: #ffffff;
+    height: 50vh;
+}
+.custom-select{
+    padding: 0px;
+    width: fit-content;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}
+div.dataTables_wrapper div.dataTables_filter input {
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+
+.card-publish{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.input-info{
+    font-size: 10px;
+    font-style: italic;
+}
+.create-image-icon{
+    background: #ffffff;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #e1e3ed;
+}
+.create-image-icon img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin: auto;
+}
+thead{
+    background: var(--primary-color);
+}
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.time-info{
+    line-height: 10px;
+    text-transform: uppercase;
+    font-size: 10px !important;
+}
+
+.time-info label{
+    line-height: 10px;
+    text-transform: uppercase;
+    font-size: 10px !important;
+}
+.faq-item-card .btn{
+    background: transparent !important;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+.faq-item-card .card-header{
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0;
+}
