@@ -17,10 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/fetch-data', [App\Http\Controllers\ScrapController::class, 'insertDataIntoNews']);
 
-Route::get('news/update', [App\Http\Controllers\ScrapController::class, 'NewsUpdate'])->name('admin.news.update');
 
-Route::get('image/update', [App\Http\Controllers\ScrapController::class, 'ImageUpdate'])->name('admin.image.update');
 
 require __DIR__.'/admin.php';
