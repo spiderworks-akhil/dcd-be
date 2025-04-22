@@ -12,7 +12,7 @@ img {
     max-width: 100%;
 }
 .brand {
-    padding: 10px 0;
+    height: 85px;
     background-color: #a6172b;
 }
 .navbar-custom .nav-link.button-menu-mobile {
