@@ -177,8 +177,26 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group scheduled-fields" @if($obj->is_scheduled != 1) style="display: none;" @endif>
-                                                        <label>Schedule Date</label>
-                                                        <input type="text" name="schedule_date" class="form-control datetimepicker" value="@if($obj->schedule_date) {{date('d/m/Y H:i', strtotime($obj->schedule_date))}} @endif">
+                                                       <div id="schedule-container">
+                                                            @if(isset($obj->schedules) && count($obj->schedules) > 0)
+                                                                @foreach($obj->schedules as $key => $schedule)
+                                                                    <div class="schedule-item mb-3">
+                                                                        <label>Schedule Title</label>
+                                                                        <input type="text" name="event_schedules[{{$key}}][title]" class="form-control" value="{{$schedule['title'] ?? ''}}">
+
+                                                                        <label>Schedule Time</label>
+                                                                        <input type="text" name="event_schedules[{{$key}}][time]" class="form-control datetimepicker" value="{{$schedule['time'] ?? ''}}">
+
+                                                                        <label>Schedule Priority</label>
+                                                                        <input type="number" name="event_schedules[{{$key}}][priority]" class="form-control" value="{{$schedule['priority'] ?? ''}}">
+
+                                                                        <button type="button" class="btn btn-danger mt-2 remove-schedule">Remove</button>
+                                                                    </div>
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                        <button type="button" id="add-schedule" class="btn btn-primary mt-3">Add Schedule</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,5 +599,34 @@
                 }
             });
     </script>
+    <script>
+    $(document).ready(function() {
+        let scheduleIndex = {{ isset($obj->schedules) ? count($obj->schedules) : 0 }};
+
+        $('#add-schedule').on('click', function() {
+            const scheduleHtml = `
+                <div class="schedule-item mb-3">
+                    <label>Schedule Title</label>
+                    <input type="text" name="event_schedules[${scheduleIndex}][title]" class="form-control">
+
+                    <label>Schedule Time</label>
+                    <input type="text" name="event_schedules[${scheduleIndex}][time]" class="form-control ">
+
+                    <label>Schedule Priority</label>
+                    <input type="number" name="event_schedules[${scheduleIndex}][priority]" class="form-control">
+
+                    <button type="button" class="btn btn-danger mt-2 remove-schedule">Remove</button>
+                </div>
+            `;
+
+            $('#schedule-container').append(scheduleHtml);
+            scheduleIndex++;
+        });
+
+        $(document).on('click', '.remove-schedule', function() {
+            $(this).closest('.schedule-item').remove();
+        });
+    });
+</script>
 @parent
 @endsection

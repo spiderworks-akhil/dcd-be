@@ -30,4 +30,8 @@ class Event extends Model
     {
         return $this->hasMany(EventMedia::class, 'events_id');
     }
+    public function schedules()
+    {
+        return $this->hasMany(EventSchedule::class, 'event_id');
+    }
 }

@@ -70,9 +70,23 @@ class EventController extends Controller
         $data['start_time'] = !empty($data['start_time'])?$this->parse_date_time($data['start_time']):null;
         $data['end_time'] = !empty($data['end_time'])?$this->parse_date_time($data['end_time']):null;
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
+
+        
+
         $this->model->fill($data);
         if($this->model->save())
         {
+            if (isset($data['event_schedules']) && is_array($data['event_schedules'])) {
+            foreach ($data['event_schedules'] as $schedule) {
+                if (!empty($schedule['time']) && !empty($schedule['title'])) {
+                    $eventSchedule = $this->model->schedules()->create([
+                        'time' => $schedule['time'],
+                        'priority' => $schedule['priority'] ?? 0,
+                        'title' => $schedule['title'] ?? null,
+                    ]);
+                }
+            }
+        }
             $this->saveGalleryMedia($this->model, $data);
             $this->saveYoutube($this->model, $data);
         }
@@ -128,6 +142,19 @@ class EventController extends Controller
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             if($obj->update($data))
             {
+                if (isset($data['event_schedules']) && is_array($data['event_schedules'])) {
+                    $schedules = [];
+                    foreach ($data['event_schedules'] as $schedule) {
+                        if (!empty($schedule['time']) && !empty($schedule['title'])) {
+                            $schedules[] = [
+                                'priority' => $schedule['priority'] ?? 0,
+                                'time' => $schedule['time'],
+                                'title' => $schedule['title'] ?? null,
+                            ];
+                        }
+                    }
+                    $obj->schedules()->sync($schedules);
+                }
                 $this->saveGalleryMedia($obj, $data);
                 $this->saveYoutube($obj, $data);
             }
