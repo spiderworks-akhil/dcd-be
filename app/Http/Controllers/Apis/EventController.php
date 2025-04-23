@@ -84,7 +84,7 @@ class EventController extends Controller
     public function categories(Request $request){
         try{
             $data = $request->all();
-            $categories = Category::where('status', 1)->where('type','Event')->orderBy('priority', 'DESC')->get();
+            $categories = Category::where('status', 1)->where('category_type','Event')->orderBy('priority', 'DESC')->get();
             return new CategoryCollection($categories);
         }
         catch(\Exception $e){
