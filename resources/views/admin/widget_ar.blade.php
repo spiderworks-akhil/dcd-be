@@ -160,30 +160,32 @@
                                 </div>
 
                                 <div class="row" style="text-align: center;">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
                                         Small Title
                                         <input type="text" name="section[small_title]" class="form-control"
                                             value="@if(!empty($data['volunteer']['small_title'])){{$data['volunteer']['small_title']??''}} @endif">
                                     </div>
 
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
                                         Main Title
                                         <input type="text" name="section[main_title]" class="form-control"
                                             value="@if(!empty($data['volunteer']['main_title'])){{$data['volunteer']['main_title']??''}} @endif">
                                     </div>
-
+                                </div>
+                                <div class="row" style="text-align: center;">
                                     <div class="form-group col-md-12">
                                         Short Description
                                         <textarea name="section[short_description]" id="short_description" cols="30" rows="2" class="form-control">@if(!empty($data['volunteer']['short_description'])){{$data['volunteer']['short_description']??''}} @endif</textarea>
                                     </div>
-
-                                    <div class="form-group col-md-12">
+                                </div>
+                                <div class="row" style="text-align: center;">
+                                    <div class="form-group col-md-6">
                                         Button Link
                                         <input type="text" name="section[button_link]" class="form-control"
                                             value="@if(!empty($data['volunteer']['button_link'])){{$data['volunteer']['button_link']??''}} @endif">
                                     </div>
 
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
                                         Button Text
                                         <input type="text" name="section[button_text]" class="form-control"
                                             value="@if(!empty($data['volunteer']['button_text'])){{$data['volunteer']['button_text']??''}} @endif">
