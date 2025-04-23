@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Apis\BlogController;
 use App\Http\Controllers\Apis\AuthController;
 use App\Http\Controllers\Apis\CommonController;
+use App\Http\Controllers\Apis\EventController;
 use App\Http\Controllers\Apis\GalleryController;
 use App\Http\Controllers\Apis\TestimonialController;
 use App\Http\Controllers\Apis\JobController;
@@ -41,6 +42,12 @@ Route::get('news', [NewsController::class, 'index'])->name('api.news.index');
 Route::get('news/categories', [NewsController::class, 'categories'])->name('api.news.categories');
 Route::get('news/featured', [NewsController::class, 'featured'])->name('api.news.featured');
 Route::get('news/{slug}', [NewsController::class, 'view'])->name('api.news.view');
+
+// events
+Route::get('events', [EventController::class, 'index'])->name('api.events.index');
+Route::get('events/featured', [EventController::class, 'featured'])->name('api.events.featured');
+Route::get('events/{slug}', [EventController::class, 'view'])->name('api.events.view');
+Route::get('events/categories', [EventController::class, 'categories'])->name('api.events.categories');
 
 
 Route::get('gallery', [GalleryController::class, 'index'])->name('api.gallery.index');
