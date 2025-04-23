@@ -143,7 +143,7 @@
                                                             </div>
                                                             @endfieldshow
                                                             @fieldshow(events-location)
-                                                            <div class="form-group col-md-6">
+                                                            <div class="form-group col-md-12">
                                                                 <label>Location / Address</label>
                                                                 <textarea name="location" class="form-control" rows="2" id="location">{{$obj->location}}</textarea>
                                                             </div>
