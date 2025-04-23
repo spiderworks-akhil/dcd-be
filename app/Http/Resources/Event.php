@@ -23,10 +23,9 @@ class Event extends JsonResource
             'end_time' => $this->end_time,
             'banner_image' => new Media($this->banner_image),
             'category' => new Category($this->category),
-            'parent_category' => $this->whenLoaded('category.parent', function () {
-                return $this->category->parent ? new Category($this->category->parent) : null;
-            }),
             'location' => $this->location,
-        ];
+        ] + ($this->category->parent ? [
+            'parent_category' => new Category($this->category->parent),
+        ] : []);
     }
 }
