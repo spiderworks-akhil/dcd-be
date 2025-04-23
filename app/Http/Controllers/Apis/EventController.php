@@ -71,8 +71,9 @@ class EventController extends Controller
             if (!$event)
                 return response()->json(['error' => 'Not found'], 404);
 
-            $event->related_event = Event::where('id', '!=', $event->id)
+            $event->related_events = Event::where('id', '!=', $event->id)
                 ->where('category_id', $event->category_id)
+                ->where('type', $type)
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
                 ->get();

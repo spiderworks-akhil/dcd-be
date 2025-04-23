@@ -17,6 +17,7 @@ class Event extends JsonResource
         $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'ASC')->get() : null;
         return [
             'id' => $this->id,
+            `is_featured` => $this->is_featured,
             'title' => $this->title,
             'slug' => $this->slug,
             'short_description' => $this->short_description,
@@ -37,6 +38,7 @@ class Event extends JsonResource
                 ];
             }) : null,
             'volunteer_ad_image' => new Media($this->volunteer_ad_image),
+            'related_events' => EventListing::collection($this->related_events),
         ]);
     }
 }
