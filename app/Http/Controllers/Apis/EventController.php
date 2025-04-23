@@ -77,6 +77,12 @@ class EventController extends Controller
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
                 ->get();
+            $event->must_attend = Event::where('id', '!=', $event->id)
+                ->where('type', $type)
+                ->where('is_must_attend', 1)
+                ->orderBy('start_time', 'DESC')
+                ->take(5)
+                ->get();
             return new EventResource($event);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
