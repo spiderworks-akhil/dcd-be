@@ -407,6 +407,8 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::post('events/media/update', [EventController::class, 'media_update'])->name('admin.events.media.update');
          Route::get('events/media/destroy/{id}', [EventController::class, 'media_destroy'])->name('admin.events.media.destroy');
 
+        Route::get('events/get-type', [EventController::class, 'GetType'])->name('admin.events.get-type');
+
          //partners
         Route::get('partners', [PartnerController::class, 'index'])->name('admin.partners.index');
         Route::get('partners/create', [PartnerController::class, 'create'])->name('admin.partners.create');
