@@ -86,7 +86,7 @@ class EventController extends Controller
             $data = $request->all();
             $categories = Category::where('status', 1)->where('category_type','Event')->orderBy('priority', 'DESC')->get();
             $categories = $categories->groupBy('parent_id');
-            $formattedCategories = $categories->map(function ($group, $parentId) {
+            $formattedCategories = $categories->map(function ($group, $parentId) use ($categories) {
                 if ($parentId == 0) {
                     return $group->map(function ($category) use ($categories) {
                         $category->children = $categories->get($category->id) ?? collect();
