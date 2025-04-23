@@ -66,7 +66,7 @@
     <h3>Rewinds Gallery</h3>
     <fieldset>
         <div class="form-group">
-            <a href="{{ route('admin.gallery.edit', [encrypt(1)]) }}" target="_blank" class="btn btn-primary">
+            <a href="{{ route('admin.galleries.edit', [encrypt(1)]) }}" target="_blank" class="btn btn-primary">
                 <i class="fas fa-arrow-right mr-2"></i>Go to Gallery Module 
             </a>
         </div>
