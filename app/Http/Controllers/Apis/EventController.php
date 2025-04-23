@@ -89,11 +89,23 @@ class EventController extends Controller
                 ->orderBy('priority', 'DESC')
                 ->get();
 
-            $parentCategories = $categories->where('parent_id', 0);
-            $childCategories = $categories->where('parent_id', '!=', 0);
+            $formattedCategories = $categories->map(function ($category) {
+                $category->events = Event::where('status', 1)
+                    ->where('category_id', $category->id)
+                    ->orderBy('start_time', 'DESC')
+                    ->get();
 
-            $formattedCategories = $parentCategories->map(function ($category) use ($childCategories) {
-                $category->children = $childCategories->where('parent_id', $category->id)->values();
+                $category->children = Category::where('parent_id', $category->id)
+                    ->where('status', 1)
+                    ->get()
+                    ->map(function ($childCategory) {
+                        $childCategory->events = Event::where('status', 1)
+                            ->where('category_id', $childCategory->id)
+                            ->orderBy('start_time', 'DESC')
+                            ->get();
+                        return $childCategory;
+                    });
+
                 return $category;
             });
 
@@ -102,6 +114,5 @@ class EventController extends Controller
         catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
 
 }

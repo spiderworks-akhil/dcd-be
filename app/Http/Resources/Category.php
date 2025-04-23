@@ -25,6 +25,10 @@ class Category extends JsonResource
             $baseData['children'] = Category::collection($this->children);
         }
 
+        if ($this->events) {
+            $baseData['events'] = EventListing::collection($this->events);
+        }
+
         return $baseData;
     }
 }
