@@ -39,6 +39,7 @@ class Event extends JsonResource
             }) : null,
             'volunteer_ad_image' => new Media($this->volunteer_ad_image),
             'related_events' => EventListing::collection($this->related_events),
+            'gallery' => GalleryMedia::collection($this->gallery),
         ]);
     }
 }
