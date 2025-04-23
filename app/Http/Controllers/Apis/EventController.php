@@ -93,24 +93,15 @@ class EventController extends Controller
                 ->orderBy('priority', 'DESC')
                 ->get();
 
-            $formattedCategories = $categories->map(function ($category) use($type) {
+            $formattedCategories = $categories->map(function ($category) use ($type) {
+                $childCategoryIds = Category::where('parent_id', $category->id)->pluck('id')->toArray();
+                $allCategoryIds = array_merge([$category->id], $childCategoryIds);
+
                 $category->events = Event::where('status', 1)
-                    ->where('category_id', $category->id)
+                    ->whereIn('category_id', $allCategoryIds)
+                    ->where('type', $type)
                     ->orderBy('start_time', 'DESC')
                     ->get();
-
-                $category->children = Category::where('parent_id', $category->id)
-                    ->where('status', 1)
-                    ->get();
-                $category->children = $category->children
-                    ->map(function ($childCategory) use($type) {
-                        $childCategory->events = Event::where('status', 1)
-                            ->where('category_id', $childCategory->id)
-                            ->where('type', $type)
-                            ->orderBy('start_time', 'DESC')
-                            ->get();
-                        return $childCategory;
-                    });
 
                 return $category;
             });
