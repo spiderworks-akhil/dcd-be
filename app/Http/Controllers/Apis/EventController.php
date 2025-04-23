@@ -86,12 +86,13 @@ class EventController extends Controller
     {
         try {
             $data = $request->all();
+            $type = !empty($data['language']) ? $data['language'] : "en";
             $categories = Category::where('status', 1)
                 ->where('category_type', 'Event')
                 ->orderBy('priority', 'DESC')
                 ->get();
 
-            $formattedCategories = $categories->map(function ($category) {
+            $formattedCategories = $categories->map(function ($category) use($type) {
                 $category->events = Event::where('status', 1)
                     ->where('category_id', $category->id)
                     ->orderBy('start_time', 'DESC')
@@ -101,9 +102,10 @@ class EventController extends Controller
                     ->where('status', 1)
                     ->get();
                 $category->children = $category->children
-                    ->map(function ($childCategory) {
+                    ->map(function ($childCategory) use($type) {
                         $childCategory->events = Event::where('status', 1)
                             ->where('category_id', $childCategory->id)
+                            ->where('type', $type)
                             ->orderBy('start_time', 'DESC')
                             ->get();
                         return $childCategory;
