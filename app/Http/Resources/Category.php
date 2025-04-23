@@ -14,14 +14,17 @@ class Category extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $baseData = [
             'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
-            'children' => $this->whenLoaded('children', function () {
-                return Category::collection($this->children)->toArray(request());
-            }),
         ];
+
+        if (count($this->children) > 0) {
+            $baseData['children'] = Category::collection($this->children);
+        }
+
+        return $baseData;
     }
 }
