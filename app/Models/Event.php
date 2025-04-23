@@ -32,7 +32,7 @@ class Event extends Model
     }
     public function schedules()
     {
-        return $this->hasMany(EventSchedule::class, 'event_id')->orderBy('priority', 'DESC');
+        return $this->hasMany(EventSchedule::class, 'event_id')->orderBy('priority', 'ASC');
     }
     public function volunteer_ad_image()
     {
