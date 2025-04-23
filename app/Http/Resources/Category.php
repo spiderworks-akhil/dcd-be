@@ -20,7 +20,7 @@ class Category extends JsonResource
             'name' => $this->name,
             'title' => $this->title,
             'children' => $this->whenLoaded('children', function () {
-                return Category::collection($this->children);
+                return Category::collection($this->children)->toArray(request());
             }),
         ];
     }
