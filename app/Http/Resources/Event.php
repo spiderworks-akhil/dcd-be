@@ -28,6 +28,7 @@ class Event extends JsonResource
             'category' => new Category($this->category),
             'location' => $this->location,
             'website_link' => $this->website_link,
+            'result' => $this->result,
         ], $this->getParentCategory(), [
             'is_scheduled' => $this->is_scheduled,
             'schedules' => $this->formatSchedules($schedule),
