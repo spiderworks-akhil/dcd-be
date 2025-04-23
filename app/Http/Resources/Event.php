@@ -17,7 +17,7 @@ class Event extends JsonResource
         $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'ASC')->get() : null;
         return [
             'id' => $this->id,
-            `is_featured` => $this->is_featured,
+            'is_featured' => $this->is_featured,
             'title' => $this->title,
             'slug' => $this->slug,
             'short_description' => $this->short_description,
