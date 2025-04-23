@@ -35,6 +35,7 @@ class Event extends JsonResource
             'related_events' => EventListing::collection($this->related_events),
             'gallery' => GalleryMedia::collection($this->gallery),
             'must_attend_events' => EventListing::collection($this->must_attend),
+            'rewinds' => $this->getGallery(),
         ]);
     }
 
