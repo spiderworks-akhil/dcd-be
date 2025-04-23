@@ -53,25 +53,12 @@ class FrontendPage extends JsonResource
 
     private function related_sections($slug) {
 
-        if ($slug == 'about-good-neighbour') {
+        if($slug == 'events') {
             return [
-                'gallery' => $this->getGallery('about-good-neighbour'),
+                'rewinds' => $this->getGallery('rewinds-gallery'),
             ];
-        }elseif ($slug == 'media-centre') {
-
-            $language = Request()->language;
-
-            $gallerySlug = $language == 'en' ? 'media-centre-video-gallery' : 'media-centre-video-gallery-arabic';
-
-            return [
-                'video_gallery' => $this->getGallery($gallerySlug),
-            ];
-
-        } if ($slug == 'brand-assets') {
-            return [
-                'gallery' => $this->getGallery('brand-assets'),
-            ];
-        }  if ($slug == 'header') {
+        }
+        if ($slug == 'header') {
             return [
                 'menus' => $this->getHeadermenus(),
             ];
@@ -97,6 +84,8 @@ class FrontendPage extends JsonResource
         $gallery = Gallery::where('slug',$slug)->first();
         return new GalleryResource($gallery);
     }
+
+    
 
     private function getHeadermenus()
     {
