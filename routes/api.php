@@ -46,8 +46,8 @@ Route::get('news/{slug}', [NewsController::class, 'view'])->name('api.news.view'
 // events
 Route::get('events', [EventController::class, 'index'])->name('api.events.index');
 Route::get('events/featured', [EventController::class, 'featured'])->name('api.events.featured');
-Route::get('events/{slug}', [EventController::class, 'view'])->name('api.events.view');
 Route::get('events/categories', [EventController::class, 'categories'])->name('api.events.categories');
+Route::get('events/{slug}', [EventController::class, 'view'])->name('api.events.view');
 
 
 Route::get('gallery', [GalleryController::class, 'index'])->name('api.gallery.index');
