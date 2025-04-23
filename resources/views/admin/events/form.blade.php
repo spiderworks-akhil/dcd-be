@@ -148,6 +148,14 @@
                                                                 <textarea name="location" class="form-control" rows="2" id="location">{{$obj->location}}</textarea>
                                                             </div>
                                                             @endfieldshow
+                                                            <div class="form-group col-md-6">
+                                                                <label>Result</label>
+                                                                <input type="text" name="result" class="form-control" value="{{$obj->result}}">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Website Link</label>
+                                                                <input type="url" name="website_link" class="form-control" value="{{$obj->website_link}}">
+                                                            </div>
                                                             @fieldshow(events-short_description)
                                                             <div class="form-group col-md-6">
                                                                 <label>Short Description</label>
