@@ -83,8 +83,8 @@ class EventController extends Controller
 
     public function categories(Request $request){
         try{
-            $data = $request->all();
-            return $categories = Category::where('status', 1)->orderBy('priority', 'DESC')->get();
+           return $data = $request->all();
+            $categories = Category::where('status', 1)->where('category_type','Event')->orderBy('priority', 'DESC')->get();
             $categories = $categories->groupBy('parent_id');
             $formattedCategories = $categories->map(function ($group, $parentId) {
                 if ($parentId == 0) {
