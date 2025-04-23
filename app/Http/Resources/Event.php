@@ -15,7 +15,8 @@ class Event extends JsonResource
     public function toArray(Request $request): array
     {
         $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'ASC')->get() : null;
-        return [
+
+        return array_merge([
             'id' => $this->id,
             'is_featured' => $this->is_featured,
             'title' => $this->title,
@@ -27,20 +28,32 @@ class Event extends JsonResource
             'category' => new Category($this->category),
             'location' => $this->location,
             'website_link' => $this->website_link,
-        ] + ($this->category->parent ? [
-            'parent_category' => new Category($this->category->parent),
-        ] : [])+([
-            'schedules' => $schedule ? $schedule->map(function ($schedule) {
-                return [
-                    'id' => $schedule->id,
-                    'title' => $schedule->title,
-                    'tile' => $schedule->time,
-                ];
-            }) : null,
+        ], $this->getParentCategory(), [
+            'schedules' => $this->formatSchedules($schedule),
             'volunteer_ad_image' => new Media($this->volunteer_ad_image),
             'related_events' => EventListing::collection($this->related_events),
             'gallery' => GalleryMedia::collection($this->gallery),
             'must_attend_events' => EventListing::collection($this->must_attend),
         ]);
+    }
+
+   
+    private function getParentCategory(): array
+    {
+        return $this->category->parent ? [
+            'parent_category' => new Category($this->category->parent),
+        ] : [];
+    }
+
+    
+    private function formatSchedules($schedule): ?array
+    {
+        return $schedule ? $schedule->map(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'title' => $schedule->title,
+                'time' => $schedule->time,
+            ];
+        })->toArray() : null;
     }
 }
