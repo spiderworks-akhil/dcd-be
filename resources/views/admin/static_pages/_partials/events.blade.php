@@ -36,5 +36,11 @@
             @endif
             >
         </div>
+        <div class="form-group">
+            <a href="{{ route('admin.events.index') }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-arrow-right mr-2"></i>Go to Events Module 
+            </a>
+        </div>
+
     </fieldset>
 </div>
