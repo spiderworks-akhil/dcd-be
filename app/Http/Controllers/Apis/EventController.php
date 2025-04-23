@@ -95,6 +95,7 @@ class EventController extends Controller
             $formattedCategories = $categories->map(function ($category) use($type) {
                 $category->events = Event::where('status', 1)
                     ->where('category_id', $category->id)
+                    ->where('parent_id', 0)
                     ->orderBy('start_time', 'DESC')
                     ->get();
 
