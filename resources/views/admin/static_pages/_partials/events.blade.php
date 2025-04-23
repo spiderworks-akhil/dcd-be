@@ -25,4 +25,16 @@
             >
         </div>
     </fieldset>
+
+    <h3>Events</h3>
+    <fieldset>
+        <div class="form-group">
+            <label>Events & Updates</label>
+            <input type="text" name="content[events_updates_title]" class="form-control"
+                @if($obj->content && isset($obj->content['events_updates_title']))
+            value="{{ $obj->content['events_updates_title'] }}"
+            @endif
+            >
+        </div>
+    </fieldset>
 </div>
