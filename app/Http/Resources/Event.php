@@ -14,7 +14,7 @@ class Event extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'DESC')->get() : null;
+        $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'ASC')->get() : null;
         return [
             'id' => $this->id,
             'title' => $this->title,
