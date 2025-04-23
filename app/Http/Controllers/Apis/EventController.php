@@ -89,13 +89,13 @@ class EventController extends Controller
             $type = !empty($data['language']) ? $data['language'] : "en";
             $categories = Category::where('status', 1)
                 ->where('category_type', 'Event')
+                ->where('parent_id', 0)
                 ->orderBy('priority', 'DESC')
                 ->get();
 
             $formattedCategories = $categories->map(function ($category) use($type) {
                 $category->events = Event::where('status', 1)
                     ->where('category_id', $category->id)
-                    ->where('parent_id', 0)
                     ->orderBy('start_time', 'DESC')
                     ->get();
 
