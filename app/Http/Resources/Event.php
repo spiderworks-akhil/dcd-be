@@ -29,6 +29,7 @@ class Event extends JsonResource
             'location' => $this->location,
             'website_link' => $this->website_link,
         ], $this->getParentCategory(), [
+            'is_scheduled' => $this->is_scheduled,
             'schedules' => $this->formatSchedules($schedule),
             'volunteer_ad_image' => new Media($this->volunteer_ad_image),
             'related_events' => EventListing::collection($this->related_events),
