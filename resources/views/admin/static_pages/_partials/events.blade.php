@@ -4,15 +4,15 @@
     <fieldset>
         <div class="form-group">
             @php
-            $media_id_banner_image_1 = ($obj->content && isset($obj->content['media_id_banner_image_1'])) ? $obj->content['media_id_banner_image_1'] : null;
+            $media_id_banner_video_1 = ($obj->content && isset($obj->content['media_id_banner_video_1'])) ? $obj->content['media_id_banner_video_1'] : null;
             @endphp
             @include('admin.media.set_file', [
-            'file' => $media_id_banner_image_1,
-            'title' => 'Banner Image',
+            'file' => $media_id_banner_video_1,
+            'title' => 'Banner Video',
             'popup_type' => 'single_image',
-            'type' => 'Image',
-            'holder_attr' => 'content[media_id_banner_image_1]',
-            'id' => 'media_id_banner_image_1',
+            'type' => 'Video',
+            'holder_attr' => 'content[media_id_banner_video_1]',
+            'id' => 'media_id_banner_video_1',
             'display' => 'horizontal'
             ])
         </div>
