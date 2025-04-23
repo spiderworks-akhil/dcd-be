@@ -97,7 +97,8 @@ class EventController extends Controller
 
                 $category->children = Category::where('parent_id', $category->id)
                     ->where('status', 1)
-                    ->get()
+                    ->get();
+                $category->children = $category->children
                     ->map(function ($childCategory) {
                         $childCategory->events = Event::where('status', 1)
                             ->where('category_id', $childCategory->id)
