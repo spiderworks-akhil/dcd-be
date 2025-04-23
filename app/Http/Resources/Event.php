@@ -28,13 +28,13 @@ class Event extends JsonResource
         ] + ($this->category->parent ? [
             'parent_category' => new Category($this->category->parent),
         ] : [])+([
-            'schedules' => $this->schedules->orderBy('priority','DESC')->map(function ($schedule) {
+            'schedules' => $this->schedules ? $this->schedules->orderBy('priority', 'DESC')->map(function ($schedule) {
                 return [
                     'id' => $schedule->id,
                     'title' => $schedule->title,
                     'tile' => $schedule->time,
                 ];
-            }),
+            }) : null,
             'volunteer_ad_image' => new Media($this->volunteer_ad_image),
         ]);
     }
