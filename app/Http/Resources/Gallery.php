@@ -20,6 +20,7 @@ class Gallery extends JsonResource
             'name' => $this->name,
             'title' => $this->title,
             'type' => $this->type,
+            'short_description' => $this->short_description,
             'medias' => new GalleryMediaCollection($this->gallery)
         ];
     }
