@@ -85,7 +85,18 @@ class EventController extends Controller
         try{
             $data = $request->all();
             $categories = Category::where('status', 1)->where('category_type','Event')->orderBy('priority', 'DESC')->get();
-            return new CategoryCollection($categories);
+            $categories = $categories->groupBy('parent_id');
+            $formattedCategories = $categories->map(function ($group, $parentId) {
+                if ($parentId == 0) {
+                    return $group->map(function ($category) use ($categories) {
+                        $category->children = $categories->get($category->id) ?? collect();
+                        return $category;
+                    });
+                }
+                return $group;
+            })->flatten(1);
+
+            return new CategoryCollection($formattedCategories);
         }
         catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
