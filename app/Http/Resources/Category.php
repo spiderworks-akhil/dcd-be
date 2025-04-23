@@ -21,10 +21,6 @@ class Category extends JsonResource
             'title' => $this->title,
         ];
 
-        if (count($this->children) > 0) {
-            $baseData['children'] = Category::collection($this->children);
-        }
-
         if ($this->events) {
             $baseData['events'] = EventListing::collection($this->events);
         }

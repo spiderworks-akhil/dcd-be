@@ -21,6 +21,7 @@ class EventListing extends JsonResource
             'short_description' => $this->short_description,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
+            'category' => new Category($this->category),
             'banner_image' => new Media($this->banner_image),
         ];
     }
