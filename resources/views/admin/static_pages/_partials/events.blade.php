@@ -29,13 +29,33 @@
     <h3>Events & Updates</h3>
     <fieldset>
         <div class="form-group">
-            <label> Title</label>
+            <label> Upcoming Events Title</label>
             <input type="text" name="content[events_updates_title]" class="form-control"
                 @if($obj->content && isset($obj->content['events_updates_title']))
             value="{{ $obj->content['events_updates_title'] }}"
             @endif
             >
         </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label>Featured Events Title</label>
+                <input type="text" name="content[featured_events_title]" class="form-control"
+                    @if($obj->content && isset($obj->content['featured_events_title']))
+                value="{{ $obj->content['featured_events_title'] }}"
+                @endif
+                >
+            </div>
+            <div class="col-md-6">
+                <label>Featured Events Sub Title</label>
+                <input type="text" name="content[featured_events_subtitle]" class="form-control"
+                    @if($obj->content && isset($obj->content['featured_events_subtitle']))
+                value="{{ $obj->content['featured_events_subtitle'] }}"
+                @endif
+                >
+            </div>
+        </div>
+        
+
         <div class="form-group">
             <a href="{{ route('admin.events.index') }}" target="_blank" class="btn btn-primary">
                 <i class="fas fa-arrow-right mr-2"></i>Go to Events Module 
@@ -43,4 +63,13 @@
         </div>
 
     </fieldset>
+    <h3>Rewinds Gallery</h3>
+    <fieldset>
+        <div class="form-group">
+            <a href="{{ route('admin.gallery.edit', [encrypt(1)]) }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-arrow-right mr-2"></i>Go to Gallery Module 
+            </a>
+        </div>
+    </fieldset>
+
 </div>
