@@ -35,6 +35,7 @@ class Event extends JsonResource
             'related_events' => EventListing::collection($this->related_events),
             'gallery' => GalleryMedia::collection($this->gallery),
             'must_attend_events' => EventListing::collection($this->must_attend),
+            'rewinds' => $this->getGallery(),
         ]);
     }
 
@@ -56,5 +57,11 @@ class Event extends JsonResource
                 'time' => $schedule->time,
             ];
         })->toArray() : null;
+    }
+
+    private function getGallery(): array
+    {
+        $gallery = \App\Models\Gallery::find(1);
+        return new Gallery($gallery);
     }
 }
