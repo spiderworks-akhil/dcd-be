@@ -55,6 +55,7 @@
                                         <tr>
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10">ID</th>
+                                            <th class="table-width-120">Type</th>
                                             <th class="table-width-120">Slug</th>
                                             <th class="table-width-120">Name</th>
                                             <th class="table-width-120">Last Updated On</th>
@@ -88,6 +89,7 @@
         var my_columns = [
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
+            {data: 'type', name: 'type'},
             {data: 'slug', name: 'slug'},
             {data: 'name', name: 'name'},
             {data: 'date', name: 'updated_at'},
