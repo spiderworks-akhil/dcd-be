@@ -19,6 +19,7 @@ class Category extends JsonResource
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
+            'children' => Category::collection($this->children),
         ];
     }
 }
