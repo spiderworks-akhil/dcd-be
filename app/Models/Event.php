@@ -34,4 +34,8 @@ class Event extends Model
     {
         return $this->hasMany(EventSchedule::class, 'event_id');
     }
+    public function volunteer_ad_image()
+    {
+        return $this->belongsTo(Media::class, 'volunteer_ad_image_id');
+    }
 }

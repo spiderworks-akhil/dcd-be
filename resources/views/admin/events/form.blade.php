@@ -206,6 +206,18 @@
                                                         <button type="button" id="add-schedule" class="btn btn-primary mt-3">Add Schedule</button>
 
                                                     </div>
+
+                                                    @if($obj->is_scheduled == 0)
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            Volunteer Ad Image
+                                                        </div>
+                                                        <div class="card-body">
+                                                            @include('admin.media.set_file', ['file'=>$obj->volunteer_ad_image, 'title'=>'Volunteer Ad Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'volunteer_ad_image_id'])
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                    
                                                 </div>
                                             </div>
                             
