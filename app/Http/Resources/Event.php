@@ -28,7 +28,7 @@ class Event extends JsonResource
         ] + ($this->category->parent ? [
             'parent_category' => new Category($this->category->parent),
         ] : [])+([
-            'schedules' => $this->schedules ? $this->schedules->orderBy('priority', 'DESC')->map(function ($schedule) {
+            'schedules' => $this->schedules ? $this->schedules->map(function ($schedule) {
                 return [
                     'id' => $schedule->id,
                     'title' => $schedule->title,
