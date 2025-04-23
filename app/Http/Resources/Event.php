@@ -24,8 +24,18 @@ class Event extends JsonResource
             'banner_image' => new Media($this->banner_image),
             'category' => new Category($this->category),
             'location' => $this->location,
+            'website_link' => $this->website_link,
         ] + ($this->category->parent ? [
             'parent_category' => new Category($this->category->parent),
-        ] : []);
+        ] : [])+([
+            'schedules' => $this->schedules->orderBy('priority','DESC')->map(function ($schedule) {
+                return [
+                    'id' => $schedule->id,
+                    'title' => $schedule->title,
+                    'tile' => $schedule->time,
+                ];
+            }),
+            'volunteer_ad_image' => new Media($this->volunteer_ad_image),
+        ]);
     }
 }
