@@ -23,7 +23,12 @@ class EventController extends Controller
                     $query->where('id', $data['category_id']);
                 });
             }
-            $events = $events->orderBy('published_on', 'DESC')->where('type',$type)->paginate($limit);
+            if (!empty($data['filter']) && $data['filter'] === 'upcoming') {
+                $events = $events->where('start_time', '>', now());
+            } elseif (!empty($data['filter']) && $data['filter'] === 'past') {
+                $events = $events->where('end_time', '<', now());
+            }
+            $events = $events->where('type',$type)->orderBy('start_time','DESC')->paginate($limit);
             return new EventListingCollection($events);
         }
         catch(\Exception $e){
@@ -44,8 +49,14 @@ class EventController extends Controller
                     $query->where('id', $data['category_id']);
                 });
             }
+
+            if (!empty($data['filter']) && $data['filter'] === 'upcoming') {
+                $events = $events->where('start_time', '>', now());
+            } elseif (!empty($data['filter']) && $data['filter'] === 'past') {
+                $events = $events->where('end_time', '<', now());
+            }
     
-            $events = $events->orderBy('priority', 'asc')
+            $events = $events->orderBy('priority', 'DESC')
             ->get();
         return new EventListingCollection($events);
     }
@@ -58,7 +69,11 @@ class EventController extends Controller
             if(!$event)
                 return response()->json(['error' => 'Not found'], 404);
 
-            $event->related_event = Event::where('id', '!=', $event->id)->orderBy('published_on', 'DESC')->take(5)->get();
+            $event->related_event = Event::where('id', '!=', $event->id)
+                ->where('category_id', $event->category_id)
+                ->orderBy('start_time', 'DESC')
+                ->take(5)
+                ->get();
             return new EventResource($event);
         }
         catch(\Exception $e){
