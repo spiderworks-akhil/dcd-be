@@ -14,6 +14,7 @@ class Event extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $schedule = $this->schedules ? $this->schedules()->orderBy('priority', 'DESC') : null;
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -28,7 +29,7 @@ class Event extends JsonResource
         ] + ($this->category->parent ? [
             'parent_category' => new Category($this->category->parent),
         ] : [])+([
-            'schedules' => $this->schedules ? $this->schedules()->orderBy('priority', 'DESC')->map(function ($schedule) {
+            'schedules' => $schedule ? $schedule->map(function ($schedule) {
                 return [
                     'id' => $schedule->id,
                     'title' => $schedule->title,
