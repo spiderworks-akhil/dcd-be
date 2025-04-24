@@ -17,10 +17,10 @@ class News extends Model
 
     protected $dates = ['created_at','updated_at'];
 
-    // public function category(): BelongsTo
-    // {
-    //     return $this->belongsTo(Category::class, 'category_id');
-    // }
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 
     // public function tags(): BelongsToMany
     // {
