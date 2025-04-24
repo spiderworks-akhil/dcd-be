@@ -17,8 +17,8 @@ class NewsController extends Controller
             $data = $request->all();
             $limit = !empty($data['limit'])?(int)$data['limit']:10;
             $type = !empty($data['language'])?$data['language']:"en";
-            $news = News::with(['featured_image'])->where('status', 1);
-            $news = $news->orderBy('published_on', 'DESC')->where('type',$type)->paginate($limit);
+            $news = News::where('status', 1)->where('type',$type);
+            $news = $news->orderBy('published_on', 'DESC')->paginate($limit);
             return new NewsListingCollection($news);
         }
         catch(\Exception $e){

@@ -56,7 +56,7 @@ class FrontendPage extends JsonResource
         if($slug == 'events') {
             return [
                 'rewinds' => $this->getGallery('rewinds-gallery'),
-                'upcoming_event' => $this->featured()
+                'upcoming_event' => $this->upcoming_event()
             ];
         }
         if ($slug == 'header') {
@@ -81,7 +81,7 @@ class FrontendPage extends JsonResource
 
     private function upcoming_event()
     {
-        return Event::where('status', 1)
+        return \App\Models\Event::where('status', 1)
             ->where('type', request()->language??'en')
             ->where('is_featured_in_banner', 1)
             ->first();

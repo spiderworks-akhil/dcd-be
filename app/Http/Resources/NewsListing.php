@@ -23,6 +23,7 @@ class NewsListing extends JsonResource
             'published_on' => $this->published_on,
             'published_by' => new Author($this->author),
             'featured_image' => new Media($this->featured_image),
+            'banner_image' => new Media($this->banner_image),
         ];
     }
 }

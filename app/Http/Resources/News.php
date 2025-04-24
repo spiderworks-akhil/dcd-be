@@ -23,10 +23,6 @@ class News extends JsonResource
             'published_by' => new Author($this->author),
             'news_title' => $this->news_title,
             'content' => $this->content,
-            'bottom_text' => $this->bottom_text,
-            'bottom_button_text' => $this->bottom_button_text,
-            'bottom_button_url' => $this->bottom_button_url,
-            'bottom_button_target' => $this->bottom_button_target,
             'featured_image' => new Media($this->featured_image),
             'banner_image' => new Media($this->banner_image),
             'browser_title' => $this->browser_title,
@@ -37,8 +33,6 @@ class News extends JsonResource
             'meta_keywords' => $this->meta_keywords,
             'bottom_description' => $this->bottom_description,
             'extra_js' => $this->extra_js,
-            'visit_count' => $this->visit_count,
-
         ];
     }
 
