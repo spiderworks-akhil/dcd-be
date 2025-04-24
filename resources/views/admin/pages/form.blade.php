@@ -255,7 +255,7 @@
                                                 </div>
                                                 @endif
                                             @endfieldshow -->
-                                            <!-- @fieldshow(pages-featured_image_id)
+                                            @fieldshow(pages-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
                                                     Featured Image
@@ -264,7 +264,7 @@
                                                     @include('admin.media.set_file', ['file'=>$obj->featured_image, 'title'=>'Featured Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'featured_image_id'])
                                                 </div>
                                             </div>
-                                            @endfieldshow -->
+                                            @endfieldshow
                                             <!-- @fieldshow(pages-banner_image_id)
                                             <div class="card">
                                                 <div class="card-header">
