@@ -24,8 +24,7 @@ class NewsRequest extends FormRequest
         $ignoreId = ($this->input('id'))?decrypt($this->input('id')):NULL;
         return [
             'name' => 'required|max:250',
-            'slug' => "required|max:250|unique:blogs,slug,{$ignoreId},id,deleted_at,NULL,type,{$this->input('type')}",
-            'content' => 'required',
+            'slug' => "required|max:250|unique:news,slug,{$ignoreId},id,deleted_at,NULL,type,{$this->input('type')}",
         ];
     }
 }
