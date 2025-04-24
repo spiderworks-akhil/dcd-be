@@ -23,6 +23,7 @@ class News extends JsonResource
             'published_by' => new Author($this->author),
             'news_title' => $this->news_title,
             'content' => $this->content,
+            'iframe_code' => $this->iframe_code,
             'featured_image' => new Media($this->featured_image),
             'banner_image' => new Media($this->banner_image),
             'browser_title' => $this->browser_title,

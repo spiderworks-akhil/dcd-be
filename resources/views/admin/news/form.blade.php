@@ -110,6 +110,11 @@
                                                                         </div>
                                                                 </div>
                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label> Iframe Code</label>
+                                                                <textarea name="iframe_code" class="form-control" rows="2">{{$obj->iframe_code}}</textarea>
+                                                            </div>
+
 
 
                                                         </div>

@@ -46,7 +46,7 @@ class NewsController extends Controller
     }
 
     protected function getCollection() {
-        return $this->model->select('id', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
+        return $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
     }
 
     protected function setDTData($collection) {
