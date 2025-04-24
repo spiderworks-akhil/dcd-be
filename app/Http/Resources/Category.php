@@ -19,6 +19,8 @@ class Category extends JsonResource
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
+            'short_description' => $this->short_description,
+            'featured_image' => new Media($this->featured_image),
         ];
 
         if ($this->events) {

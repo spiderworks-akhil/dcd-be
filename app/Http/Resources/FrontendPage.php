@@ -69,13 +69,6 @@ class FrontendPage extends JsonResource
         }  else {
             return null;
         }
-        // if($slug == 'procurement_faq'){
-        //     return [
-        //         'faq' => $this->faq('procurement_faqs')
-        //     ];
-        // }else {
-        //     return null;
-        // }
 
     }
 
