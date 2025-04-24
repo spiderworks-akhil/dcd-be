@@ -20,6 +20,7 @@ class NewsListing extends JsonResource
             'title' => $this->title,
             'priority' => $this->priority,
             'short_description' => $this->short_description,
+            'category' => new Category($this->category),
             'published_on' => $this->published_on,
             'published_by' => new Author($this->author),
             'featured_image' => new Media($this->featured_image),
