@@ -450,6 +450,9 @@
                         id: function() {
                           return $( "#inputId" ).val();
                         },
+                        type: function() {
+                            return "{{ $obj->type??'en' }}";
+                        },
                         table: 'news',
                     }
                   }
