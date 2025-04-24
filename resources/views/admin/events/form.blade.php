@@ -345,6 +345,11 @@
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="is_must_attend" name="is_must_attend" @if($obj->is_must_attend == 1) checked="checked" @endif>
                                                                 <label class="custom-control-label" for="is_must_attend">Must Attend</label>
                                                             </div>
+                                                            <div style="margin-right: 5px;" class="custom-control custom-switch switch-primary float-right">
+                                                                <input type="checkbox" class="custom-control-input" value="1" id="is_featured_in_banner" name="is_featured_in_banner" @if($obj->is_featured_in_banner == 1) checked="checked" @endif>
+                                                                <label class="custom-control-label" for="is_featured_in_banner">Featured In Banner</label>
+                                                            </div>
+
                                                         </div>
                                                         <div class="form-group w-100 mb-1">
                                                             <label for="name">Created On: </label>
@@ -461,6 +466,15 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Logo Image
+                                                </div>
+                                                <div class="card-body">
+                                                    @include('admin.media.set_file', ['file'=>$obj->logo_image, 'title'=>'Logo Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'logo_image_id'])
+                                                </div>
+                                            </div>
+
                                             @fieldshow(events-banner_image_id)
                                             <div class="card">
                                                 <div class="card-header">
