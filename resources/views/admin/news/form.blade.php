@@ -94,26 +94,25 @@
                                                                 <textarea name="short_description" class="form-control" rows="2" id="short_description">{{$obj->short_description}}</textarea>
                                                             </div>
 
-                                                            <div class="card">
-                                                                <div class="card-body" id="blog-content-holder">
-                                                                        <div class="card">
-                                                                            <div class="card-body">
-                                                                                <div class="form-group col-md-12">
-                                                                                    <label>Title</label>
-                                                                                    <input type="text" name="news_title" class="form-control text-direction"  value="{{$obj->news_title}}">
-                                                                                </div>
-                                                                                <div class="form-group col-md-12">
-                                                                                    <label>Description</label>
-                                                                                    <textarea name="content" class="form-control text-direction editor" rows="2">{{$obj->content}}</textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                </div>
-                                                           </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>Title</label>
+                                                                <input type="text" name="news_title" class="form-control text-direction"  value="{{$obj->news_title}}">
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label>Description</label>
+                                                                <textarea name="content" class="form-control text-direction editor" rows="2">{{$obj->content}}</textarea>
+                                                            </div>
+                                                           
                                                             <div class="form-group col-md-12">
                                                                 <label> Iframe Code</label>
                                                                 <textarea name="iframe_code" class="form-control" rows="2">{{$obj->iframe_code}}</textarea>
                                                             </div>
+
+                                                            <div class="form-group col-md-12">
+                                                                <label>Bottom content</label>
+                                                                <textarea name="bottom_content" class="form-control editor" rows="2">{{$obj->bottom_content}}</textarea>
+                                                            </div>
+
 
 
 

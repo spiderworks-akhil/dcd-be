@@ -24,6 +24,7 @@ class News extends JsonResource
             'news_title' => $this->news_title,
             'content' => $this->content,
             'iframe_code' => $this->iframe_code,
+            'bottom_content' => $this->bottom_content,
             'featured_image' => new Media($this->featured_image),
             'banner_image' => new Media($this->banner_image),
             'browser_title' => $this->browser_title,
