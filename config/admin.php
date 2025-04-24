@@ -27,7 +27,7 @@ return array(
 		'positions'=>['Main Menu', 'Footer Menu'],
 	],
 
-	'category_types' => ['Blog', 'Event','Product','Brand'],
+	'category_types' => ['Blog', 'Event','Product','News'],
 
 	'services' => [
 		'sections' => true,
