@@ -32,6 +32,19 @@ class CategoryDetail extends JsonResource
         if ($this->children) {
             $baseData['children'] = Category::collection($this->children);
         }
+        
+        $baseData['rewinds'] = $this->getGallery();
+
         return $baseData;
+    }
+
+    private function getGallery(): array
+    {
+        $gallery = \App\Models\Gallery::find(1);
+        return $gallery ? [
+            'title' => $gallery->title,
+            'short_description' => $gallery->short_description,
+            'medias' => new GalleryMediaCollection($gallery->gallery)
+        ] : [];
     }
 }
