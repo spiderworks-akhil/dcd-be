@@ -13,8 +13,9 @@ class TeamController extends Controller
     public function index(Request $request){
         try{
             $data = $request->all();
+            $type = !empty($data['language']) ? $data['language'] : "en";
             $limit = !empty($data['limit'])?(int)$data['limit']:10;
-            $teams = Team::where('status', 1);
+            $teams = Team::where('status', 1)->where('type', $type);
             $teams = $teams->orderBy('priority', 'DESC')->paginate($limit);
             return new TeamCollection($teams);
         }
@@ -23,16 +24,18 @@ class TeamController extends Controller
         }
     }
 
-    public function featured(){
-        $teams = Team::select('name','title','short_description','id','slug','featured_image_id','designation')->with(['featured_image'])->where('status', 1)->where('is_featured', 1)->orderBy('priority','DESC')->get();
+    public function featured(Request $request){
+        $data = $request->all();
+        $type = !empty($data['language']) ? $data['language'] : "en";
+        $teams = Team::select('name','title','short_description','id','slug','featured_image_id','designation')->where('type', $type)->where('status', 1)->where('is_featured', 1)->orderBy('priority','DESC')->get();
         return new TeamCollection($teams);
     }
-
 
     public function view(Request $request, $slug){
         try{
             $data = $request->all();
-            $team = Team::with(['featured_image','department'])->where('slug', $slug)->where('status', 1)->first();
+            $type = !empty($data['language']) ? $data['language'] : "en";
+            $team = Team::where('type', $type)->where('slug', $slug)->where('status', 1)->first();
             if(!$team)
                 return response()->json(['error' => 'Not found'], 404);
             return new TeamResource($team);
