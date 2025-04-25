@@ -27,7 +27,7 @@ class CategoryDetail extends JsonResource
             $baseData['events'] = EventListing::collection($this->events);
         }
         if ($this->children) {
-            $baseData['children'] = CategoryCollection::collection($this->children);
+            $baseData['children'] = Category::collection($this->children);
         }
 
         return $baseData;
