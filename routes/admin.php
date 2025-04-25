@@ -292,6 +292,8 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('team/store', [TeamController::class, 'store'])->name('admin.team.store');
         Route::post('team/update', [TeamController::class, 'update'])->name('admin.team.update');
         Route::get('team/show/{id}', [TeamController::class, 'show'])->name('admin.team.show');
+        Route::get('get-slug', [TeamController::class, 'GetSlug'])->name('admin.get-slug');
+
 
         //services
         Route::get('/services/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');

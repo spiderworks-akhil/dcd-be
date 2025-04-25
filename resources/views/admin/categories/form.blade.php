@@ -355,9 +355,12 @@
                   required: true,
                   remote: {
                       url: "{{route('admin.unique-slug')}}",
-                      data: {
+                      data: {   
                         id: function() {
                           return $( "#inputId" ).val();
+                        },
+                        type: function() {
+                          return "{{ $obj->type ?? 'en' }}";
                         },
                         table: 'categories',
                     }

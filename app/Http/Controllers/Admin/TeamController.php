@@ -88,4 +88,79 @@ class TeamController extends Controller
         return $this->_update($id, $data);
     }
 
+    public function GetType(Request $request)
+    {
+        $type = $request->query('type');
+        $slug = $request->query('slug');
+        $name = $request->query('name');
+        $currentType = $request->query('currentType');
+
+        if (($currentType == "en_draft" && $type == "en") || ($currentType == "en" && $type == "en_draft")) {
+
+            $draft = Team::where('slug', $slug)->where('type', "en_draft")->first();
+            $en = Team::where('slug', $slug)->where('type', "en")->first();
+
+            if ($draft && $en) {
+
+                $draft->type = "en";
+                $draft->save();
+
+                $en->type = "en_draft";
+                $en->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.team.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        if (($currentType === "ar_draft" && $type === "ar") || ($currentType === "ar" && $type === "ar_draft")) {
+            $draft = Team::where('slug', $slug)->where('type', "ar_draft")->first();
+            $ar = Team::where('slug', $slug)->where('type', "ar")->first();
+
+            if ($draft && $ar) {
+                $draft->type = "ar";
+                $draft->save();
+
+                $ar->type = "ar_draft";
+                $ar->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.team.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        $existingPage = Team::where('type', $type)->where('slug', $slug)->first();
+
+        if ($existingPage) {
+            return response()->json([
+                'redirect_url' => route('admin.team.edit', ['id' => encrypt($existingPage->id)])
+            ]);
+        } else {
+
+            $existingId = Team::where('slug', $slug)->where('type', 'en')->pluck('id')->first();
+
+            if ($existingId) {
+                $page = Team::find($existingId);
+
+                if ($page) {
+                    $newPage = $page->replicate();
+                    $newPage->slug = $slug;
+                    $newPage->title = $name;
+                    $newPage->type = $type;
+                    $newPage->save();
+
+                    return response()->json([
+                        'redirect_url' => route('admin.team.edit', ['id' => encrypt($newPage->id)])
+                    ]);
+                }
+
+            }
+
+        }
+    }
+
 }
