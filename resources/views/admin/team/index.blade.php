@@ -55,6 +55,7 @@
                                         <tr>
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10 text-center">ID</th>
+                                            <th class="table-width-120">Type</th>
                                             <th class="table-width-120">Name</th>
                                             <th class="table-width-120">Slug</th>
                                             <th class="nosearch table-width-10 text-center  @fieldshow(team-priority) @else nodisplay @endfieldshow">Priority</th>
@@ -85,6 +86,7 @@
         var my_columns = [
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
+            {data: 'type', name: 'type'},
             {data: 'name', name: 'name'},
             {data: 'slug', name: 'slug'},
             {data: 'priority', name: 'priority'},
