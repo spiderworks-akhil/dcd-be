@@ -109,4 +109,80 @@ class CategoryController extends Controller
         $id = decrypt($request->id);
         return $this->_update($id, $request->all());
     }
+
+
+    public function GetType(Request $request)
+    {
+        $type = $request->query('type');
+        $slug = $request->query('slug');
+        $name = $request->query('name');
+        $currentType = $request->query('currentType');
+
+        if (($currentType == "en_draft" && $type == "en") || ($currentType == "en" && $type == "en_draft")) {
+
+            $draft = Category::where('slug', $slug)->where('type', "en_draft")->first();
+            $en = Category::where('slug', $slug)->where('type', "en")->first();
+
+            if ($draft && $en) {
+
+                $draft->type = "en";
+                $draft->save();
+
+                $en->type = "en_draft";
+                $en->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.categories.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        if (($currentType === "ar_draft" && $type === "ar") || ($currentType === "ar" && $type === "ar_draft")) {
+            $draft = Category::where('slug', $slug)->where('type', "ar_draft")->first();
+            $ar = Category::where('slug', $slug)->where('type', "ar")->first();
+
+            if ($draft && $ar) {
+                $draft->type = "ar";
+                $draft->save();
+
+                $ar->type = "ar_draft";
+                $ar->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.categories.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        $existingPage = Category::where('type', $type)->where('slug', $slug)->first();
+
+        if ($existingPage) {
+            return response()->json([
+                'redirect_url' => route('admin.categories.edit', ['id' => encrypt($existingPage->id)])
+            ]);
+        } else {
+
+            $existingId = Category::where('slug', $slug)->where('type', 'en')->pluck('id')->first();
+
+            if ($existingId) {
+                $page = Category::find($existingId);
+
+                if ($page) {
+                    $newPage = $page->replicate();
+                    $newPage->slug = $slug;
+                    $newPage->title = $name;
+                    $newPage->type = $type;
+                    $newPage->save();
+
+                    return response()->json([
+                        'redirect_url' => route('admin.categories.edit', ['id' => encrypt($newPage->id)])
+                    ]);
+                }
+
+            }
+
+        }
+    }
 }

@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
         $ignoreId = ($this->input('id'))?decrypt($this->input('id')):NULL;
         return [
             'name' => 'required|max:250',
-            'slug' => "required|max:250|unique:categories,slug,{$ignoreId},id,deleted_at,NULL",
+            'slug' => "required|max:250|unique:categories,slug,{$ignoreId},id,deleted_at,NULL,type,{$this->input('type')}",
         ];
     }
 }

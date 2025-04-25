@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Apis\BlogController;
 use App\Http\Controllers\Apis\AuthController;
+use App\Http\Controllers\Apis\CategoryController;
 use App\Http\Controllers\Apis\CommonController;
 use App\Http\Controllers\Apis\EventController;
 use App\Http\Controllers\Apis\GalleryController;
@@ -86,6 +87,9 @@ Route::get('leads/{id}', [CommonController::class, 'leads_view'])->name('api.lea
 Route::get('list-urls/{page}', [CommonController::class, 'list_urls'])->name('api.list-urls');
 
 Route::post('contact/save', [CommonController::class, 'contact_save'])->name('contacts.save');
+
+Route::get('categories/{slug}', [CategoryController::class, 'detail'])->name('api.category.details');
+
 
 
 // products

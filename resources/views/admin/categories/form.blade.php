@@ -247,6 +247,29 @@
                                                     <button class="btn btn-sm btn-primary float-right">Save</button>
                                                 </div>
                                             </div>
+                                            @if ($obj->id)
+
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Available Languages
+                                                </div>
+                                                    <div class="card-body">
+                                                        <div class="row m-0">
+                                                                <div class="form-group w-100 mb-2">
+                                                                    <div class="card-footer text-muted">
+                                                                        <select name="type" class="form-control" id="languageSelect">
+                                                                            <option value="en" @if ($obj->type == 'en') selected @endif>English</option>
+                                                                            <option value="ar" @if ($obj->type == 'ar') selected @endif>Arabic</option>
+                                                                            <option value="en_draft" @if ($obj->type == 'en_draft') selected @endif>English Draft</option>
+                                                                            <option value="ar_draft" @if ($obj->type == 'ar_draft') selected @endif>Arabic Draft</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            @endif
                                             @fieldshow(categories-faq)
                                                 @if($obj->id)
                                                 <div class="card">
@@ -342,5 +365,76 @@
               },
             });
     </script>
+    <script>
+    document.getElementById('submitBtn').addEventListener('click', function() {
+    var selectedValue = document.getElementById('languageSelect').value;
+    var slug = @json($obj->slug);
+    var name = @json($obj->name);
+    var currentType = @json($obj->type);
+
+    const swapConditions = [
+    ["en_draft", "en"],
+    ["en", "en_draft"],
+    ["ar_draft", "ar"],
+    ["ar", "ar_draft"]
+    ];
+
+    if (swapConditions.some(([type, value]) => currentType === type && selectedValue === value)) {
+        ProcessConfirm("If you click submit, the contents of both pages will swap. Do you want to continue?")
+    } else {
+            ProcessContent(slug, name, currentType, selectedValue);
+            return;
+    }
+
+
+    function ProcessConfirm(content){
+        $.confirm({
+                    title: 'Warning',
+                    content: content,
+                    buttons: {
+                        confirm: function() {
+                            ProcessContent();
+                        },
+                        cancel: function() {
+                            return;
+                        }
+                    }
+                });
+    }
+
+    function ProcessContent(){
+
+        var url = "{{ route('admin.categories.get-type') }}?type=" + selectedValue + "&slug=" + slug + "&name=" + name + "&currentType=" + currentType;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed');
+            }
+        })
+        .then(data => {
+            if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert('No redirect URL found');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error sending data.");
+        });
+    }
+
+    });
+
+</script>
 @parent
 @endsection

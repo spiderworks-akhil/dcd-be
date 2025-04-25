@@ -217,8 +217,12 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('/categories/update', [CategoryController::class, 'update'])->name('admin.categories.update');
         Route::post('/categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
         Route::get('/categories/change-status/{id}', [CategoryController::class, 'changeStatus'])->name('admin.categories.change-status');
+        Route::get('categories/get-type', [CategoryController::class, 'GetType'])->name('admin.categories.get-type');
         Route::get('/categories/{parent?}', [CategoryController::class, 'index'])->name('admin.categories.index');
         Route::get('/categories/show/{id}', [CategoryController::class, 'show'])->name('admin.categories.show');
+
+
+
 
         //settings
         Route::get('settings', [SettingController::class, 'index'])->name('admin.settings.index');
