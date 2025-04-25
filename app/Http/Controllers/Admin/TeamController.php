@@ -28,7 +28,7 @@ class TeamController extends Controller
     }
 
     protected function getCollection() {
-        return $this->model->select('id', 'name', 'slug', 'designation', 'priority', 'status', 'updated_at');
+        return $this->model->select('id', 'type','name', 'slug', 'designation', 'priority', 'status', 'updated_at');
     }
 
     protected function setDTData($collection) {
