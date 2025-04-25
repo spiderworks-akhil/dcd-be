@@ -58,9 +58,10 @@
                                         <tr>
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10">ID</th>
+                                            <th class="table-width-120">Type</th>
                                             <th class="table-width-120">Name</th>
                                             @if(Config('admin.category_types'))
-                                                <th class="table-width-120 @fieldshow(categories-category_type) @else nodisplay @endfieldshow">Type</th>
+                                                <th class="table-width-120 @fieldshow(categories-category_type) @else nodisplay @endfieldshow">Category Type</th>
                                             @else
                                                 <th class="nodisplay"></th>
                                             @endif
@@ -96,6 +97,7 @@
         var my_columns = [
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
+            {data: 'type', name: 'type'},
             {data: 'name', name: 'name'},
             {data: 'category_type', name: 'category_type'},
             {data: 'date', name: 'updated_at'},
