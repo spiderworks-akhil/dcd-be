@@ -18,6 +18,9 @@ class NewsController extends Controller
             $limit = !empty($data['limit'])?(int)$data['limit']:10;
             $type = !empty($data['language'])?$data['language']:"en";
             $news = News::where('status', 1)->where('type',$type);
+            if($data['category_id']){
+                $news = $news->where('category_id', $data['category_id']);
+            }
             $news = $news->orderBy('published_on', 'DESC')->paginate($limit);
             return new NewsListingCollection($news);
         }
@@ -26,6 +29,15 @@ class NewsController extends Controller
         }
     }
 
+    public function categories(Request $request){
+        $data = $request->all();
+        $type = !empty($data['language'])?$data['language']:"en";
+        $categories = Category::where('status', 1)
+            ->where('category_type', 'News')
+            ->where('type',$type)
+            ->get();
+        return new CategoryCollection($categories);
+    }
 
     public function featured(Request $request){
         $data = $request->all();
