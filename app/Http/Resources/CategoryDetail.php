@@ -26,10 +26,12 @@ class CategoryDetail extends JsonResource
         if ($this->events) {
             $baseData['events'] = EventListing::collection($this->events);
         }
+        if($this->banner_video){
+            $baseData['banner_video'] = new Media($this->banner_video);
+        }
         if ($this->children) {
             $baseData['children'] = Category::collection($this->children);
         }
-
         return $baseData;
     }
 }
