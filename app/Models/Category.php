@@ -38,5 +38,11 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
     }
+    
+    public function banner_video()
+    {
+        return $this->belongsTo(Media::class, 'banner_video_id');
+    }
+
 
 }

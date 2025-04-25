@@ -20,7 +20,7 @@ class EventController extends Controller
             $type = !empty($data['language']) ? $data['language'] : "en";
             $events = Event::where('status', 1);
             if (!empty($data['category_id'])) {
-                $events = $event->whereHas('categories', function ($query) use ($data) {
+                $events = $events->whereHas('categories', function ($query) use ($data) {
                     $query->where('id', $data['category_id']);
                 });
             }

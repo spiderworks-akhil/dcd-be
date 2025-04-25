@@ -315,6 +315,14 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Banner Video
+                                                </div>
+                                                <div class="card-body">
+                                                    @include('admin.media.set_file', ['file'=>$obj->banner_video, 'title'=>'Banner Video', 'popup_type'=>'single_video', 'type'=>'Video', 'holder_attr'=>'banner_video_id'])
+                                                </div>
+                                            </div>
                                             @fieldshow(categories-og_image_id)
                                             <div class="card">
                                                 <div class="card-header">
