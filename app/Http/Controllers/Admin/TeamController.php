@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\TeamRequest;
 use App\Traits\ResourceTrait;
 use App\Models\Team;
 use App\Models\Department;
+use Illuminate\Http\Request;
 use Redirect;
 
 class TeamController extends Controller
