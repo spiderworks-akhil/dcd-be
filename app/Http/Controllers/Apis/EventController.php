@@ -29,6 +29,11 @@ class EventController extends Controller
             } elseif (!empty($data['filter']) && $data['filter'] === 'past') {
                 $events = $events->where('end_time', '<', now());
             }
+            if (!empty($data['search'])) {
+                $events = $events->where(function ($query) use ($data) {
+                    $query->where('title', 'LIKE', "%{$data['search']}%");
+                });
+            }
             $events = $events->where('type', $type)->orderBy('start_time', 'DESC')->paginate($limit);
             return new EventListingCollection($events);
         } catch (\Exception $e) {
