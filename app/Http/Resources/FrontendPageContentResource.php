@@ -20,8 +20,7 @@ class FrontendPageContentResource extends JsonResource
             if (strpos($key, 'media_id') !== false)
                 $response[$key] = new Media($item);
             elseif (strpos($key, 'listing_id') !== false)
-                if($item)
-                    $response[$key] = new ListingResourceCollection($item->list);
+                $response[$key] = new ListingResourceCollection($item->list);
             else
                 $response[$key] = $item;
         }
