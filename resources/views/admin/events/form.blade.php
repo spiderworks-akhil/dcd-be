@@ -642,7 +642,7 @@
                           return $( "#inputId" ).val();
                         },
                         type: function() {
-                          return "{{$obj->type??en}}";
+                          return "{{$obj->type??'en'}}";
                         },
                         table: 'events',
                     }
