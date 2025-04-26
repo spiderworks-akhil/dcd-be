@@ -33,6 +33,15 @@
                         'display' => 'horizontal'
                     ])
                 </div>
+                <div class="form-group col-md-12">
+                    @if ($obj->type == 'en')
+                        <input type="hidden" name="content[logo_listing_id]" value="8">
+                        <a href="{{route('admin.listing-items.index',[1])}}" class="btn btn-sm btn-danger" target="_blank" > Add Logo </a>
+                    @else
+                         <input type="hidden" name="content[logo_listing_id]" value="28">
+                        <a href="{{route('admin.listing-items.index',[1])}}" class="btn btn-sm btn-danger" target="_blank" > Add Logo </a>
+                    @endif
+                </div>
             </fieldset>
 
             <h3>Middle Content</h3>
