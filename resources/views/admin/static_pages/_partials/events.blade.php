@@ -36,6 +36,7 @@
             @endif
             >
         </div>
+        
         <div class="form-group row">
             <div class="col-md-6">
                 <label>Featured Events Title</label>
