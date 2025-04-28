@@ -29,7 +29,6 @@ class Service extends JsonResource
             'meta_keywords' => $this->meta_keywords,
             'bottom_description' => $this->bottom_description,
             'faq' => new FaqCollection($this->faq),
-            'gallery' => new MediaCollection($this->gallery),
             'children' => new ServiceCollection($this->whenLoaded('children'))
         ];
     }
