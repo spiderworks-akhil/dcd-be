@@ -81,6 +81,27 @@
             @endif
         >
     </div>
+
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Button Text</label>
+            <input type="text" name="content[divisions_btn_text]" class="form-control"
+                @if($obj->content && isset($obj->content['divisions_btn_text']))
+                    value="{{ $obj->content['divisions_btn_text'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-6">
+            <label>Button Link</label>
+            <input type="text" name="content[divisions_btn_link]" class="form-control"
+                @if($obj->content && isset($obj->content['divisions_btn_link']))
+                    value="{{ $obj->content['divisions_btn_link'] }}"
+                @endif
+            >
+        </div>
+    </div>
+    
     <div class="form-group col-md-12">
             <a href="{{route('admin.services.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add Divisions </a>
     </div>
@@ -156,7 +177,7 @@
             @endif
         >
     </div>
-        <a href="{{route('admin.news.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add News </a>
+        <a href="{{route('admin.news.index')}}" class="btn btn-sm btn-danger" target="_blank"> Add News </a>
     
     </div>
 </fieldset>
