@@ -29,25 +29,21 @@ class CommonController extends Controller
 
     public function GeneralSettings()
     {
-        $allMenus = Menu::select('position')->where('status', 1)->get();
+        $data = request()->all();
+        $type = !empty($data['language']) ? $data['language'] : "en";
+
+        $allMenus = Menu::where('status', 1)->where('type', $type)->get();
         $formattedMenus = [];
 
         foreach ($allMenus as $menu) {
             $menuId = $menu->id;
             $position = $menu->position;
 
-            $menuResponse = $this->menu($position);
-            $menuData = json_decode($menuResponse->getContent());
-
             $menuItems = MenuItem::where('menu_id', $menuId)
                 ->select('title', 'url')
                 ->get();
 
-
-            $formattedMenus[str_replace(' ', '_', $position)] = array_merge(
-                (array) $menuData->data,
-                $menuItems->toArray()
-            );
+            $formattedMenus[str_replace(' ', '_', $position)] = $menuItems->toArray();
         }
 
         $settings = $this->getSettings();
@@ -57,7 +53,6 @@ class CommonController extends Controller
                 'all_menus' => $formattedMenus,
                 'all_settings' => $settings,
             ],
-
         ]);
     }
 
