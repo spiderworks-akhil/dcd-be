@@ -85,4 +85,21 @@
             <a href="{{route('admin.services.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add Divisions </a>
     </div>
 </fieldset>
+<h3>Social Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[social_title]" class="form-control"
+            @if($obj->content && isset($obj->content['social_title']))
+                value="{{ $obj->content['social_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Small text</label>
+        <textarea name="content[small_text]" class="form-control" rows="5">@if($obj->content && isset($obj->content['small_text'])){{ $obj->content['small_text'] }}@endif</textarea>
+    </div>
+
+   
+</fieldset>
 </div>
