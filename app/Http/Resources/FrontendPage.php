@@ -62,7 +62,6 @@ class FrontendPage extends JsonResource
         if($slug == 'index') {
             return [
                 'sliders' => $this->getSliders(),
-                'featured_divisions' => $this->featuredDivisions(),
                 'rewinds' => $this->getGallery('rewinds-gallery'),
             ];
         }
