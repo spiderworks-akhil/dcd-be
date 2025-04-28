@@ -249,7 +249,6 @@
                                                 </div>
                                             </div>
 
-                                            @if ($obj->id)
 
                                             <div class="card">
                                                 <div class="card-header">
@@ -270,7 +269,6 @@
                                                                 </div>
                                                         </div>
                                                     </div>
-                                            @endif
                                             @fieldshow(blogs-category_id)
                                             <div class="card">
                                                 <div class="card-header">
