@@ -162,6 +162,6 @@ class FrontendPage extends JsonResource
             $out = $out->find(3);
         }
         return $out;
-
+    }
 
 }
