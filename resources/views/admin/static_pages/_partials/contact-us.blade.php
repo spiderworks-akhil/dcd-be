@@ -104,4 +104,91 @@
         </div>
     </fieldset>
 
+
+    <h3>Membership and Volunteer Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Left Side - Image</label>
+        @include('admin.media.set_file', [
+            'name' => 'content[left_image]',
+            'value' => isset($obj->content['left_image']) ? $obj->content['left_image'] : null
+        ])
+    </div>
+    <div class="form-group col-md-12">
+        <label>Left Side - Title</label>
+        <input type="text" name="content[left_title]" class="form-control"
+            @if($obj->content && isset($obj->content['left_title']))
+                value="{{ $obj->content['left_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Left Side - Description</label>
+        <textarea name="content[left_description]" class="form-control editor">
+            @if($obj->content && isset($obj->content['left_description']))
+                {{ $obj->content['left_description'] }}
+            @endif
+        </textarea>
+    </div>
+    <div class="form-group col-md-12">
+        <label>Left Side - Button Text</label>
+        <input type="text" name="content[left_button_text]" class="form-control"
+            @if($obj->content && isset($obj->content['left_button_text']))
+                value="{{ $obj->content['left_button_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Left Side - Button Link</label>
+        <input type="text" name="content[left_button_link]" class="form-control"
+            @if($obj->content && isset($obj->content['left_button_link']))
+                value="{{ $obj->content['left_button_link'] }}"
+            @endif
+        >
+    </div>
+
+    <hr>
+
+    <div class="form-group col-md-12">
+        <label>Right Side - Image</label>
+        @include('admin.media.set_file', [
+            'name' => 'content[right_image]',
+            'value' => isset($obj->content['right_image']) ? $obj->content['right_image'] : null
+        ])
+    </div>
+    <div class="form-group col-md-12">
+        <label>Right Side - Title</label>
+        <input type="text" name="content[right_title]" class="form-control"
+            @if($obj->content && isset($obj->content['right_title']))
+                value="{{ $obj->content['right_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Right Side - Description</label>
+        <textarea name="content[right_description]" class="form-control editor">
+            @if($obj->content && isset($obj->content['right_description']))
+                {{ $obj->content['right_description'] }}
+            @endif
+        </textarea>
+    </div>
+    <div class="form-group col-md-12">
+        <label>Right Side - Button Text</label>
+        <input type="text" name="content[right_button_text]" class="form-control"
+            @if($obj->content && isset($obj->content['right_button_text']))
+                value="{{ $obj->content['right_button_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Right Side - Button Link</label>
+        <input type="text" name="content[right_button_link]" class="form-control"
+            @if($obj->content && isset($obj->content['right_button_link']))
+                value="{{ $obj->content['right_button_link'] }}"
+            @endif
+        >
+    </div>
+</fieldset>
+
+
 </div>
