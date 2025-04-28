@@ -64,6 +64,7 @@ class FrontendPage extends JsonResource
                 'sliders' => $this->getSliders(),
                 'featured_divisions' => $this->featuredDivisions(),
                 'rewinds' => $this->getGallery('rewinds-gallery'),
+                'featured_news' => $this->featuredNews(),
             ];
         }
         if ($slug == 'header') {
@@ -184,5 +185,20 @@ class FrontendPage extends JsonResource
         return new ServiceCollection($out);
         
     }
+
+    private function featuredNews()
+    {
+        $language = request()->language ?? 'en';
+
+        $out = new \App\Models\News();
+        if ($language == 'en') {
+            $out->where('is_featured', 1)->where('type', 'en')->get();
+        } else if ($language == 'ar') {
+            $out->where('is_featured', 1)->where('type', 'ar')->get();
+        }
+        $out = $out->get();
+        return new NewsListingCollection($out);
+    }
+    
 
 }
