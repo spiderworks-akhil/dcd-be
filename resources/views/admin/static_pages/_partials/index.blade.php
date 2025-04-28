@@ -52,6 +52,7 @@
             @endif
         >
     </div>
+    <div class="row">
     <div class="form-group col-md-6">
         <label>Button Text</label>
         <input type="text" name="content[btn_text]" class="form-control"
@@ -67,6 +68,7 @@
                 value="{{ $obj->content['btn_link'] }}"
             @endif
         >
+    </div>
     </div>
 </fieldset>
 <h3>Divisions Section</h3>
