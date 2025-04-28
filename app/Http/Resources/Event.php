@@ -29,6 +29,7 @@ class Event extends JsonResource
             'content' => $this->content,
             'category' => new Category($this->category),
             'location' => $this->location,
+            'website_link_text' => $this->website_link_text,
             'website_link' => $this->website_link,
             'result' => $this->result,
         ], $this->getParentCategory(), [
