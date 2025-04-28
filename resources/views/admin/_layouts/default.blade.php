@@ -114,9 +114,9 @@
             .item-meida img{
                 width: 200px;
             }
-             .card:has(#og_image_id) {
+             /* .card:has(#og_image_id) {
                 display: none;
-            }
+            } */
             div.form-group:has(#extra_js) {
             display: none;
             } 

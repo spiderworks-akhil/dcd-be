@@ -44,7 +44,13 @@ class ServiceController extends Controller
     }
     
     protected function getCollection() {
-        return $this->model->select('id', 'name', 'slug', 'parent_id', 'title', 'priority', 'status', 'created_at', 'updated_at');
+        $type = request()->get('type');
+
+        if ($type) {
+            return $this->model->select('id', 'name', 'slug', 'parent_id', 'title', 'priority', 'status', 'created_at', 'updated_at')->where('type', $type);
+        } else {
+            return $this->model->select('id', 'name', 'slug', 'parent_id', 'title', 'priority', 'status', 'created_at', 'updated_at');
+        }
     }
 
     protected function setDTData($collection) {
