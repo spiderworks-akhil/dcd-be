@@ -19,7 +19,7 @@ class Service extends JsonResource
             'name' => $this->name,
             'title' => $this->title,
             'slug' => $this->slug,
-            'content' => $this->content,
+            'content' => new FrontendPageContentResource($this->content),
             'bottom_text' => $this->bottom_text,
             'icon_image' => new Media($this->icon_image),
             'featured_image' => new Media($this->featured_image),
