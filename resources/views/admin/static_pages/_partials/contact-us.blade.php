@@ -1,106 +1,107 @@
+<div id="form-vertical" class="form-horizontal form-wizard-wrapper">
 
-        <div id="form-vertical" class="form-horizontal form-wizard-wrapper">
-
-            <h3>Top Content</h3>
-            <fieldset>
-                <div class="form-group col-md-12">
-                    <label>Title</label>
-                    <input type="text" name="content[title_1]" class="form-control"
-                        @if($obj->content && isset($obj->content['title_1']))
-                            value="{{ $obj->content['title_1'] }}"
-                        @endif
-                    >
-                </div>
-                <div class="form-group col-md-12">
-                    <label>Content</label>
-                    <textarea name="content[description_1]" class="form-control editor">
-                        @if($obj->content && isset($obj->content['description_1']))
-                            {{ $obj->content['description_1'] }}
-                        @endif
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    @php
-                        $media_id_1 = ($obj->content && isset($obj->content['media_id_1'])) ? $obj->content['media_id_1'] : null;
-                    @endphp
-                    @include('admin.media.set_file', [
-                        'file' => $media_id_1,
-                        'title' => 'Featured Image',
-                        'popup_type' => 'single_image',
-                        'type' => 'Image',
-                        'holder_attr' => 'content[media_id_1]',
-                        'id' => 'content_image_1',
-                        'display' => 'horizontal'
-                    ])
-                </div>
-            </fieldset>
-
-            <h3>Middle Content</h3>
-            <fieldset>
-                <div class="form-group col-md-12">
-                    <label>Title</label>
-                    <input type="text" name="content[title_2]" class="form-control"
-                        @if($obj->content && isset($obj->content['title_2']))
-                            value="{{ $obj->content['title_2'] }}"
-                        @endif
-                    >
-                </div>
-                <div class="form-group col-md-12">
-                    <label>Content</label>
-                    <textarea name="content[description_2]" class="form-control editor">
-                        @if($obj->content && isset($obj->content['description_2']))
-                            {{ $obj->content['description_2'] }}
-                        @endif
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    @php
-                        $media_id_2 = ($obj->content && isset($obj->content['media_id_2'])) ? $obj->content['media_id_2'] : null;
-                    @endphp
-                    @include('admin.media.set_file', [
-                        'file' => $media_id_2,
-                        'title' => 'Featured Image',
-                        'popup_type' => 'single_image',
-                        'type' => 'Image',
-                        'holder_attr' => 'content[media_id_2]',
-                        'id' => 'content_image_2',
-                        'display' => 'horizontal'
-                    ])
-                </div>
-            </fieldset>
-
-            <h3>Bottom Content</h3>
-            <fieldset>
-                <div class="form-group col-md-12">
-                    <label>Title</label>
-                    <input type="text" name="content[title_3]" class="form-control"
-                        @if($obj->content && isset($obj->content['title_3']))
-                            value="{{ $obj->content['title_3'] }}"
-                        @endif
-                    >
-                </div>
-                <div class="form-group col-md-12">
-                    <label>Content</label>
-                    <textarea name="content[description_3]" class="form-control editor">
-                        @if($obj->content && isset($obj->content['description_3']))
-                            {{ $obj->content['description_3'] }}
-                        @endif
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    @php
-                        $media_id_3 = ($obj->content && isset($obj->content['media_id_3'])) ? $obj->content['media_id_3'] : null;
-                    @endphp
-                    @include('admin.media.set_file', [
-                        'file' => $media_id_3,
-                        'title' => 'Featured Image',
-                        'popup_type' => 'single_image',
-                        'type' => 'Image',
-                        'holder_attr' => 'content[media_id_3]',
-                        'id' => 'content_image_3',
-                        'display' => 'horizontal'
-                    ])
-                </div>
-            </fieldset>
+    <h3>Support Section</h3>
+    <fieldset>
+        <div class="form-group col-md-12">
+            <label>Main Title</label>
+            <input type="text" name="content[support_main_title]" class="form-control"
+                @if($obj->content && isset($obj->content['support_main_title']))
+                    value="{{ $obj->content['support_main_title'] }}"
+                @endif
+            >
         </div>
-        
+        <div class="form-group col-md-12">
+            <label>Sub Title / Description</label>
+            <textarea name="content[support_sub_title]" class="form-control editor">
+                @if($obj->content && isset($obj->content['support_sub_title']))
+                    {{ $obj->content['support_sub_title'] }}
+                @endif
+            </textarea>
+        </div>
+    </fieldset>
+
+    <h3>Email Section</h3>
+    <fieldset>
+        <div class="form-group col-md-12">
+            <label>Email Title</label>
+            <input type="text" name="content[email_title]" class="form-control"
+                @if($obj->content && isset($obj->content['email_title']))
+                    value="{{ $obj->content['email_title'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-12">
+            <label>Email Address</label>
+            <input type="text" name="content[email_address]" class="form-control"
+                @if($obj->content && isset($obj->content['email_address']))
+                    value="{{ $obj->content['email_address'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-12">
+            <label>Email Description</label>
+            <textarea name="content[email_description]" class="form-control editor">
+                @if($obj->content && isset($obj->content['email_description']))
+                    {{ $obj->content['email_description'] }}
+                @endif
+            </textarea>
+        </div>
+    </fieldset>
+
+    <h3>Call Section</h3>
+    <fieldset>
+        <div class="form-group col-md-12">
+            <label>Call Title</label>
+            <input type="text" name="content[call_title]" class="form-control"
+                @if($obj->content && isset($obj->content['call_title']))
+                    value="{{ $obj->content['call_title'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-12">
+            <label>Phone Number</label>
+            <input type="text" name="content[phone_number]" class="form-control"
+                @if($obj->content && isset($obj->content['phone_number']))
+                    value="{{ $obj->content['phone_number'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-12">
+            <label>Call Description</label>
+            <textarea name="content[call_description]" class="form-control editor">
+                @if($obj->content && isset($obj->content['call_description']))
+                    {{ $obj->content['call_description'] }}
+                @endif
+            </textarea>
+        </div>
+    </fieldset>
+
+    <h3>Location Section</h3>
+    <fieldset>
+        <div class="form-group col-md-12">
+            <label>Location Title</label>
+            <input type="text" name="content[location_title]" class="form-control"
+                @if($obj->content && isset($obj->content['location_title']))
+                    value="{{ $obj->content['location_title'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-12">
+            <label>Address</label>
+            <textarea name="content[location_address]" class="form-control editor">
+                @if($obj->content && isset($obj->content['location_address']))
+                    {{ $obj->content['location_address'] }}
+                @endif
+            </textarea>
+        </div>
+        <div class="form-group col-md-12">
+            <label>Google Maps Link</label>
+            <input type="text" name="content[google_maps_link]" class="form-control"
+                @if($obj->content && isset($obj->content['google_maps_link']))
+                    value="{{ $obj->content['google_maps_link'] }}"
+                @endif
+            >
+        </div>
+    </fieldset>
+
+</div>
