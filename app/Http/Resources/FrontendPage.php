@@ -156,7 +156,7 @@ class FrontendPage extends JsonResource
     {
         $language = request()->language ?? 'en';
 
-        $out = \App\Models\Slider::where('status', 1);
+        $out = new \App\Models\Slider();
         if ($language == 'en') {
             $out = $out->find(2);
         } else {
