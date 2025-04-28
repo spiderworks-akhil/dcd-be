@@ -117,8 +117,8 @@
             'title' => 'Left Side Image',
             'popup_type' => 'single_image',
             'type' => 'Image',
-            'holder_attr' => 'content[left_image]',
-            'id' => 'left_image',
+            'holder_attr' => 'content[left_image_id]',
+            'id' => 'left_image_id',
             'display' => 'horizontal'
         ])
     </div>
@@ -167,8 +167,8 @@
             'title' => 'Right Side Image',
             'popup_type' => 'single_image',
             'type' => 'Image',
-            'holder_attr' => 'content[right_image]',
-            'id' => 'right_image',
+            'holder_attr' => 'content[right_image_id]',
+            'id' => 'right_image_id',
             'display' => 'horizontal'
         ])
     </div>
