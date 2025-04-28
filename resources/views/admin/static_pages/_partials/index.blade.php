@@ -13,7 +13,7 @@
     </div>
 </fieldset>
 
-<h3>inspiring stories</h3>
+<h3>Inspiring Stories</h3>
 <fieldset>
     <div class="form-group col-md-12">
         <label>Title</label>
