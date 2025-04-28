@@ -62,6 +62,8 @@ class FrontendPage extends JsonResource
         if($slug == 'index') {
             return [
                 'sliders' => $this->getSliders(),
+                'featured_divisions' => $this->featuredDivisions(),
+                'rewinds' => $this->getGallery('rewinds-gallery'),
             ];
         }
         if ($slug == 'header') {
@@ -167,6 +169,20 @@ class FrontendPage extends JsonResource
             $out = $out->find(2);
         }
         return new Slider($out);
+    }
+    private function featuredDivisions()
+    {
+        $language = request()->language ?? 'en';
+
+        $out = new \App\Models\Service();
+        if ($language == 'en') {
+            $out->where('featured', 1)->where('type', 'en')->get();
+        } else if ($language == 'ar') {
+            $out->where('featured', 1)->where('type', 'ar')->get();
+        }
+        $out = $out->get();
+        return new ServiceCollection($out);
+        
     }
 
 }
