@@ -48,7 +48,6 @@ class CommonController extends Controller
 
                 $formattedMenus[str_replace(' ', '_', $position)] = array_merge(
                     (array) $menuData->data,
-                    $menuItems->toArray()
                 );
         }
 
