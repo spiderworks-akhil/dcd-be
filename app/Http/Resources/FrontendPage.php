@@ -56,7 +56,8 @@ class FrontendPage extends JsonResource
         if($slug == 'events') {
             return [
                 'rewinds' => $this->getGallery('rewinds-gallery'),
-                'upcoming_event' => $this->upcoming_event()
+                'upcoming_event' => $this->upcoming_event(),
+                'sliders' => $this->getSliders(),
             ];
         }
         if ($slug == 'header') {
