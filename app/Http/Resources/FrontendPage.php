@@ -162,7 +162,7 @@ class FrontendPage extends JsonResource
         } else if ($language == 'ar') {
             $out = $out->find(3);
         }
-        return $out;
+        return new Slider($out);
     }
 
 }
