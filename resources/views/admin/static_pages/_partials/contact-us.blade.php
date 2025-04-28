@@ -109,9 +109,17 @@
 <fieldset>
     <div class="form-group col-md-12">
         <label>Left Side - Image</label>
+        @php
+            $left_image = ($obj->content && isset($obj->content['left_image'])) ? $obj->content['left_image'] : null;
+        @endphp
         @include('admin.media.set_file', [
-            'name' => 'content[left_image]',
-            'value' => isset($obj->content['left_image']) ? $obj->content['left_image'] : null
+            'file' => $left_image,
+            'title' => 'Left Side Image',
+            'popup_type' => 'single_image',
+            'type' => 'Image',
+            'holder_attr' => 'content[left_image]',
+            'id' => 'left_image',
+            'display' => 'horizontal'
         ])
     </div>
     <div class="form-group col-md-12">
@@ -151,9 +159,17 @@
 
     <div class="form-group col-md-12">
         <label>Right Side - Image</label>
+        @php
+            $right_image = ($obj->content && isset($obj->content['right_image'])) ? $obj->content['right_image'] : null;
+        @endphp
         @include('admin.media.set_file', [
-            'name' => 'content[right_image]',
-            'value' => isset($obj->content['right_image']) ? $obj->content['right_image'] : null
+            'file' => $right_image,
+            'title' => 'Right Side Image',
+            'popup_type' => 'single_image',
+            'type' => 'Image',
+            'holder_attr' => 'content[right_image]',
+            'id' => 'right_image',
+            'display' => 'horizontal'
         ])
     </div>
     <div class="form-group col-md-12">
