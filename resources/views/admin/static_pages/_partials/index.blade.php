@@ -126,4 +126,38 @@
         @endif
     </div>
 </fieldset>
+<h3>News Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[news_title]" class="form-control"
+            @if($obj->content && isset($obj->content['news_title']))
+                value="{{ $obj->content['news_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Description</label>
+        <textarea name="content[news_description]" class="form-control" rows="5">@if($obj->content && isset($obj->content['news_description'])){{ $obj->content['news_description'] }}@endif</textarea>
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Text</label>
+        <input type="text" name="content[news_btn_text]" class="form-control"
+            @if($obj->content && isset($obj->content['news_btn_text']))
+                value="{{ $obj->content['news_btn_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Link</label>
+        <input type="text" name="content[news_btn_link]" class="form-control"
+            @if($obj->content && isset($obj->content['news_btn_link']))
+                value="{{ $obj->content['news_btn_link'] }}"
+            @endif
+        >
+    </div>
+        <a href="{{route('admin.news.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add News </a>
+    
+    </div>
+</fieldset>
 </div>

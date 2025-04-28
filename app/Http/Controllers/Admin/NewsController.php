@@ -46,6 +46,10 @@ class NewsController extends Controller
     }
 
     protected function getCollection() {
+        $type = request()->query('type');
+        if ($type) {
+            $this->model = $this->model->where('type', $type);
+        }
         return $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
     }
 
