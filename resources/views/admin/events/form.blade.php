@@ -478,6 +478,14 @@
                                                     @include('admin.media.set_file', ['file'=>$obj->logo_image, 'title'=>'Logo Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'logo_image_id'])
                                                 </div>
                                             </div>
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Video
+                                                </div>
+                                                <div class="card-body">
+                                                    @include('admin.media.set_file', ['file'=>$obj->video, 'title'=>'Video', 'popup_type'=>'single_video', 'type'=>'Video', 'holder_attr'=>'video_id'])
+                                                </div>
+                                            </div>
 
                                             @fieldshow(events-banner_image_id)
                                             <div class="card">

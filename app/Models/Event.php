@@ -42,6 +42,10 @@ class Event extends Model
     {
         return $this->belongsTo(Media::class, 'logo_image_id');
     }
+    public function video()
+    {
+        return $this->belongsTo(Media::class, 'video_id');
+    }
     
 
 }

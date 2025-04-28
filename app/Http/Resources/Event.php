@@ -26,6 +26,7 @@ class Event extends JsonResource
             'end_time' => $this->end_time,
             'featured_image' => new Media($this->featured_image),
             'banner_image' => new Media($this->banner_image),
+            'video'=> new Media($this->video),
             'content' => $this->content,
             'category' => new Category($this->category),
             'location' => $this->location,

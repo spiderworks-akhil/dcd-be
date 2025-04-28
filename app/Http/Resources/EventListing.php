@@ -25,6 +25,7 @@ class EventListing extends JsonResource
             'location' => $this->location,
             'featured_image' => new Media($this->featured_image),
             'logo_image' => new Media($this->logo_image),
+            'video'=> new Media($this->video),
             'banner_image' => new Media($this->banner_image),
         ];
     }
