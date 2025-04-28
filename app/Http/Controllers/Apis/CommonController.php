@@ -20,10 +20,48 @@ use App\Http\Resources\WidgetResource;
 use App\Http\Resources\CommonPageResource;
 use App\Http\Resources\Lead as LeadResource;
 use App\Http\Resources\FrontendPage as ResourcesFrontendPage;
+use App\Models\Menu;
+use App\Models\MenuItem;
 
 class CommonController extends Controller
 {
     use App;
+
+    public function GeneralSettings()
+    {
+        $allMenus = Menu::select('position')->where('status', 1)->get();
+        $formattedMenus = [];
+
+        foreach ($allMenus as $menu) {
+            $menuId = $menu->id;
+            $position = $menu->position;
+
+            $menuResponse = $this->menu($position);
+            $menuData = json_decode($menuResponse->getContent());
+
+            $menuItems = MenuItem::where('menu_id', $menuId)
+                ->select('title', 'url')
+                ->get();
+
+
+            $formattedMenus[str_replace(' ', '_', $position)] = array_merge(
+                (array) $menuData->data,
+                $menuItems->toArray()
+            );
+        }
+
+        $settings = $this->getSettings();
+
+        return response()->json([
+            'data' => [
+                'all_menus' => $formattedMenus,
+                'project_mega_menu' => $this->project_mega_menu(),
+                'all_settings' => $settings,
+            ],
+
+        ]);
+    }
+
     public function menu($position){
         return response()->json(['data' => $this->getMenu($position)]);
     }

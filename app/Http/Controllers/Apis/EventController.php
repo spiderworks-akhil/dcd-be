@@ -78,6 +78,7 @@ class EventController extends Controller
 
             $event->related_events = Event::where('id', '!=', $event->id)
                 ->where('category_id', $event->category_id)
+                ->where('status', 1)
                 ->where('type', $type)
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
@@ -85,6 +86,7 @@ class EventController extends Controller
             $event->must_attend = Event::where('id', '!=', $event->id)
                 ->where('type', $type)
                 ->where('is_must_attend', 1)
+                ->where('status', 1)
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
                 ->get();

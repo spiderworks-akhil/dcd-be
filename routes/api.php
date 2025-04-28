@@ -97,6 +97,8 @@ Route::get('product', [ProductController::class, 'index'])->name('api.product.in
 Route::get('product/{slug}', [ProductController::class, 'view'])->name('api.product.view');
 Route::get('product/images/{id}', [ProductController::class, 'ProductImages'])->name('api.product.images');
 
+Route::get('general-settings', [CommonController::class, 'GeneralSettings'])->name('api.general-settings');
+
 //widgets
 
 Route::get('widget/{code}',[CommonController::class,'widget'])->name('api.widget');
