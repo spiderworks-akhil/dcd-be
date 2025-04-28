@@ -304,6 +304,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('/services/change-status/{id}', [ServiceController::class, 'changeStatus'])->name('admin.services.change-status');
         Route::get('/services/{parent?}', [ServiceController::class, 'index'])->name('admin.services.index');
         Route::get('/services/show/{id}', [ServiceController::class, 'show'])->name('admin.services.show');
+        Route::get('services/get-type', [ServiceController::class, 'GetType'])->name('admin.services.get-type');
 
         //jobs
         Route::get('jobs', [JobController::class, 'index'])->name('admin.jobs.index');
