@@ -40,4 +40,69 @@
         @endif
     </div>
 </fieldset>
+
+<h3>Events Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[events_title]" class="form-control"
+            @if($obj->content && isset($obj->content['events_title']))
+                value="{{ $obj->content['events_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="row">
+    <div class="form-group col-md-6">
+        <label>Button Text</label>
+        <input type="text" name="content[btn_text]" class="form-control"
+            @if($obj->content && isset($obj->content['btn_text']))
+                value="{{ $obj->content['btn_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Link</label>
+        <input type="text" name="content[btn_link]" class="form-control"
+            @if($obj->content && isset($obj->content['btn_link']))
+                value="{{ $obj->content['btn_link'] }}"
+            @endif
+        >
+    </div>
+    </div>
+</fieldset>
+<h3>Divisions Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[divisions_title]" class="form-control"
+            @if($obj->content && isset($obj->content['divisions_title']))
+                value="{{ $obj->content['divisions_title'] }}"
+            @endif
+        >
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Button Text</label>
+            <input type="text" name="content[divisions_btn_text]" class="form-control"
+                @if($obj->content && isset($obj->content['divisions_btn_text']))
+                    value="{{ $obj->content['divisions_btn_text'] }}"
+                @endif
+            >
+        </div>
+        <div class="form-group col-md-6">
+            <label>Button Link</label>
+            <input type="text" name="content[divisions_btn_link]" class="form-control"
+                @if($obj->content && isset($obj->content['divisions_btn_link']))
+                    value="{{ $obj->content['divisions_btn_link'] }}"
+                @endif
+            >
+        </div>
+    </div>
+    
+    <div class="form-group col-md-12">
+            <a href="{{route('admin.services.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add Divisions </a>
+    </div>
+</fieldset>
 </div>
