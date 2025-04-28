@@ -114,12 +114,15 @@
             .item-meida img{
                 width: 200px;
             }
-            /* .card:has(#og_image_id) {
+             .card:has(#og_image_id) {
                 display: none;
             }
             div.form-group:has(#extra_js) {
             display: none;
-            } */
+            } 
+            .card:has(#og_title) {
+                display: none;
+            }
         </style>
 
     </head>
