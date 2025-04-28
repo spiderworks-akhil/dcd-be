@@ -252,7 +252,7 @@
 
                                             <div class="card">
                                                 <div class="card-header">
-                                                    Available Languages
+                                                @if($obj->id) Available @else Select @endif Languages
                                                 </div>
                                                     <div class="card-body">
                                                         <div class="row m-0">
@@ -265,7 +265,10 @@
                                                                             <option value="ar_draft" @if ($obj->type == 'ar_draft') selected @endif>Arabic Draft</option>
                                                                         </select>
                                                                     </div>
+                                                                    @if($obj->id)
+                                                                    
                                                                     <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
+                                                                    @endif
                                                                 </div>
                                                         </div>
                                                     </div>
