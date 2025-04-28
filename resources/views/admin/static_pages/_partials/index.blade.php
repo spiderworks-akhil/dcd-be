@@ -24,6 +24,14 @@
         >
     </div>
     <div class="form-group col-md-12">
+        <label>Main Title</label>
+        <input type="text" name="content[main_title_2]" class="form-control"
+            @if($obj->content && isset($obj->content['main_title_2']))
+                value="{{ $obj->content['main_title_2'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
         @if ($obj->type == 'en')
             <input type="hidden" name="content[story_listing_id]" value="2">
             <a href="{{route('admin.listing-items.index',[2])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
