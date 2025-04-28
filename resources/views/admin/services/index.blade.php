@@ -28,13 +28,13 @@
                             <div class="page-title-box">
                                 <div class="row">
                                     <div class="col">
-                                        <h4 class="page-title">@if($parent_data) Sub-Services of {{$parent_data->name}} @else All Services @endif</h4>
+                                        <h4 class="page-title">@if($parent_data) Sub-Divisions of {{$parent_data->name}} @else All Divisions @endif</h4>
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
                                             @if($parent_data)
                                             <li class="breadcrumb-item"><a href="{{ route($route.'.index', [$parent_data->parent_id]) }}">{{$parent_data->name}}</a></li>
                                             @endif
-                                            <li class="breadcrumb-item active">List Services</li>
+                                            <li class="breadcrumb-item active">List Divisions</li>
                                         </ol>
                                     </div><!--end col-->
                                     @if(auth()->user()->can($permissions['create']))

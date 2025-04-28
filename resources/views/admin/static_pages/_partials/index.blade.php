@@ -42,37 +42,45 @@
     </div>
 </fieldset>
 
-<h3>Bottom Content</h3>
+<h3>Events Section</h3>
 <fieldset>
     <div class="form-group col-md-12">
         <label>Title</label>
-        <input type="text" name="content[title_3]" class="form-control"
-            @if($obj->content && isset($obj->content['title_3']))
-                value="{{ $obj->content['title_3'] }}"
+        <input type="text" name="content[events_title]" class="form-control"
+            @if($obj->content && isset($obj->content['events_title']))
+                value="{{ $obj->content['events_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Text</label>
+        <input type="text" name="content[btn_text]" class="form-control"
+            @if($obj->content && isset($obj->content['btn_text']))
+                value="{{ $obj->content['btn_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Link</label>
+        <input type="text" name="content[btn_link]" class="form-control"
+            @if($obj->content && isset($obj->content['btn_link']))
+                value="{{ $obj->content['btn_link'] }}"
+            @endif
+        >
+    </div>
+</fieldset>
+<h3>Divisions Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[divisions_title]" class="form-control"
+            @if($obj->content && isset($obj->content['divisions_title']))
+                value="{{ $obj->content['divisions_title'] }}"
             @endif
         >
     </div>
     <div class="form-group col-md-12">
-        <label>Content</label>
-        <textarea name="content[description_3]" class="form-control editor">
-            @if($obj->content && isset($obj->content['description_3']))
-                {{ $obj->content['description_3'] }}
-            @endif
-        </textarea>
-    </div>
-    <div class="form-group">
-        @php
-            $media_id_3 = ($obj->content && isset($obj->content['media_id_3'])) ? $obj->content['media_id_3'] : null;
-        @endphp
-        @include('admin.media.set_file', [
-            'file' => $media_id_3,
-            'title' => 'Featured Image',
-            'popup_type' => 'single_image',
-            'type' => 'Image',
-            'holder_attr' => 'content[media_id_3]',
-            'id' => 'content_image_3',
-            'display' => 'horizontal'
-        ])
+            <a href="{{route('admin.services.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add Divisions </a>
     </div>
 </fieldset>
 </div>

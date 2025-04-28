@@ -29,13 +29,13 @@
                                 <div class="row">
                                     <div class="col">
                                         @if($obj->id)
-                                            <h4 class="page-title">Edit Service</h4>
+                                            <h4 class="page-title">Edit Division</h4>
                                         @else
-                                            <h4 class="page-title">Create new Service</h4>
+                                            <h4 class="page-title">Create new Division</h4>
                                         @endif
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
-                                            <li class="breadcrumb-item"><a href="{{route($route.'.index', [$parent])}}">All Services</a></li>
+                                            <li class="breadcrumb-item"><a href="{{route($route.'.index', [$parent])}}">All Division</a></li>
                                             <li class="breadcrumb-item active">@if($obj->id)Edit @else Create new @endif Page</li>
                                         </ol>
                                     </div><!--end col-->
