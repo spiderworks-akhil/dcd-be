@@ -102,4 +102,28 @@
 
    
 </fieldset>
+<h3>Awards Section</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[awards_title]" class="form-control"
+            @if($obj->content && isset($obj->content['awards_title']))
+                value="{{ $obj->content['awards_title'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-12">
+        <label>Description</label>
+        <textarea name="content[awards_description]" class="form-control" rows="5">@if($obj->content && isset($obj->content['awards_description'])){{ $obj->content['awards_description'] }}@endif</textarea>
+    </div>
+    <div class="form-group col-md-12">
+        @if ($obj->type == 'en')
+            <input type="hidden" name="content[awards_listing_id]" value="4">
+            <a href="{{route('admin.awards.index',[4])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
+        @else
+            <input type="hidden" name="content[awards_listing_id]" value="5">
+            <a href="{{route('admin.awards.index',[5])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
+        @endif
+    </div>
+</fieldset>
 </div>
