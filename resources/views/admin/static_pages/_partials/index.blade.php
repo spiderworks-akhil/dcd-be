@@ -156,7 +156,7 @@
             @endif
         >
     </div>
-        <a href="{{route('admin.news.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add News </a>
+        <a href="{{route('admin.news.index')}}" class="btn btn-sm btn-danger" target="_blank"> Add News </a>
     
     </div>
 </fieldset>
