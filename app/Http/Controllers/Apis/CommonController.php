@@ -55,7 +55,6 @@ class CommonController extends Controller
         return response()->json([
             'data' => [
                 'all_menus' => $formattedMenus,
-                'project_mega_menu' => $this->project_mega_menu(),
                 'all_settings' => $settings,
             ],
 
