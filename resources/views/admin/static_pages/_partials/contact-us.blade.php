@@ -110,15 +110,15 @@
     <div class="form-group col-md-12">
         <label>Left Side - Image</label>
         @php
-            $left_image = ($obj->content && isset($obj->content['left_image'])) ? $obj->content['left_image'] : null;
+            $media_id_left_image = ($obj->content && isset($obj->content['media_id_left_image'])) ? $obj->content['media_id_left_image'] : null;
         @endphp
         @include('admin.media.set_file', [
-            'file' => $left_image,
+            'file' => $media_id_left_image,
             'title' => 'Left Side Image',
             'popup_type' => 'single_image',
             'type' => 'Image',
-            'holder_attr' => 'content[left_image_id]',
-            'id' => 'left_image_id',
+            'holder_attr' => 'content[media_id_left_image]',
+            'id' => 'media_id_left_image',
             'display' => 'horizontal'
         ])
     </div>
@@ -160,15 +160,15 @@
     <div class="form-group col-md-12">
         <label>Right Side - Image</label>
         @php
-            $right_image = ($obj->content && isset($obj->content['right_image'])) ? $obj->content['right_image'] : null;
+            $media_id_right_image = ($obj->content && isset($obj->content['media_id_right_image'])) ? $obj->content['media_id_right_image'] : null;
         @endphp
         @include('admin.media.set_file', [
-            'file' => $right_image,
+            'file' => $media_id_right_image,
             'title' => 'Right Side Image',
             'popup_type' => 'single_image',
             'type' => 'Image',
-            'holder_attr' => 'content[right_image_id]',
-            'id' => 'right_image_id',
+            'holder_attr' => 'content[media_id_right_image]',
+            'id' => 'media_id_right_image',
             'display' => 'horizontal'
         ])
     </div>
