@@ -6,9 +6,9 @@
  
     <div class="form-group col-md-12">
         @if ($obj->type == 'en')
-            <a href="{{route('admin.sliders.edit',[1])}}" class="btn btn-sm btn-danger" target="_blank"> Add Sliders </a>
+            <a href="{{route('admin.sliders.edit',[encrypt(1)])}}" class="btn btn-sm btn-danger" target="_blank"> Add Sliders </a>
         @else
-            <a href="{{route('admin.sliders.edit',[2])}}" class="btn btn-sm btn-danger" target="_blank"> Add Sliders </a>
+            <a href="{{route('admin.sliders.edit',[encrypt(2)])}}" class="btn btn-sm btn-danger" target="_blank"> Add Sliders </a>
         @endif
     </div>
 </fieldset>
