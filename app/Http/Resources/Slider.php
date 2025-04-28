@@ -18,6 +18,6 @@ class Slider extends JsonResource
             'id' => $this->id,
             'slider_name' => $this->slider_name,
             'media' => new SliderMediaCollection($this->photos),
-        ]
+        ];
     }
 }
