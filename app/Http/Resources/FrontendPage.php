@@ -158,9 +158,9 @@ class FrontendPage extends JsonResource
 
         $out = new \App\Models\Slider();
         if ($language == 'en') {
-            $out = $out->find(2);
+            $out = $out->find(1);
         } else if ($language == 'ar') {
-            $out = $out->find(3);
+            $out = $out->find(2);
         }
         return new Slider($out);
     }
