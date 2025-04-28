@@ -151,5 +151,17 @@ class FrontendPage extends JsonResource
     //     dd($procurement_faq_id);
     // }
 
+    private function getSliders()
+    {
+        $language = request()->language ?? 'en';
+
+        $out = \App\Models\Slider::where('status', 1);
+        if ($language == 'en') {
+            $out = $out->find(2);
+        } else {
+            $out = $out->find(3);
+        }
+        return $out;
+
 
 }
