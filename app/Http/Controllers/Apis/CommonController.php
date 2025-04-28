@@ -39,11 +39,17 @@ class CommonController extends Controller
             $menuId = $menu->id;
             $position = $menu->position;
 
+            $menuResponse = $this->menu($position);
+            $menuData = json_decode($menuResponse->getContent());
+
             $menuItems = MenuItem::where('menu_id', $menuId)
                 ->select('title', 'url')
                 ->get();
 
-            $formattedMenus[str_replace(' ', '_', $position)] = $menuItems->toArray();
+                $formattedMenus[str_replace(' ', '_', $position)] = array_merge(
+                    (array) $menuData->data,
+                    $menuItems->toArray()
+                );
         }
 
         $settings = $this->getSettings();
