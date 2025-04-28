@@ -154,11 +154,11 @@
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label>Website Link</label>
-                                                                <input type="url" name="website_link" class="form-control" value="{{$obj->website_link}}">
+                                                                <input type="text" name="website_link" class="form-control" value="{{$obj->website_link}}">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label>Website Link Text</label>
-                                                                <input type="url" name="website_link_text" class="form-control" value="{{$obj->website_link_text}}">
+                                                                <input type="text" name="website_link_text" class="form-control" value="{{$obj->website_link_text}}">
                                                             </div>
                                                             @fieldshow(events-short_description)
                                                             <div class="form-group col-md-6">
