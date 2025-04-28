@@ -14,6 +14,9 @@ class SliderMedia extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [new Media($this->media)];
+        return [
+            'meta_data' => $this->meta_data,
+            'media'=>new Media($this->media)
+        ];
     }
 }
