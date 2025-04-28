@@ -50,6 +50,9 @@ Route::get('events/featured', [EventController::class, 'featured'])->name('api.e
 Route::get('events/categories', [EventController::class, 'categories'])->name('api.events.categories');
 Route::get('events/{slug}', [EventController::class, 'view'])->name('api.events.view');
 
+Route::get('events-list', [EventController::class, 'slug_list'])->name('api.events.slug_list');
+
+
 
 Route::get('gallery', [GalleryController::class, 'index'])->name('api.gallery.index');
 Route::get('gallery/{slug}', [GalleryController::class, 'view'])->name('api.gallery.view');

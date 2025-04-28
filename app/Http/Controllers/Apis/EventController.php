@@ -125,4 +125,19 @@ class EventController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function slug_list(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $type = !empty($data['language']) ? $data['language'] : "en";
+            $slugs = Event::where('status', 1)
+                ->where('type', $type)
+                ->pluck('slug');
+
+            return response()->json(['slugs' => $slugs], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
