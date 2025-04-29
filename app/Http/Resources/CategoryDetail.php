@@ -22,6 +22,9 @@ class CategoryDetail extends JsonResource
             'short_description' => $this->short_description,
             'featured_image' => new Media($this->featured_image),
         ];
+        if ($this->category_type == 'Event') {
+            $baseData['event_updates'] = $this->getEventUpdates($this->id,$this->name,$this->type);
+        }
 
         if ($this->events) {
             $baseData['events'] = EventListing::collection($this->events);
@@ -46,5 +49,17 @@ class CategoryDetail extends JsonResource
             'short_description' => $gallery->short_description,
             'medias' => new GalleryMediaCollection($gallery->gallery)
         ] : [];
+    }
+
+    private function getEventUpdates($id,$name,$type)
+    {
+        $list_name =  ($type == 'en')? 
+                        'catId:' . $id . ' ' . $name . ' Event Update EN'
+                        :
+                         'catId:' . $id . ' ' . $name . ' Event Update AR';
+
+        $listing = \App\Models\Listing::where('name', $list_name)->first();
+
+        return new ListingResourceCollection($listing->list);
     }
 }
