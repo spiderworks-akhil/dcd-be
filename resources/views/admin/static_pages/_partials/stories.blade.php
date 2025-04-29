@@ -34,14 +34,14 @@
                     ])
                 </div> -->
                 <div class="form-group col-md-12">
-            @if ($obj->type == 'en')
-                <input type="hidden" name="content[story_listing_id]" value="2">
-                <a href="{{route('admin.listing-items.index',[2])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
-            @else
-                    <input type="hidden" name="content[story_listing_id]" value="3">
-                <a href="{{route('admin.listing-items.index',[3])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
-            @endif
-        </div>
+                    @if ($obj->type == 'en')
+                        <input type="hidden" name="content[story_listing_id]" value="2">
+                        <a href="{{route('admin.listing-items.index',[2])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
+                    @else
+                            <input type="hidden" name="content[story_listing_id]" value="3">
+                        <a href="{{route('admin.listing-items.index',[3])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
+                    @endif
+                </div>
             </fieldset>
 
             <h3>Middle Content</h3>
