@@ -57,11 +57,15 @@
         </div>
         
 
-        <div class="form-group">
-            <a href="{{ route('admin.events.index') }}" target="_blank" class="btn btn-primary">
-                <i class="fas fa-arrow-right mr-2"></i>Go to Events Module 
-            </a>
-        </div>
+        <div class="form-group col-md-12">
+        @if ($obj->type == 'en')
+            <input type="hidden" name="content[event_updates_listing_id]" value="6">
+            <a href="{{route('admin.listing-items.index',[6])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
+        @else
+                <input type="hidden" name="content[event_updates_listing_id]" value="7">
+            <a href="{{route('admin.listing-items.index',[7])}}" class="btn btn-sm btn-danger" target="_blank" >  Add Event Updates  </a>
+        @endif
+    </div>
 
     </fieldset>
     <h3>Rewinds Gallery</h3>
