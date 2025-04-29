@@ -33,14 +33,13 @@ class CommonController extends Controller
         $type = !empty($data['language']) ? $data['language'] : "en";
 
         $allMenus = Menu::where('status', 1)->where('type', $type)->get();
-        return $allMenus ;
         $formattedMenus = [];
 
         foreach ($allMenus as $menu) {
             $menuId = $menu->id;
             $position = $menu->position;
 
-            $menuResponse = $this->menu($position);
+            $menuResponse = $this->menu($position, $menuId);
             $menuData = json_decode($menuResponse->getContent());
 
             $menuItems = MenuItem::where('menu_id', $menuId)
@@ -62,8 +61,8 @@ class CommonController extends Controller
         ]);
     }
 
-    public function menu($position){
-        return response()->json(['data' => $this->getMenu($position)]);
+    public function menu($position,$menuId){
+        return response()->json(['data' => $this->getMenu($position,$menuId)]);
     }
 
     public function settings(){

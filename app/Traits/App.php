@@ -25,8 +25,8 @@ trait App {
         return $common_settings;
     }
 
-    protected function getMenu($menu_position){
-        $menu = SiteMenu::where('position', $menu_position)->first();
+    protected function getMenu($menu_position,$menuId){
+        $menu = SiteMenu::where('position', $menu_position)->where('id',$menuId)->first();
         if(!$menu)
             return response()->json(['error' => 'Oops, something wrong happend.'], 400);
 
