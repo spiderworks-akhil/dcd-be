@@ -123,7 +123,7 @@
                                                             @if($listing->logo == "Yes")
                                                             <div class="form-group col-md-12" >
                                                                 <label>Logo</label>
-                                                                @include('admin.media.set_file', ['file'=>$obj->media, 'title'=>'Media Files', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'logo_id'])
+                                                                @include('admin.media.set_file', ['file'=>$obj->logo, 'title'=>'Media Files', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'logo_id'])
                                                             </div>
                                                             @endif
 
