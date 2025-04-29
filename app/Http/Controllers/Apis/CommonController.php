@@ -33,6 +33,7 @@ class CommonController extends Controller
         $type = !empty($data['language']) ? $data['language'] : "en";
 
         $allMenus = Menu::where('status', 1)->where('type', $type)->get();
+        return $allMenus ;
         $formattedMenus = [];
 
         foreach ($allMenus as $menu) {
