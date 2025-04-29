@@ -120,8 +120,7 @@
                                                             @endfieldshow
                                                             @if($obj->id)
                                                             @if($obj->type == 'en')
-                                                            $list_name = $obj->name.' Event Update EN';
-                                                
+                                                            $list_name = $obj->name.' Event Update EN';                     
                                                                 <a href="{{route('admin.dynamic-listing.create',[$list_name,'title'=>'Yes','image'=>'Yes','short_description'=>'Yes','url'=>'Yes'])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
                                                             @else
                                                             $list_name = $obj->name.' Event Update AR';
