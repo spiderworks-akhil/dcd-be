@@ -20,6 +20,7 @@ class ListingResource extends JsonResource
             'banner_image' => new Media($this->banner_image),
             'logo_image' => new Media($this->logo),
             'icon' => $this->icon,
+            'short_title' => $this->short_title,
             'title' => $this->title,
             'short_description' => $this->short_description,
             'detailed_description' => $this->detailed_description,
