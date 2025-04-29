@@ -118,6 +118,15 @@
                                                                 <textarea name="short_description" class="form-control" rows="2" id="short_description">{{$obj->short_description}}</textarea>
                                                             </div>
                                                             @endfieldshow
+                                                            @if($obj->id)
+                                                            @if($obj->type == 'en')
+                                                            $list_name = $obj->name.' Event Update EN';
+                                                
+                                                                <a href="{{route('admin.dynamic-listing.create',[$list_name,'title'=>'Yes','image'=>'Yes','short_description'=>'Yes','url'=>'Yes'])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
+                                                            @else
+                                                            $list_name = $obj->name.' Event Update AR';
+                                                                <a href="{{route('admin.dynamic-listing.create',[$list_name,'title'=>'Yes','image'=>'Yes','short_description'=>'Yes','url'=>'Yes'])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
+                                                            @endif
                                                             @fieldshow(categories-content)
                                                             <div class="form-group col-md-12">
                                                                 <label>Content</label>

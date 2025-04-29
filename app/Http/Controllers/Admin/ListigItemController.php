@@ -94,4 +94,47 @@ class ListigItemController extends Controller
         return $this->_update($id, $request->all());
     }
 
+    public function dynamic_create($listing_name, Request $request) {
+        $listing = Listing::where('name', $listing_name)->first();
+
+        if (!$listing) {
+            $listing = new Listing();
+            $data = $this->process_list_item($request);
+            $data['name'] = $listing_name;
+            $listing->fill($data);
+            $listing->save();
+        }
+
+        return Redirect::route('admin.listing-items.index', [$listing->id]);
+    }
+
+    private function process_list_item($request)
+    {
+        $fields = [
+            'title',
+            'short_title',
+            'short_description',
+            'detailed_description',
+            'extra_description',
+            'icon',
+            'image',
+            'banner',
+            'logo',
+            'date',
+            'url_title',
+            'url',
+            'author_id',
+        ];
+
+        $data = [];
+
+        foreach ($fields as $field) {
+            $value = $request->input($field) === 'Yes' ? 'Yes' : 'No';
+            $data[$field] = $value;
+        }
+
+        return $data;
+    }
+
+
 }

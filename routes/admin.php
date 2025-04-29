@@ -471,6 +471,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('/listing-items/store', [ListigItemController::class, 'store'])->name('admin.listing-items.store');
         Route::get('/listing-items/{listing_id}', [ListigItemController::class, 'index'])->name('admin.listing-items.index');
 
+        Route::get('/dynamic-listing/{listing_name}', [ListigItemController::class, 'dynamic_create'])->name('admin.dynamic-listing.create');
+
+
          //tags
          Route::get('tags', [TagController::class, 'index'])->name('admin.tags.index');
          Route::get('tags/create', [TagController::class, 'create'])->name('admin.tags.create');
@@ -503,6 +506,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('authors/store', [AuthorController::class, 'store'])->name('admin.authors.store');
         Route::post('authors/update', [AuthorController::class, 'update'])->name('admin.authors.update');
         Route::get('authors/show/{id}', [AuthorController::class, 'show'])->name('admin.authors.show');
+
+
+
 	});
 
 
