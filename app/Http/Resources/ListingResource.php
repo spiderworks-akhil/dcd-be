@@ -17,6 +17,7 @@ class ListingResource extends JsonResource
         return [
             'meida_type' => $this->meida_type,
             'media_id' => new Media($this->media),
+            'alt_image' => new Media($this->altImage),
             'banner_image' => new Media($this->banner_image),
             'logo_image' => new Media($this->logo),
             'icon' => $this->icon,

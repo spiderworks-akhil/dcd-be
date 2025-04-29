@@ -108,6 +108,12 @@
                                                                 @include('admin.media.set_file', ['file'=>$obj->media, 'title'=>'Media Files', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'media_id'])
                                                             </div>
                                                             @endif
+                                                            @if($listing->alt_image == "Yes")
+                                                            <div class="form-group col-md-12" >
+                                                                <label>Alt Image</label>
+                                                                @include('admin.media.set_file', ['file'=>$obj->altImage, 'title'=>'Media Files', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'alt_image_id'])
+                                                            </div>
+                                                            @endif
                                                             @if($listing->banner == "Yes")
                                                             <div class="form-group col-md-12" >
                                                                 <label>Banner Image</label>
