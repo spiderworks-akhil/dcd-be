@@ -19,7 +19,7 @@
                         @endif
                     </textarea>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     @php
                         $media_id_1 = ($obj->content && isset($obj->content['media_id_1'])) ? $obj->content['media_id_1'] : null;
                     @endphp
@@ -32,7 +32,16 @@
                         'id' => 'content_image_1',
                         'display' => 'horizontal'
                     ])
-                </div>
+                </div> -->
+                <div class="form-group col-md-12">
+            @if ($obj->type == 'en')
+                <input type="hidden" name="content[story_listing_id]" value="2">
+                <a href="{{route('admin.listing-items.index',[2])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
+            @else
+                    <input type="hidden" name="content[story_listing_id]" value="3">
+                <a href="{{route('admin.listing-items.index',[3])}}" class="btn btn-sm btn-danger" target="_blank" > Add Stories  </a>
+            @endif
+        </div>
             </fieldset>
 
             <h3>Middle Content</h3>
