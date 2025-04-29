@@ -21,6 +21,10 @@ class ListingContent extends Model
     {
         return $this->belongsTo(Media::class, 'media_id');
     }
+    public function banner_image(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'banner_image_id');
+    }
 
     public function logo():BelongsTo
     {

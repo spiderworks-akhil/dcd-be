@@ -25,6 +25,7 @@ class Event extends JsonResource
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'featured_image' => new Media($this->featured_image),
+            'logo_image' => new Media($this->logo_image),
             'banner_image' => new Media($this->banner_image),
             'video'=> new Media($this->video),
             'content' => $this->content,
@@ -33,6 +34,7 @@ class Event extends JsonResource
             'website_link_text' => $this->website_link_text,
             'website_link' => $this->website_link,
             'result' => $this->result,
+            'result_link' => $this->result_link,
         ], $this->getParentCategory(), [
             'is_scheduled' => $this->is_scheduled,
             'schedules' => $this->formatSchedules($schedule),

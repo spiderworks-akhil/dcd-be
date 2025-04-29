@@ -149,8 +149,12 @@
                                                             </div>
                                                             @endfieldshow
                                                             <div class="form-group col-md-6">
-                                                                <label>Result</label>
+                                                                <label>Result Text</label>
                                                                 <input type="text" name="result" class="form-control" value="{{$obj->result}}">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label>Result Link</label>
+                                                                <input type="text" name="result_link" class="form-control" value="{{$obj->result_link}}">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label>Website Link</label>
