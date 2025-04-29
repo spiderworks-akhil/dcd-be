@@ -67,9 +67,9 @@
           </div>
           <div class="form-group col-md-6">
               <label for="name">Banner Image</label>
-              <select class="form-control" name="banner_image">
-                <option value="No" @if($obj->banner_image == "No") selected="selected" @endif >No</option>
-                <option value="Yes" @if($obj->banner_image == "Yes") selected="selected" @endif>Yes</option>
+              <select class="form-control" name="banner">
+                <option value="No" @if($obj->banner == "No") selected="selected" @endif >No</option>
+                <option value="Yes" @if($obj->banner == "Yes") selected="selected" @endif>Yes</option>
               </select>
           </div>
 
