@@ -67,7 +67,7 @@
           </div>
           <div class="form-group col-md-6">
               <label for="name">Alt Image</label>
-              <select class="form-control" name="image">
+              <select class="form-control" name="alt_image">
                 <option value="No" @if($obj->alt_image == "No") selected="selected" @endif >No</option>
                 <option value="Yes" @if($obj->alt_image == "Yes") selected="selected" @endif>Yes</option>
               </select>
