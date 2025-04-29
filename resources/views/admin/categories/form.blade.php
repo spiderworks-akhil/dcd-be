@@ -124,7 +124,7 @@
                                                                <?php  $list_name = 'catId:'.$obj->id.' '.$obj->name.' Event Update EN'; ?>                    
                                                                     <a href="{{route('admin.dynamic-listing.create',[$list_name,'title'=>'Yes','image'=>'Yes','short_description'=>'Yes','url'=>'Yes'])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
                                                                 @else
-                                                                <?php $list_name = 'catId:'.$obj->id.' '.' Event Update AR'; ?>
+                                                                <?php $list_name = 'catId:'.$obj->id.' '.$obj->name.' Event Update AR'; ?>
                                                                     <a href="{{route('admin.dynamic-listing.create',[$list_name,'title'=>'Yes','image'=>'Yes','short_description'=>'Yes','url'=>'Yes'])}}" class="btn btn-sm btn-danger" target="_blank" > Add Event Updates</a>
                                                                 @endif
                                                             </div>
