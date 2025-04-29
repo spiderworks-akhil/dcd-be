@@ -226,6 +226,20 @@
                     'display' => 'horizontal'
                 ])
             </div>
+            <div class="form-group">
+                @php
+                    $media = $obj->content['media_id_history_block_2'] ?? null;
+                @endphp
+                @include('admin.media.set_file', [
+                    'file' => $media,
+                    'title' => 'Additional History Image',
+                    'popup_type' => 'single_image',
+                    'type' => 'Image',
+                    'holder_attr' => 'content[media_id_history_block_2]',
+                    'id' => 'content_image_history_block_2',
+                    'display' => 'horizontal'
+                ])
+            </div>
         </fieldset>
 
         {{-- Vision Block --}}
@@ -298,9 +312,145 @@
                     'display' => 'horizontal'
                 ])
             </div>
+            <div class="form-group col-md-12">
+                @if ($obj->type == 'en')
+                    <input type="hidden" name="content[about_activities_listing_id]" value="13">
+                    <a href="{{route('admin.listing-items.index',[13])}}" class="btn btn-sm btn-danger" target="_blank" > Add Activities</a>
+                @else
+                        <input type="hidden" name="content[about_activities_listing_id]" value="14">
+                    <a href="{{route('admin.listing-items.index',[14])}}" class="btn btn-sm btn-danger" target="_blank" >  Add Activities  </a>
+                @endif
+            </div>
         </fieldset>
 
         {{-- Activities Block 2 --}}
-         
+
+        {{-- Sports Block --}}
+        <h3>Sports Block</h3>
+        <fieldset>
+            <div class="form-group col-md-12">
+                <label>Title</label>
+                <input type="text" name="content[title_sports_block]" class="form-control"
+                    @if($obj->content && isset($obj->content['title_sports_block']))
+                        value="{{ $obj->content['title_sports_block'] }}"
+                    @endif
+                >
+            </div>
+
+            <div class="form-group col-md-12">
+                <label>Content</label>
+                <textarea name="content[description_sports_block]" class="form-control editor">
+                    @if($obj->content && isset($obj->content['description_sports_block']))
+                        {{ $obj->content['description_sports_block'] }}
+                    @endif
+                </textarea>
+            </div>
+
+            <div class="form-group">
+                @php
+                    $media = $obj->content['media_id_sports_block'] ?? null;
+                @endphp
+                @include('admin.media.set_file', [
+                    'file' => $media,
+                    'title' => 'Sports Image',
+                    'popup_type' => 'single_image',
+                    'type' => 'Image',
+                    'holder_attr' => 'content[media_id_sports_block]',
+                    'id' => 'content_image_sports_block',
+                    'display' => 'horizontal'
+                ])
+            </div>
+        </fieldset>
+        <h3>Milestones Block</h3>
+        <fieldset>
+        <div class="form-group col-md-12">
+                @if ($obj->type == 'en')
+                    <input type="hidden" name="content[milestones_listing_id]" value="15">
+                    <a href="{{route('admin.listing-items.index',[15])}}" class="btn btn-sm btn-danger" target="_blank"> Add Milestones</a>
+                @else
+                    <input type="hidden" name="content[milestones_listing_id]" value="16">
+                    <a href="{{route('admin.listing-items.index',[16])}}" class="btn btn-sm btn-danger" target="_blank"> Add Milestones</a>
+                @endif         </div>
+        </fieldset>
+        {{-- Commitment Block --}}
+<h3>Commitment Block</h3>
+<fieldset>
+    <div class="form-group col-md-12">
+        <label>Content</label>
+        <textarea name="content[description_commitment_block]" class="form-control editor">
+            @if($obj->content && isset($obj->content['description_commitment_block']))
+                {{ $obj->content['description_commitment_block'] }}
+            @endif
+        </textarea>
+    </div>
+</fieldset>
+
+{{-- Related Links Block --}}
+<h3>Related Links Block</h3>
+<fieldset>
+    {{-- Chairman Message --}}
+    <div class="form-group col-md-6">
+        <label>Chairman's Message Title</label>
+        <input type="text" name="content[title_chairman_block]" class="form-control"
+            @if($obj->content && isset($obj->content['title_chairman_block']))
+                value="{{ $obj->content['title_chairman_block'] }}"
+            @endif
+        >
+        <label>Description</label>
+        <textarea name="content[description_chairman_block]" class="form-control">
+            @if($obj->content && isset($obj->content['description_chairman_block']))
+                {{ $obj->content['description_chairman_block'] }}
+            @endif
+        </textarea>
+    </div>
+
+    {{-- Executive Director --}}
+    <div class="form-group col-md-6">
+        <label>Executive Director Title</label>
+        <input type="text" name="content[title_director_block]" class="form-control"
+            @if($obj->content && isset($obj->content['title_director_block']))
+                value="{{ $obj->content['title_director_block'] }}"
+            @endif
+        >
+        <label>Description</label>
+        <textarea name="content[description_director_block]" class="form-control">
+            @if($obj->content && isset($obj->content['description_director_block']))
+                {{ $obj->content['description_director_block'] }}
+            @endif
+        </textarea>
+    </div>
+
+    {{-- Board of Members --}}
+    <div class="form-group col-md-6">
+        <label>Board of Members Title</label>
+        <input type="text" name="content[title_board_block]" class="form-control"
+            @if($obj->content && isset($obj->content['title_board_block']))
+                value="{{ $obj->content['title_board_block'] }}"
+            @endif
+        >
+        <label>Description</label>
+        <textarea name="content[description_board_block]" class="form-control">
+            @if($obj->content && isset($obj->content['description_board_block']))
+                {{ $obj->content['description_board_block'] }}
+            @endif
+        </textarea>
+    </div>
+
+    {{-- Divisions --}}
+    <div class="form-group col-md-6">
+        <label>Divisions Title</label>
+        <input type="text" name="content[title_division_block]" class="form-control"
+            @if($obj->content && isset($obj->content['title_division_block']))
+                value="{{ $obj->content['title_division_block'] }}"
+            @endif
+        >
+        <label>Description</label>
+        <textarea name="content[description_division_block]" class="form-control">
+            @if($obj->content && isset($obj->content['description_division_block']))
+                {{ $obj->content['description_division_block'] }}
+            @endif
+        </textarea>
+    </div>
+</fieldset>
         </div>
         
