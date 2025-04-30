@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 class GalleryController extends Controller
 {
     public function index(){
+        $type = request()->language ?? 'en';
+
         $gallery = Gallery::where('status', 1)
+                        ->where('lang_type',$type)
                         ->orderBy('priority')
                         ->get()
                         ->each(function ($gallery) {

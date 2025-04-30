@@ -83,7 +83,9 @@ class FrontendPage extends JsonResource
 
     private function getGallery($slug)
     {
-        $gallery = Gallery::where('slug',$slug)->first();
+        $type = request()->language??'en';
+
+        $gallery = Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
         return new GalleryResource($gallery);
     }
 
