@@ -30,6 +30,22 @@
             @endif
         >
     </div>
+    <div class="form-group col-md-6">
+        <label>Button Text</label>
+        <input type="text" name="content[story_btn_text]" class="form-control"
+            @if($obj->content && isset($obj->content['story_btn_text']))
+                value="{{ $obj->content['story_btn_text'] }}"
+            @endif
+        >
+    </div>
+    <div class="form-group col-md-6">
+        <label>Button Link</label>
+        <input type="text" name="content[story_btn_link]" class="form-control"
+            @if($obj->content && isset($obj->content['story_btn_link']))
+                value="{{ $obj->content['story_btn_link'] }}"
+            @endif
+        >
+    </div>
     <div class="form-group col-md-12">
         @if ($obj->type == 'en')
             <input type="hidden" name="content[story_listing_id]" value="2">
