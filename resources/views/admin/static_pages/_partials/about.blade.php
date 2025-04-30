@@ -25,6 +25,14 @@
             <h3>Journey Block 1</h3>
             <fieldset>
                 <div class="form-group col-md-12">
+                    <label>Sub Title</label>
+                    <input type="text" name="content[sub_title_journey_block_1]" class="form-control"
+                        @if($obj->content && isset($obj->content['sub_title_journey_block_1']))
+                            value="{{ $obj->content['sub_title_journey_block_1'] }}"
+                        @endif
+                    >
+                </div>
+                <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_journey_block_1]" class="form-control"
                         @if($obj->content && isset($obj->content['title_journey_block_1']))
@@ -195,6 +203,14 @@
         <h3>History Block</h3>
         <fieldset>
             <div class="form-group col-md-12">
+                <label>Sub Title</label>
+                <input type="text" name="content[sub_title_history_block]" class="form-control"
+                    @if($obj->content && isset($obj->content['sub_title_history_block']))
+                        value="{{ $obj->content['sub_title_history_block'] }}"
+                    @endif
+                >
+            </div>
+            <div class="form-group col-md-12">
                 <label>Title</label>
                 <input type="text" name="content[title_history_block]" class="form-control"
                     @if($obj->content && isset($obj->content['title_history_block']))
@@ -239,6 +255,14 @@
                     'id' => 'content_image_history_block_2',
                     'display' => 'horizontal'
                 ])
+            </div>
+            <div class="form-group col-md-12">
+                <label>Small Text</label>
+                <input type="text" name="content[small_text_history_block]" class="form-control"
+                    @if($obj->content && isset($obj->content['small_text_history_block']))
+                        value="{{ $obj->content['small_text_history_block'] }}"
+                    @endif
+                >
             </div>
         </fieldset>
 
@@ -363,6 +387,14 @@
         </fieldset>
         <h3>Milestones Block</h3>
         <fieldset>
+            <div class="form-group col-md-12">
+                <label>Sub Title</label>
+                <input type="text" name="content[sub_title_milestones_block]" class="form-control"
+                    @if($obj->content && isset($obj->content['sub_title_milestones_block']))
+                        value="{{ $obj->content['sub_title_milestones_block'] }}"
+                    @endif
+                >
+            </div>
         <div class="form-group col-md-12">
                 @if ($obj->type == 'en')
                     <input type="hidden" name="content[milestones_listing_id]" value="15">
@@ -389,6 +421,14 @@
 <h3>Related Links Block</h3>
 <fieldset>
     {{-- Chairman Message --}}
+    <div class="form-group col-md-6">
+        <label>Sub Title</label>
+        <input type="text" name="content[sub_title_related_links_block]" class="form-control"
+            @if($obj->content && isset($obj->content['sub_title_related_links_block']))
+                value="{{ $obj->content['sub_title_related_links_block'] }}"
+            @endif
+        >
+    </div>
     <div class="form-group col-md-6">
         <label>Chairman's Message Title</label>
         <input type="text" name="content[title_chairman_block]" class="form-control"
