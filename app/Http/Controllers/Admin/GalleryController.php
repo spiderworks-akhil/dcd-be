@@ -186,5 +186,80 @@ class GalleryController extends Controller
 		}
     }
 
+    public function Gettype(Request $request)
+    {
+        $lang_type = $request->query('lang_type');
+        $slug = $request->query('slug');
+        $name = $request->query('name');
+        $currentlang_type = $request->query('currentlang_type');
+
+        if (($currentlang_type == "en_draft" && $lang_type == "en") || ($currentlang_type == "en" && $lang_type == "en_draft")) {
+
+            $draft = Gallery::where('slug', $slug)->where('lang_type', "en_draft")->first();
+            $en = Gallery::where('slug', $slug)->where('lang_type', "en")->first();
+
+            if ($draft && $en) {
+
+                $draft->lang_type = "en";
+                $draft->save();
+
+                $en->lang_type = "en_draft";
+                $en->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        if (($currentlang_type === "ar_draft" && $lang_type === "ar") || ($currentlang_type === "ar" && $lang_type === "ar_draft")) {
+            $draft = Gallery::where('slug', $slug)->where('lang_type', "ar_draft")->first();
+            $ar = Gallery::where('slug', $slug)->where('lang_type', "ar")->first();
+
+            if ($draft && $ar) {
+                $draft->lang_type = "ar";
+                $draft->save();
+
+                $ar->lang_type = "ar_draft";
+                $ar->save();
+
+                return response()->json([
+                    'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($draft->id)])
+                ]);
+            }
+
+        }
+
+        $existingPage = Gallery::where('lang_type', $lang_type)->where('slug', $slug)->first();
+
+        if ($existingPage) {
+            return response()->json([
+                'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($existingPage->id)])
+            ]);
+        } else {
+
+            $existingId = Gallery::where('slug', $slug)->where('lang_type', 'en')->pluck('id')->first();
+
+            if ($existingId) {
+                $page = Gallery::find($existingId);
+
+                if ($page) {
+                    $newPage = $page->replicate();
+                    $newPage->slug = $slug;
+                    $newPage->title = $name;
+                    $newPage->lang_type = $lang_type;
+                    $newPage->save();
+
+                    return response()->json([
+                        'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($newPage->id)])
+                    ]);
+                }
+
+            }
+
+        }
+    }
+
 
 }

@@ -497,6 +497,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::post('galleries/media/update', [GalleryController::class, 'media_update'])->name('admin.galleries.media.update');
          Route::get('galleries/media/destroy/{id}', [GalleryController::class, 'media_destroy'])->name('admin.galleries.media.destroy');
 
+         Route::get('galleries/get-type', [GalleryController::class, 'GetType'])->name('admin.galleries.get-type');
+
+
          //authors
         Route::get('authors', [AuthorController::class, 'index'])->name('admin.authors.index');
         Route::get('authors/create', [AuthorController::class, 'create'])->name('admin.authors.create');
