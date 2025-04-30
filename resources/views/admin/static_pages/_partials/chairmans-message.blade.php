@@ -33,9 +33,25 @@
                         'display' => 'horizontal'
                     ])
                 </div>
+                <div class="form-group col-md-12">
+                    <label>Name</label>
+                    <input type="text" name="content[name]" class="form-control"
+                        @if($obj->content && isset($obj->content['name']))
+                            value="{{ $obj->content['name'] }}"
+                        @endif
+                    >
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Designation</label>
+                    <input type="text" name="content[designation]" class="form-control"
+                        @if($obj->content && isset($obj->content['designation']))
+                            value="{{ $obj->content['designation'] }}"
+                        @endif
+                    >
+                </div>
             </fieldset>
 
-            <h3>Middle Content</h3>
+            <!-- <h3>Middle Content</h3>
             <fieldset>
                 <div class="form-group col-md-12">
                     <label>Title</label>
@@ -101,6 +117,6 @@
                         'display' => 'horizontal'
                     ])
                 </div>
-            </fieldset>
+            </fieldset> -->
         </div>
         

@@ -16,7 +16,7 @@ class TeamController extends Controller
             $type = !empty($data['language']) ? $data['language'] : "en";
             $limit = !empty($data['limit'])?(int)$data['limit']:10;
             $teams = Team::where('status', 1)->where('type', $type);
-            $teams = $teams->orderBy('priority', 'DESC')->paginate($limit);
+            $teams = $teams->orderBy('priority', 'ASC')->paginate($limit);
             return new TeamCollection($teams);
         }
         catch(\Exception $e){
@@ -27,7 +27,7 @@ class TeamController extends Controller
     public function featured(Request $request){
         $data = $request->all();
         $type = !empty($data['language']) ? $data['language'] : "en";
-        $teams = Team::select('name','title','short_description','id','slug','featured_image_id','designation')->where('type', $type)->where('status', 1)->where('is_featured', 1)->orderBy('priority','DESC')->get();
+        $teams = Team::select('name','title','short_description','id','slug','featured_image_id','designation')->where('type', $type)->where('status', 1)->where('is_featured', 1)->orderBy('priority','ASC')->get();
         return new TeamCollection($teams);
     }
 

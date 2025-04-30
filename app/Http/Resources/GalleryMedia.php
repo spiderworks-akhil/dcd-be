@@ -20,6 +20,8 @@ class GalleryMedia extends JsonResource
             'youtube_preview' => $this->youtube_preview,
             'youtube_url' => $this->youtube_url,
             'title' => $this->title,
+            'description' => $this->description,
+            'link' => $this->link,
             'media' => new Media($this->media)
         ];
     }

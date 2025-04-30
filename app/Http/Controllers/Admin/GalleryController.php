@@ -159,6 +159,7 @@ class GalleryController extends Controller
 
             $obj->title = $data['media_title'];
             $obj->description = $data['media_description'];
+            $obj->link = $data['media_link'];
             $obj->save();
 
             $type = "Image-Video";

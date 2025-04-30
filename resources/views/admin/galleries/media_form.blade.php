@@ -43,6 +43,10 @@
                     <label>Description</label>
                     <textarea name="media_description" class="form-control" rows="3" >{{$file->description}}</textarea>
                 </div>
+                <div class="form-group">
+                    <label>Link</label>
+                    <input type="text" name="media_link" class="form-control" value="{{$file->link}}" placeholder="Enter a valid URL">
+                </div>
             </div>
             <div class="col-md-12 text-right">
                 <button type="button" class="btn btn-soft-primary" id="gallery-media-update-form">Save</button> 
