@@ -174,11 +174,7 @@ class FrontendPage extends JsonResource
     private function featuredDivisions()
     {
         $type = request()->language ?? 'en';
-
-        $out = new \App\Models\Service();
-    
-        $out->where('is_featured', 1)->where('type',$type)->get();
-        $out = $out->get();
+        $out = \App\Models\Service::where('is_featured', 1)->where('type',$type)->get();
         return new ServiceCollection($out);
         
     }
