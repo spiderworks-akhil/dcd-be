@@ -345,6 +345,7 @@
                                                                 </div>
                                                         </div>
                                                     </div>
+                                            </div>
                                             @endif
                                             @fieldshow(galleries-category_id)
                                             <div class="card">
