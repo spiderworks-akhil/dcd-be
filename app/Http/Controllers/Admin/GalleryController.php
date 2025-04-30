@@ -207,7 +207,7 @@ class GalleryController extends Controller
                 $en->save();
 
                 return response()->json([
-                    'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($draft->id)])
+                    'redirect_url' => route('admin.galleries.edit', ['id' => encrypt($draft->id)])
                 ]);
             }
 
@@ -225,7 +225,7 @@ class GalleryController extends Controller
                 $ar->save();
 
                 return response()->json([
-                    'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($draft->id)])
+                    'redirect_url' => route('admin.galleries.edit', ['id' => encrypt($draft->id)])
                 ]);
             }
 
@@ -235,7 +235,7 @@ class GalleryController extends Controller
 
         if ($existingPage) {
             return response()->json([
-                'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($existingPage->id)])
+                'redirect_url' => route('admin.galleries.edit', ['id' => encrypt($existingPage->id)])
             ]);
         } else {
 
@@ -252,7 +252,7 @@ class GalleryController extends Controller
                     $newPage->save();
 
                     return response()->json([
-                        'redirect_url' => route('admin.gallerys.edit', ['id' => encrypt($newPage->id)])
+                        'redirect_url' => route('admin.galleries.edit', ['id' => encrypt($newPage->id)])
                     ]);
                 }
 
