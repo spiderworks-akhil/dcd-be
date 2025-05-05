@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Apis;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Category;
 use App\Http\Resources\Gallery as ResourcesGallery;
 use App\Http\Resources\GalleryCollection;
 use App\Http\Resources\GalleryMediaCollection;
@@ -47,5 +48,28 @@ class GalleryController extends Controller
         })->paginate($limit);
 
         return new GalleryMediaCollection($medias);
+    }
+
+    public function categories(Request $request){
+        $type = request()->language ?? 'en';
+
+        $categories = Category::where('status', 1)
+                        ->where('category_type', 'Gallery')
+                        ->where('type',$type)
+                        ->orderBy('priority')
+                        ->get();
+
+        return new GalleryCollection($categories);
+    }
+    public function featured(Request $request){
+        $type = request()->language ?? 'en';
+
+        $gallery = Gallery::where('status', 1)
+                        ->where('lang_type',$type)
+                        ->where('is_featured', 1)
+                        ->orderBy('priority')
+                        ->get();
+
+        return new GalleryCollection($gallery);
     }
 }

@@ -26,6 +26,9 @@ class Category extends JsonResource
         if ($this->events) {
             $baseData['events'] = EventListing::collection($this->events);
         }
+        if ($this->galleries) {
+            $baseData['galleries'] = Gallery::collection($this->galleries);
+        }
 
         return $baseData;
     }

@@ -44,5 +44,9 @@ class Category extends Model
         return $this->belongsTo(Media::class, 'banner_video_id');
     }
 
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(Gallery::class, 'category_id', 'id');
+    }
 
 }
