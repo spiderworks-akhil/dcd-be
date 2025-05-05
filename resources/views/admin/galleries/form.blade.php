@@ -355,7 +355,7 @@
                                                 <div class="card-body">
                                                     <div class="form-group col-md-12">
                                                         <label class="">Category</label>
-                                                        <select id="category_id" name="category_id" class="w-100 webadmin-select2-input" data-placeholder="Select a Category">
+                                                        <select name="category_id" class="w-100 webadmin-select2-input" data-placeholder="Select a Category">
                                                             <option value="0">-- Select --</option>
                                                             @foreach($categories as $category)
                                                                 <option value="{{$category->id}}" @if($category->id == $obj->category_id) selected="selected" @endif>{{$category->name}}</option>
