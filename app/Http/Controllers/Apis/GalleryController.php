@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Apis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Category;
+use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\Gallery as ResourcesGallery;
 use App\Http\Resources\GalleryCollection;
 use App\Http\Resources\GalleryMediaCollection;
+use App\Models\Category as ModelsCategory;
 use App\Models\Gallery;
 use App\Models\GalleryMedia;
 use Illuminate\Http\Request;
@@ -53,13 +55,17 @@ class GalleryController extends Controller
     public function categories(Request $request){
         $type = request()->language ?? 'en';
 
-        $categories = Category::where('status', 1)
+        $categories = ModelsCategory::where('status', 1)
                         ->where('category_type', 'Gallery')
                         ->where('type',$type)
-                        ->orderBy('priority')
+                        ->orderBy('priority', 'asc')
+                        ->with(['galleries' => function($query) use($type){
+                            $query->where('status', 1)
+                                ->where('lang_type',$type)
+                                ->orderBy('priority');
+                        }])
                         ->get();
-
-        return new GalleryCollection($categories);
+        return new CategoryCollection($categories);
     }
     public function featured(Request $request){
         $type = request()->language ?? 'en';
