@@ -55,9 +55,10 @@ Route::get('events-list', [EventController::class, 'slug_list'])->name('api.even
 
 
 Route::get('gallery', [GalleryController::class, 'index'])->name('api.gallery.index');
+Route::get('gallery/categories', [GalleryController::class, 'categories'])->name('api.gallery.categories');
+
 Route::get('gallery/{slug}', [GalleryController::class, 'view'])->name('api.gallery.view');
 Route::get('gallery/medias/{slug}', [GalleryController::class, 'medias'])->name('api.gallery.medias');
-Route::get('gallery/categories', [GalleryController::class, 'categories'])->name('api.gallery.categories');
 Route::get('gallery/featured', [GalleryController::class, 'featured'])->name('api.gallery.featured');
 
 
