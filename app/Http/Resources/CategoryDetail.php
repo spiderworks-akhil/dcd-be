@@ -63,6 +63,6 @@ class CategoryDetail extends JsonResource
 
         $listing = \App\Models\Listing::where('name', $list_name)->first();
 
-        return new ListingResourceCollection($listing->list);
+        return (!empty($listing->list)) ? new ListingResourceCollection($listing->list) : [];
     }
 }
