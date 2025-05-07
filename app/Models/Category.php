@@ -49,4 +49,9 @@ class Category extends Model
         return $this->hasMany(Gallery::class, 'category_id', 'id');
     }
 
+    public function logo_image()
+    {
+        return $this->belongsTo(Media::class, 'logo_image_id');
+    }
+
 }

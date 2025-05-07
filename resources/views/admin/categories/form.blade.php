@@ -316,6 +316,14 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Logo Image
+                                                </div>
+                                                <div class="card-body">
+                                                    @include('admin.media.set_file', ['file'=>$obj->logo_image, 'title'=>'Logo Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'logo_image_id'])
+                                                </div>
+                                            </div>
                                             @fieldshow(categories-banner_image_id)
                                             <div class="card">
                                                 <div class="card-header">
