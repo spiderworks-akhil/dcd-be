@@ -111,8 +111,8 @@ class EventController extends Controller
                 $childCategoryIds = Category::where('parent_id', $category->id)->pluck('id')->toArray();
                 $allCategoryIds = array_merge([$category->id], $childCategoryIds);
 
-                $category->events = Event::where('status', 1)
-                    ->whereIn('category_id', $allCategoryIds)
+                $category->events = Event::whereIn('category_id', $allCategoryIds)
+                    ->where('status', 1)
                     ->where('type', $type)
                     ->orderBy('start_time', 'DESC')
                     ->get();
