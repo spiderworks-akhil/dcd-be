@@ -81,7 +81,7 @@ class Event extends JsonResource
     {
         $type = request()->language??'en';
 
-        $gallery = Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
+        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
         return new GalleryResource($gallery);
     }
 }
