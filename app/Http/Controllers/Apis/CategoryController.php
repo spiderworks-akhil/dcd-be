@@ -25,7 +25,7 @@ class CategoryController extends Controller
         $events = Event::where('category_id', $category->id)->where('status',1)->where('type', $type)->get();
         if($category->children){
             foreach ($category->children as $child) {
-                $events = $events->merge(Event::where('category_id', $child->id)->get());
+                $events = $events->merge(Event::where('category_id', $child->id)->where('status',1)->get());
             }
         }
         $category->events = $events;
