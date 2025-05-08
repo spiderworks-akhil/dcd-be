@@ -22,7 +22,7 @@ class CategoryController extends Controller
             return response()
                 ->json(['error' => 'Category not found'], 404);
         }
-        $events = Event::where('category_id', $category->id)->where('type', $type)->get();
+        $events = Event::where('category_id', $category->id)->where('status',1)->where('type', $type)->get();
         if($category->children){
             foreach ($category->children as $child) {
                 $events = $events->merge(Event::where('category_id', $child->id)->get());

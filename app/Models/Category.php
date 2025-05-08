@@ -53,5 +53,6 @@ class Category extends Model
     {
         return $this->belongsTo(Media::class, 'logo_image_id');
     }
+    
 
 }
