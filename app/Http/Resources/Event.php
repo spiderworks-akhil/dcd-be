@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Gallery as GalleryResource;
+
 
 class Event extends JsonResource
 {
@@ -42,7 +44,7 @@ class Event extends JsonResource
             'related_events' => EventListing::collection($this->related_events),
             'gallery' => GalleryMedia::collection($this->gallery),
             'must_attend_events' => EventListing::collection($this->must_attend),
-            'rewinds' => $this->getGallery(),
+            'rewinds' =>  $this->getGallery('rewinds-gallery'),
         ]);
     }
 
@@ -66,13 +68,20 @@ class Event extends JsonResource
         })->toArray() : null;
     }
 
-    private function getGallery(): array
+    // private function getGallery(): array
+    // {
+    //     $gallery = \App\Models\Gallery::find(1);
+    //     return $gallery ? [
+    //         'title' => $gallery->title,
+    //         'short_description' => $gallery->short_description,
+    //         'medias' => new GalleryMediaCollection($gallery->gallery)
+    //     ] : [];
+    // }
+    private function getGallery($slug)
     {
-        $gallery = \App\Models\Gallery::find(1);
-        return $gallery ? [
-            'title' => $gallery->title,
-            'short_description' => $gallery->short_description,
-            'medias' => new GalleryMediaCollection($gallery->gallery)
-        ] : [];
+        $type = request()->language??'en';
+
+        $gallery = Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
+        return new GalleryResource($gallery);
     }
 }
