@@ -33,6 +33,15 @@
                         'display' => 'horizontal'
                     ])
                 </div>
+                <div class="form-group col-md-12">
+                    @if ($obj->type == 'en')
+                        <input type="hidden" name="content[awards_listing_id]" value="4">
+                        <a href="{{route('admin.listing-items.index',[4])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
+                    @else
+                        <input type="hidden" name="content[awards_listing_id]" value="5">
+                        <a href="{{route('admin.listing-items.index',[5])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
+                    @endif
+                </div>
             </fieldset>
 
             <h3>Middle Content</h3>
@@ -67,15 +76,7 @@
                         'display' => 'horizontal'
                     ])
                 </div>
-                 <div class="form-group col-md-12">
-                    @if ($obj->type == 'en')
-                        <input type="hidden" name="content[awards_listing_id]" value="4">
-                        <a href="{{route('admin.listing-items.index',[4])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
-                    @else
-                        <input type="hidden" name="content[awards_listing_id]" value="5">
-                        <a href="{{route('admin.listing-items.index',[5])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
-                    @endif
-                </div>
+                 
             </fieldset>
 
             <h3>Bottom Content</h3>
