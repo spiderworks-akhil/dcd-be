@@ -160,6 +160,7 @@
             <input type="hidden" name="content[awards_listing_id]" value="5">
             <a href="{{route('admin.listing-items.index',[5])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
         @endif
+        
     </div>
     <div class="row">
         <div class="form-group col-md-6">
