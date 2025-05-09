@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Gallery as GalleryResource;
 
 class CategoryDetail extends JsonResource
 {
@@ -39,19 +40,17 @@ class CategoryDetail extends JsonResource
             $baseData['children'] = Category::collection($this->children);
         }
         
-        $baseData['rewinds'] = $this->getGallery();
+        $baseData['rewinds'] = $this->getGallery('rewinds-gallery');
 
         return $baseData;
     }
 
-    private function getGallery(): array
+    private function getGallery($slug)
     {
-        $gallery = \App\Models\Gallery::find(1);
-        return $gallery ? [
-            'title' => $gallery->title,
-            'short_description' => $gallery->short_description,
-            'medias' => new GalleryMediaCollection($gallery->gallery)
-        ] : [];
+        $type = request()->language??'en';
+
+        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
+        return new GalleryResource($gallery);
     }
 
     private function getEventUpdates($id,$name,$type)
