@@ -103,6 +103,7 @@ class EventController extends Controller
             $type = !empty($data['language']) ? $data['language'] : "en";
             $categories = Category::where('status', 1)
                 ->where('category_type', 'Event')
+                ->where('type', $type)
                 ->where('parent_id', 0)
                 ->orderBy('priority', 'DESC')
                 ->get();
