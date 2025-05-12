@@ -98,6 +98,9 @@ class CommonController extends Controller
     }
 
     public function contact_save(ContactRequest $request){
+        return true;
+
+        
         $request->validated();
         $contact = new Lead;
         $contact->fill($request->all());
