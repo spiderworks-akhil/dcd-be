@@ -1,7 +1,7 @@
 @extends('email._layouts.base')
 
 @section('content')
-<h1>Etihadrail Contact Request</h1>
+<h1>DCD Contact Request</h1>
 
     <p>You have received a contact request. Please login to <a href="{{route('admin.auth.login')}}">admin portal</a> for more details. 👍</p>
 

@@ -32,6 +32,6 @@ class Contact extends Mailable
     public function build()
     {
         $common_settings = $this->getSettings();
-        return $this->subject('Etihadrail contact us')->view('email.contact')->with('common_settings', $common_settings);
+        return $this->subject('DCD contact us')->view('email.contact')->with('common_settings', $common_settings);
     }
 }
