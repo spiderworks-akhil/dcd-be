@@ -98,9 +98,9 @@ class CommonController extends Controller
     }
 
     public function contact_save(ContactRequest $request){
-        return true;
+        return response()->json(['success' => false, 'message' => 'Contact form submission failed.'], 422);
 
-        
+
         $request->validated();
         $contact = new Lead;
         $contact->fill($request->all());
