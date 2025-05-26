@@ -31,8 +31,9 @@ class GalleryController extends Controller
     }
 
     public function view(Request $request, $slug){
+        $type = request()->language ?? 'en';
 
-        $gallery = Gallery::where('status', 1)->where('slug', $slug)->first();
+        $gallery = Gallery::where('status', 1)->where('slug', $slug)->where('lang_type',$type)->first();
 
         if($gallery){
             $gallery->gallery = GalleryMedia::where('galleries_id', $gallery->id)->take(8)->get();
