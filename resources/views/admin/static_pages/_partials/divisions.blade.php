@@ -31,7 +31,6 @@
              </textarea>
         </div>
 
-
         <div class="row">
             <div class="form-group col-md-4">
                 @php
@@ -132,7 +131,7 @@
             </div>
         </div>
 
-         <div class="form-group col-md-12">
+        <div class="form-group col-md-12">
             <label>Image Heading</label>
             <input type="text" name="content[image_heading]" class="form-control"
                 @if ($obj->content && isset($obj->content['image_heading'])) value="{{ $obj->content['image_heading'] }}" @endif>
@@ -141,20 +140,34 @@
             <label>Image Description 1 </label>
             <textarea name="content[image_description_1]" class="form-control editor">
                         @if ($obj->content && isset($obj->content['image_description_1']))
-            {{ $obj->content['image_description_1'] }}
-            @endif
+{{ $obj->content['image_description_1'] }}
+@endif
              </textarea>
         </div>
 
-         <div class="form-group col-md-12">
+        <div class="form-group col-md-12">
             <label>Image Description 2 </label>
             <textarea name="content[image_description_2]" class="form-control editor">
                         @if ($obj->content && isset($obj->content['image_description_2']))
-            {{ $obj->content['image_description_2'] }}
-            @endif
+{{ $obj->content['image_description_2'] }}
+@endif
              </textarea>
         </div>
+        <div class="row">
 
+            <div class="form-group col-md-12">
+                <label>Button Text</label>
+                <input type="text" name="content[button_text]" class="form-control"
+                    @if ($obj->content && isset($obj->content['button_text'])) value="{{ $obj->content['button_text'] }}" @endif>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label>Image Url</label>
+                <input type="text" name="content[button_url]" class="form-control"
+                    @if ($obj->content && isset($obj->content['button_url'])) value="{{ $obj->content['button_url'] }}" @endif>
+            </div>
+
+        </div>
 
     </fieldset>
 
@@ -167,13 +180,15 @@
         </div>
 
         <div class="form-group col-md-12">
-                @if ($obj->type == 'en')
-                    <input type="hidden" name="content[sports_and_socio_culture_en_listing_id]" value="22">
-                    <a href="{{route('admin.listing-items.index',[22])}}" class="btn btn-sm btn-danger" target="_blank" > Add sports and socio-culture</a>
-                @else
-                        <input type="hidden" name="content[sports_and_socio_culture_ar_listing_id]" value="23">
-                    <a href="{{route('admin.listing-items.index',[23])}}" class="btn btn-sm btn-danger" target="_blank" >  Add sports and socio-culture  </a>
-                @endif
+            @if ($obj->type == 'en')
+                <input type="hidden" name="content[sports_and_socio_culture_en_listing_id]" value="22">
+                <a href="{{ route('admin.listing-items.index', [22]) }}" class="btn btn-sm btn-danger" target="_blank">
+                    Add sports and socio-culture</a>
+            @else
+                <input type="hidden" name="content[sports_and_socio_culture_ar_listing_id]" value="23">
+                <a href="{{ route('admin.listing-items.index', [23]) }}" class="btn btn-sm btn-danger" target="_blank">
+                    Add sports and socio-culture </a>
+            @endif
         </div>
     </fieldset>
 
@@ -188,8 +203,8 @@
             <label>Content</label>
             <textarea name="content[description_3]" class="form-control editor">
                         @if ($obj->content && isset($obj->content['description_3']))
-                        {{ $obj->content['description_3'] }}
-                        @endif
+{{ $obj->content['description_3'] }}
+@endif
             </textarea>
         </div>
         <div class="form-group">
@@ -207,20 +222,22 @@
             ])
         </div>
 
-         <div class="form-group col-md-12">
+        <div class="form-group col-md-12">
             <label>Listing Title</label>
             <input type="text" name="content[listing_title_3]" class="form-control"
                 @if ($obj->content && isset($obj->content['listing_title_3'])) value="{{ $obj->content['listing_title_3'] }}" @endif>
         </div>
 
-              <div class="form-group col-md-12">
-                @if ($obj->type == 'en')
-                    <input type="hidden" name="content[categories_in_sports_en_listing_id]" value="24">
-                    <a href="{{route('admin.listing-items.index',[24])}}" class="btn btn-sm btn-danger" target="_blank" >Add Categories in sports</a>
-                @else
-                        <input type="hidden" name="content[categories_in_sports_ar_listing_id]" value="25">
-                    <a href="{{route('admin.listing-items.index',[25])}}" class="btn btn-sm btn-danger" target="_blank" >Add  Categories in sports  </a>
-                @endif
+        <div class="form-group col-md-12">
+            @if ($obj->type == 'en')
+                <input type="hidden" name="content[categories_in_sports_en_listing_id]" value="24">
+                <a href="{{ route('admin.listing-items.index', [24]) }}" class="btn btn-sm btn-danger"
+                    target="_blank">Add Categories in sports</a>
+            @else
+                <input type="hidden" name="content[categories_in_sports_ar_listing_id]" value="25">
+                <a href="{{ route('admin.listing-items.index', [25]) }}" class="btn btn-sm btn-danger"
+                    target="_blank">Add Categories in sports </a>
+            @endif
         </div>
 
     </fieldset>
@@ -237,58 +254,63 @@
         <div class="form-group col-md-12">
             @if ($obj->type == 'en')
                 <input type="hidden" name="content[games_en_listing_id]" value="26">
-                <a href="{{route('admin.listing-items.index',[26])}}" class="btn btn-sm btn-danger" target="_blank" >Add Games</a>
+                <a href="{{ route('admin.listing-items.index', [26]) }}" class="btn btn-sm btn-danger"
+                    target="_blank">Add Games</a>
             @else
-                    <input type="hidden" name="content[games_ar_listing_id]" value="27">
-                <a href="{{route('admin.listing-items.index',[27])}}" class="btn btn-sm btn-danger" target="_blank" >Add  Games  </a>
+                <input type="hidden" name="content[games_ar_listing_id]" value="27">
+                <a href="{{ route('admin.listing-items.index', [27]) }}" class="btn btn-sm btn-danger"
+                    target="_blank">Add Games </a>
             @endif
         </div>
 
-    <h3>Socio- Culture</h3>
-    <fieldset>
-        <div class="form-group col-md-12">
-            <label>Title</label>
-            <input type="text" name="content[title_5]" class="form-control"
-                @if ($obj->content && isset($obj->content['title_5'])) value="{{ $obj->content['title_5'] }}" @endif>
-        </div>
-        <div class="form-group col-md-12">
-            <label>Content</label>
-            <textarea name="content[description_5]" class="form-control editor">
+        <h3>Socio- Culture</h3>
+        <fieldset>
+            <div class="form-group col-md-12">
+                <label>Title</label>
+                <input type="text" name="content[title_5]" class="form-control"
+                    @if ($obj->content && isset($obj->content['title_5'])) value="{{ $obj->content['title_5'] }}" @endif>
+            </div>
+            <div class="form-group col-md-12">
+                <label>Content</label>
+                <textarea name="content[description_5]" class="form-control editor">
                         @if ($obj->content && isset($obj->content['description_5']))
-                        {{ $obj->content['description_5'] }}
-                        @endif
+{{ $obj->content['description_5'] }}
+@endif
             </textarea>
-        </div>
-        <div class="form-group">
-            @php
-                $media_id_9 = $obj->content && isset($obj->content['media_id_9']) ? $obj->content['media_id_9'] : null;
-            @endphp
-            @include('admin.media.set_file', [
-                'file' => $media_id_9,
-                'title' => 'Socio Culture Video',
-                'popup_type' => 'single_image',
-                'type' => 'Video',
-                'holder_attr' => 'content[media_id_9]',
-                'id' => 'content_image_3',
-                'display' => 'horizontal',
-            ])
-        </div>
+            </div>
+            <div class="form-group">
+                @php
+                    $media_id_9 =
+                        $obj->content && isset($obj->content['media_id_9']) ? $obj->content['media_id_9'] : null;
+                @endphp
+                @include('admin.media.set_file', [
+                    'file' => $media_id_9,
+                    'title' => 'Socio Culture Video',
+                    'popup_type' => 'single_image',
+                    'type' => 'Video',
+                    'holder_attr' => 'content[media_id_9]',
+                    'id' => 'content_image_3',
+                    'display' => 'horizontal',
+                ])
+            </div>
 
-         <div class="form-group col-md-12">
-            <label>Listing Title</label>
-            <input type="text" name="content[listing_title_5]" class="form-control"
-                @if ($obj->content && isset($obj->content['listing_title_5'])) value="{{ $obj->content['listing_title_5'] }}" @endif>
-        </div>
+            <div class="form-group col-md-12">
+                <label>Listing Title</label>
+                <input type="text" name="content[listing_title_5]" class="form-control"
+                    @if ($obj->content && isset($obj->content['listing_title_5'])) value="{{ $obj->content['listing_title_5'] }}" @endif>
+            </div>
 
-              <div class="form-group col-md-12">
+            <div class="form-group col-md-12">
                 @if ($obj->type == 'en')
                     <input type="hidden" name="content[socio_culture_en_listing_id]" value="28">
-                    <a href="{{route('admin.listing-items.index',[28])}}" class="btn btn-sm btn-danger" target="_blank" >Add socio culture</a>
+                    <a href="{{ route('admin.listing-items.index', [28]) }}" class="btn btn-sm btn-danger"
+                        target="_blank">Add socio culture</a>
                 @else
-                        <input type="hidden" name="content[socio_culture_ar_listing_id]" value="29">
-                    <a href="{{route('admin.listing-items.index',[29])}}" class="btn btn-sm btn-danger" target="_blank" >Add socio culture  </a>
+                    <input type="hidden" name="content[socio_culture_ar_listing_id]" value="29">
+                    <a href="{{ route('admin.listing-items.index', [29]) }}" class="btn btn-sm btn-danger"
+                        target="_blank">Add socio culture </a>
                 @endif
-        </div>
-    </fieldset>
+            </div>
+        </fieldset>
 
 </div>
