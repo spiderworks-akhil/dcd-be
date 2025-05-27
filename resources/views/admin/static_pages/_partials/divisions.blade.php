@@ -276,8 +276,8 @@
 
          <div class="form-group col-md-12">
             <label>Listing Title</label>
-            <input type="text" name="content[listing_title_3]" class="form-control"
-                @if ($obj->content && isset($obj->content['listing_title_3'])) value="{{ $obj->content['listing_title_3'] }}" @endif>
+            <input type="text" name="content[listing_title_5]" class="form-control"
+                @if ($obj->content && isset($obj->content['listing_title_5'])) value="{{ $obj->content['listing_title_5'] }}" @endif>
         </div>
 
               <div class="form-group col-md-12">
