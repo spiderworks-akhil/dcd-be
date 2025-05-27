@@ -155,13 +155,13 @@
         </div>
         <div class="row">
 
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Button Text</label>
                 <input type="text" name="content[button_text]" class="form-control"
                     @if ($obj->content && isset($obj->content['button_text'])) value="{{ $obj->content['button_text'] }}" @endif>
             </div>
 
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Image Url</label>
                 <input type="text" name="content[button_url]" class="form-control"
                     @if ($obj->content && isset($obj->content['button_url'])) value="{{ $obj->content['button_url'] }}" @endif>
