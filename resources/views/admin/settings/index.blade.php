@@ -134,9 +134,18 @@
                                 <label>Instagram Link</label>
                                 <input type="text" name="settings[intagram_link]" class="form-control" value="{{$data['intagram_link']}}">
                             </div>
+
                             <div class="form-group col-md-6">
                                 <label>Youtube Link</label>
                                 <input type="text" name="settings[youtube_link]" class="form-control" value="{{$data['youtube_link']}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Tiktok Link</label>
+                                <input type="text" name="settings[tiktok_link]" class="form-control" value="{{$data['tiktok_link']}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Snapchat Link</label>
+                                <input type="text" name="settings[snapchat_link]" class="form-control" value="{{$data['snapchat_link']}}">
                             </div>
                         </div>
                         <div class="card-footer text-right">
