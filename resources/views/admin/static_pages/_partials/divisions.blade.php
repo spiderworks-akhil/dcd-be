@@ -207,20 +207,23 @@
 @endif
             </textarea>
         </div>
+
         <div class="form-group">
             @php
                 $media_id_8 = $obj->content && isset($obj->content['media_id_8']) ? $obj->content['media_id_8'] : null;
             @endphp
             @include('admin.media.set_file', [
                 'file' => $media_id_8,
-                'title' => 'Sports Video',
+                'title' => 'Video',
                 'popup_type' => 'single_image',
-                'type' => 'Video',
+                'type' => 'video',
                 'holder_attr' => 'content[media_id_8]',
-                'id' => 'content_image_3',
+                'id' => 'content_image_8',
                 'display' => 'horizontal',
             ])
         </div>
+
+
 
         <div class="form-group col-md-12">
             <label>Listing Title</label>
@@ -278,21 +281,21 @@
 @endif
             </textarea>
             </div>
-            <div class="form-group">
-                @php
-                    $media_id_9 =
-                        $obj->content && isset($obj->content['media_id_9']) ? $obj->content['media_id_9'] : null;
-                @endphp
-                @include('admin.media.set_file', [
-                    'file' => $media_id_9,
-                    'title' => 'Socio Culture Video',
-                    'popup_type' => 'single_image',
-                    'type' => 'Video',
-                    'holder_attr' => 'content[media_id_9]',
-                    'id' => 'content_image_3',
-                    'display' => 'horizontal',
-                ])
-            </div>
+
+        <div class="form-group">
+            @php
+                $media_id_9 = $obj->content && isset($obj->content['media_id_9']) ? $obj->content['media_id_9'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_9,
+                'title' => 'Video',
+                'popup_type' => 'single_image',
+                'type' => 'video',
+                'holder_attr' => 'content[media_id_9]',
+                'id' => 'content_image_9',
+                'display' => 'horizontal',
+            ])
+        </div>
 
             <div class="form-group col-md-12">
                 <label>Listing Title</label>
