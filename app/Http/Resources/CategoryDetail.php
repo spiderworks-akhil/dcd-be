@@ -22,6 +22,8 @@ class CategoryDetail extends JsonResource
             'title' => $this->title,
             'short_description' => $this->short_description,
             'featured_image' => new Media($this->featured_image),
+            'extra_image' => new Media($this->extra_image),
+            'extra_text' => $this->extra_text,
         ];
         if ($this->category_type == 'Event') {
             $baseData['event_updates'] = $this->getEventUpdates($this->id,$this->name,$this->type);
