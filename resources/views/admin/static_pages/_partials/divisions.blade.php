@@ -181,11 +181,11 @@
 
         <div class="form-group col-md-12">
             @if ($obj->type == 'en')
-                <input type="hidden" name="content[sports_and_socio_culture_en_listing_id]" value="22">
+                <input type="hidden" name="content[sports_and_socio_culture_listing_id]" value="22">
                 <a href="{{ route('admin.listing-items.index', [22]) }}" class="btn btn-sm btn-danger" target="_blank">
                     Add sports and socio-culture</a>
             @else
-                <input type="hidden" name="content[sports_and_socio_culture_ar_listing_id]" value="23">
+                <input type="hidden" name="content[sports_and_socio_culture_listing_id]" value="23">
                 <a href="{{ route('admin.listing-items.index', [23]) }}" class="btn btn-sm btn-danger" target="_blank">
                     Add sports and socio-culture </a>
             @endif
@@ -223,8 +223,6 @@
             ])
         </div>
 
-
-
         <div class="form-group col-md-12">
             <label>Listing Title</label>
             <input type="text" name="content[listing_title_3]" class="form-control"
@@ -233,11 +231,11 @@
 
         <div class="form-group col-md-12">
             @if ($obj->type == 'en')
-                <input type="hidden" name="content[categories_in_sports_en_listing_id]" value="24">
+                <input type="hidden" name="content[categories_in_sports_listing_id]" value="24">
                 <a href="{{ route('admin.listing-items.index', [24]) }}" class="btn btn-sm btn-danger"
                     target="_blank">Add Categories in sports</a>
             @else
-                <input type="hidden" name="content[categories_in_sports_ar_listing_id]" value="25">
+                <input type="hidden" name="content[categories_in_sports_listing_id]" value="25">
                 <a href="{{ route('admin.listing-items.index', [25]) }}" class="btn btn-sm btn-danger"
                     target="_blank">Add Categories in sports </a>
             @endif
@@ -256,11 +254,11 @@
 
         <div class="form-group col-md-12">
             @if ($obj->type == 'en')
-                <input type="hidden" name="content[games_en_listing_id]" value="26">
+                <input type="hidden" name="content[games_listing_id]" value="26">
                 <a href="{{ route('admin.listing-items.index', [26]) }}" class="btn btn-sm btn-danger"
                     target="_blank">Add Games</a>
             @else
-                <input type="hidden" name="content[games_ar_listing_id]" value="27">
+                <input type="hidden" name="content[games_listing_id]" value="27">
                 <a href="{{ route('admin.listing-items.index', [27]) }}" class="btn btn-sm btn-danger"
                     target="_blank">Add Games </a>
             @endif
@@ -305,11 +303,11 @@
 
             <div class="form-group col-md-12">
                 @if ($obj->type == 'en')
-                    <input type="hidden" name="content[socio_culture_en_listing_id]" value="28">
+                    <input type="hidden" name="content[socio_culture_listing_id]" value="28">
                     <a href="{{ route('admin.listing-items.index', [28]) }}" class="btn btn-sm btn-danger"
                         target="_blank">Add socio culture</a>
                 @else
-                    <input type="hidden" name="content[socio_culture_ar_listing_id]" value="29">
+                    <input type="hidden" name="content[socio_culture_listing_id]" value="29">
                     <a href="{{ route('admin.listing-items.index', [29]) }}" class="btn btn-sm btn-danger"
                         target="_blank">Add socio culture </a>
                 @endif
