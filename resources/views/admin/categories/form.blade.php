@@ -333,7 +333,18 @@
                                                     @include('admin.media.set_file', ['file'=>$obj->banner_image, 'title'=>'Banner Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'banner_image_id'])
                                                 </div>
                                             </div>
+                                
                                             @endfieldshow
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Extra Image
+                                                </div>
+                                                <div class="card-body">
+                                                    <label>Extra Text</label>
+                                                    <input type="text" name="extra_text" class="form-control" value="{{$obj->extra_text ?? ''}}">
+                                                    @include('admin.media.set_file', ['file'=>$obj->extra_image, 'title'=>'Extra Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'extra_image_id'])   
+                                                </div> 
+                                            </div>
                                             <div class="card">
                                                 <div class="card-header">
                                                     Banner Video
