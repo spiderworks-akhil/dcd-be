@@ -36,9 +36,9 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(Category::class, 'parent_id', 'id');
+        return $this->hasMany(Category::class, 'parent_id', 'id')->where('status',1);
     }
-    
+
     public function banner_video()
     {
         return $this->belongsTo(Media::class, 'banner_video_id');
@@ -57,6 +57,6 @@ class Category extends Model
     {
         return $this->belongsTo(Media::class, 'extra_image_id');
     }
-    
+
 
 }
