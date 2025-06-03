@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Models;
 
 use App\Models\BaseModel as Model;
@@ -6,9 +6,9 @@ use App\Traits\ValidationTrait;
 
 class EventMedia extends Model
 {
-    
+
     public function __construct() {
-        
+
         parent::__construct();
     }
 
@@ -19,7 +19,7 @@ class EventMedia extends Model
      */
     protected $table = 'event_medias';
 
-    protected $fillable = array('events_id', 'upload_type', 'youtube_preview', 'youtube_url', 'media_id', 'title', 'description');
+    protected $fillable = array('events_id', 'upload_type', 'youtube_preview', 'youtube_url', 'media_id', 'title', 'description','vimeo_link');
 
     protected $dates = ['created_at','updated_at'];
 

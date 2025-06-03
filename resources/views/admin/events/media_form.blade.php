@@ -10,8 +10,8 @@
                     @if($file->youtube_preview)
                         <div class="img-container-edit box" id="simple-media-{{$file->id}}">
                             <img src="{{$file->youtube_preview}}"/>
-                            <a href="{{route('admin.media.popup', ['popup_type'=>'set_file_simple', 'type'=>'Image', 'holder_attr'=>'simple-media-'.$file->id, 'title'=>'Update Youtube Cover', 
-                'related_id'=>$file->id, 'media_id'=>'simple-media-'.$file->id])}}" class="webadmin-open-ajax-popup direction" title="Media Images" 
+                            <a href="{{route('admin.media.popup', ['popup_type'=>'set_file_simple', 'type'=>'Image', 'holder_attr'=>'simple-media-'.$file->id, 'title'=>'Update Youtube Cover',
+                'related_id'=>$file->id, 'media_id'=>'simple-media-'.$file->id])}}" class="webadmin-open-ajax-popup direction" title="Media Images"
                 data-popup-size="xlarge"><i class="fas fa-pencil-alt"></i></a>
                         </div>
                     @endif
@@ -24,6 +24,11 @@
                     </div>
                     <div class="video-cover-upload">
                         <input type="file" class="form-control" name="video_cover" accept="image/*" onchange="loadFile(event)" />
+                    </div>
+
+                     <div class="form-group required">
+                        <label>Vimeo Link</label>
+                        <input type="text" name="vimeo_link" id="gallery-vimeo-link" class="form-control" value="{{$file->vimeo_link}}" >
                     </div>
                 </div>
                 @endif
@@ -45,7 +50,7 @@
                 </div>
             </div>
             <div class="col-md-12 text-right">
-                <button type="button" class="btn btn-soft-primary" id="gallery-media-update-form">Save</button> 
+                <button type="button" class="btn btn-soft-primary" id="gallery-media-update-form">Save</button>
             </div>
         </div>
     </form>

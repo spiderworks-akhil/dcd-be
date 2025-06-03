@@ -30,7 +30,7 @@ class EventController extends Controller
         $this->resourceConstruct();
 
     }
-    
+
     protected function getCollection() {
         return $this->model->select('id','type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at');
     }
@@ -76,7 +76,7 @@ class EventController extends Controller
         $data['end_time'] = !empty($data['end_time'])?$this->parse_date_time($data['end_time']):null;
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
 
-        
+
 
         $this->model->fill($data);
         if($this->model->save())
@@ -201,7 +201,9 @@ class EventController extends Controller
                 if($upload['success']) {
                     $obj->video_preview_image = 'uploads/media/cover/'.$upload['filename'];
                 }
+
             }
+             $obj->vimeo_link = $data['vimeo_link'];
 
             $obj->title = $data['media_title'];
             $obj->description = $data['media_description'];
@@ -302,5 +304,5 @@ class EventController extends Controller
         }
     }
 
-    
+
 }

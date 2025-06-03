@@ -22,6 +22,7 @@ class GalleryMedia extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'link' => $this->link,
+            'vimeo_link' => $this->vimeo_link,
             'media' => new Media($this->media)
         ];
     }

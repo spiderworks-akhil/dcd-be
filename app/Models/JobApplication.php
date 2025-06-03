@@ -12,9 +12,9 @@ class JobApplication extends Model
 	use ValidationTrait {
         ValidationTrait::validate as private parent_validate;
     }
-    
+
     public function __construct() {
-        
+
         parent::__construct();
         $this->__validationConstruct();
     }
