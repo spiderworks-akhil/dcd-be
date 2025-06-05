@@ -24,6 +24,13 @@ class CategoryDetail extends JsonResource
             'featured_image' => new Media($this->featured_image),
             'extra_image' => new Media($this->extra_image),
             'extra_text' => $this->extra_text,
+            'browser_title' => $this->browser_title,
+            'og_title' => $this->og_title,
+            'meta_description' => $this->meta_description,
+            'og_description' => $this->og_description,
+            'og_image' => new Media($this->og_image),
+            'meta_keywords' => $this->meta_keywords,
+            'bottom_description' => $this->bottom_description,
         ];
         if ($this->category_type == 'Event') {
             $baseData['event_updates'] = $this->getEventUpdates($this->id,$this->name,$this->type);
@@ -41,7 +48,7 @@ class CategoryDetail extends JsonResource
         if ($this->children) {
             $baseData['children'] = Category::collection($this->children);
         }
-        
+
         $baseData['rewinds'] = $this->getGallery('rewinds-gallery');
 
         return $baseData;
@@ -57,7 +64,7 @@ class CategoryDetail extends JsonResource
 
     private function getEventUpdates($id,$name,$type)
     {
-        $list_name =  ($type == 'en')? 
+        $list_name =  ($type == 'en')?
                         'catId:' . $id . ' ' . $name . ' Event Update EN'
                         :
                          'catId:' . $id . ' ' . $name . ' Event Update AR';
