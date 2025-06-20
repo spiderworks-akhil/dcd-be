@@ -9,7 +9,9 @@
         <thead >
 
             <tr> <td>Name:</td><td > {{$data->name}}</td> </tr>
+             @if($data->phone_number)
             <tr> <td>Phone:</td><td > {{$data->phone_number}}</td> </tr>
+            @endif
             <tr> <td>Email:</td><td > {{$data->email}}</td> </tr>
             @if($data->message)
             <tr> <td>Message:</td><td > {{$data->message}}</td> </tr>

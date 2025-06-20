@@ -81,12 +81,12 @@
 				min-width: 414px !important;
 			}
 		}
-		
+
 		@media(max-width:768px){
 				.thank-msg h1{
 					font-size:18px;
 				}
-				
+
 				.footer_copy{display: block; text-align: center;}
 				.footer_copy span{float: unset !important; display: block;}
 				.footer_copy span.sp_left{
@@ -349,7 +349,7 @@
 							<tr>
 								<td class="logo" style="text-align: center;">
 									<h1>
-									    <img src="{{asset($common_settings['logo'])}}" style="height:50px;" />
+									    <img src="{{asset('client/img/dcd-logo.png')}}" style="height:50px;" />
 									</h1>
 								</td>
 							</tr>
@@ -359,7 +359,7 @@
 
 					@section('content')
 					@show
-				
+
 				<!-- 1 Column Text + Button : END -->
 			</table>
 			<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
