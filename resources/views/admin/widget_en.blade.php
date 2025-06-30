@@ -238,7 +238,58 @@
                                             value="@if(!empty($data['join_the_club']['button_link'])){{$data['join_the_club']['button_link']}} @endif">
                                     </div>
                                     </div>
-                                    
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-sm btn-primary">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col-12">
+                <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                    @csrf
+                    <input type="hidden" name="id" value="9">
+                    <div class="card">
+                        <div class="card-header">
+                            Join The Club
+                        </div>
+                        <div class="card-body row">
+                            <div class="col-md-12">
+                                <div class="row" style="text-align: center;">
+                                    <div class="form-group col-md-12">
+                                    <label>Image</label>
+                                    @php
+                                        $media_id_1 = isset($data['volunteer']['media_id_1']) ? (object)($data['volunteer']['media_id_1']) : null;
+                                    @endphp
+                                    @include('admin.media.set_file', [
+                                        'file' => $media_id_1,
+                                        'title' => 'Image',
+                                        'popup_type' => 'single_image',
+                                        'type' => 'Image',
+                                        'holder_attr' => 'section[media_id_1]',
+                                        'id' => 'media_id_1',
+                                        'display' => 'horizontal'
+                                    ])
+                                </div>
+
+                                 <div class="form-group col-md-12">
+                                        Button Link
+                                        <input type="text" name="section[button_link]" class="form-control"
+                                            value="@if(!empty($data['join_the_club']['button_link'])){{$data['join_the_club']['button_link']}} @endif">
+                                </div>
+
+                                 <div class="form-group col-md-12">
+                                        <a href="{{route('admin.listing-items.index',[1])}}" class="btn btn-sm btn-danger" target="_blank" > Etihad rail </a>
+                                </div>
+
+
+
                                 </div>
                             </div>
                         </div>
