@@ -283,12 +283,33 @@
                                             value="@if(!empty($data['popup']['button_link'])){{$data['popup']['button_link']}} @endif">
                                 </div>
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-sm btn-primary">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                    @csrf
+                    <input type="hidden" name="id" value="14">
+                    <div class="card">
+                        <div class="card-header">
+                            Youtube Live Stream
+                        </div>
+                        <div class="card-body row">
+                            <div class="col-md-12">
+
                                  <div class="form-group col-md-12">
                                      <input type="hidden" name="section[live_stream_listing_id]" value="32">
                                         <a href="{{route('admin.listing-items.index',[32])}}" class="btn btn-sm btn-danger" target="_blank" > Live stream </a>
                                  </div>
-
-
 
                                 </div>
                             </div>
