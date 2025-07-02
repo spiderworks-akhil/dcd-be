@@ -268,6 +268,12 @@
                                             value="@if(!empty($data['popup']['title'])){{$data['popup']['title']}} @endif">
                                     </div>
 
+                                     <div class="form-group col-md-12">
+                                        Youtube Embedded Link
+                                        <input type="text" name="section[embedded_link]" class="form-control"
+                                            value="@if(!empty($data['popup']['embedded_link'])){{$data['popup']['embedded_link']}} @endif">
+                                    </div>
+
                                     <div class="form-group col-md-12">
                                     <label>Image</label>
                                     @php
