@@ -314,12 +314,6 @@
                             <div class="col-md-12">
 
                                  <div class="form-group col-md-12">
-                                        Youtube Embedded Link
-                                        <input type="text" name="section[embedded_link]" class="form-control"
-                                            value="@if(!empty($data['live_stream']['embedded_link'])){{$data['live_stream']['embedded_link']}} @endif">
-                                </div>
-
-                                 <div class="form-group col-md-12">
                                      <input type="hidden" name="section[live_stream_listing_id]" value="31">
                                         <a href="{{route('admin.listing-items.index',[31])}}" class="btn btn-sm btn-danger" target="_blank" > Live stream </a>
                                  </div>
