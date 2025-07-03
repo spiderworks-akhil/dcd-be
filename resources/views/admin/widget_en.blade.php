@@ -291,19 +291,19 @@
                                             value="@if(!empty($data['popup']['button_link'])){{$data['popup']['button_link']}} @endif">
                                 </div>
 
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                       Live Streaming Title
                                         <input type="text" name="section[live_streaming_title]" class="form-control"
                                             value="@if(!empty($data['popup']['live_streaming_title'])){{$data['popup']['live_streaming_title']}} @endif">
                                 </div>
 
-                                 <div class="form-group col-md-12">
+                                 <div class="form-group col-md-6">
                                       Watch Button Title
                                         <input type="text" name="section[watch_button_title]" class="form-control"
                                             value="@if(!empty($data['popup']['watch_button_title'])){{$data['popup']['watch_button_title']}} @endif">
                                 </div>
 
-                                 <div class="form-group col-md-12">
+                                 <div class="form-group col-md-6">
                                       Close Button Title
                                         <input type="text" name="section[close_button_title]" class="form-control"
                                             value="@if(!empty($data['popup']['close_button_title'])){{$data['popup']['close_button_title']}} @endif">
