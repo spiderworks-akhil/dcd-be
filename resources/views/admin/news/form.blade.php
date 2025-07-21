@@ -445,18 +445,7 @@
                 "name": "required",
                 slug: {
                   required: true,
-                  remote: {
-                      url: "{{route('admin.unique-slug')}}",
-                      data: {
-                        id: function() {
-                          return $( "#inputId" ).val();
-                        },
-                        type: function() {
-                            return "{{ $obj->type??'en' }}";
-                        },
-                        table: 'news',
-                    }
-                  }
+                  
                 },
                 "content": "required",
               },
@@ -464,7 +453,6 @@
                 "name": "News name cannot be blank",
                 slug: {
                   required: "Slug cannot be blank",
-                  remote: "Slug is already in use",
                 },
                 "content": "News content cannot be blank",
               },
