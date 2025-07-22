@@ -291,7 +291,7 @@
                                                 </div>
                                                 @endif
                                             @endfieldshow
-                                            @fieldshow(services-featured_image_id)
+                                            {{-- @fieldshow(services-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
                                                     Featured Image
@@ -310,7 +310,7 @@
                                                     @include('admin.media.set_file', ['file'=>$obj->banner_image, 'title'=>'Banner Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'banner_image_id'])
                                                 </div>
                                             </div>
-                                            @endfieldshow
+                                            @endfieldshow --}}
                                             @fieldshow(services-og_image_id)
                                             <div class="card">
                                                 <div class="card-header">
