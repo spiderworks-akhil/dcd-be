@@ -66,14 +66,14 @@
 
             <h3>Journey Block 2</h3>
             <fieldset>
-                <div class="form-group col-md-12">
+                {{-- <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_journey_block_2]" class="form-control"
                         @if($obj->content && isset($obj->content['title_journey_block_2']))
                             value="{{ $obj->content['title_journey_block_2'] }}"
                         @endif
                     >
-                </div>
+                </div> --}}
                 <div class="form-group col-md-12">
                     <label>Content</label>
                     <textarea name="content[description_journey_block_2]" class="form-control editor">
@@ -100,14 +100,14 @@
 
             <h3>Journey Block 3</h3>
             <fieldset>
-                <div class="form-group col-md-12">
+                {{-- <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_journey_block_3]" class="form-control"
                         @if($obj->content && isset($obj->content['title_journey_block_3']))
                             value="{{ $obj->content['title_journey_block_3'] }}"
                         @endif
                     >
-                </div>
+                </div> --}}
                 <div class="form-group col-md-12">
                     <label>Content</label>
                     <textarea name="content[description_journey_block_3]" class="form-control editor">
@@ -134,14 +134,14 @@
 
             <h3>Journey Block 4</h3>
             <fieldset>
-                <div class="form-group col-md-12">
+                {{-- <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_journey_block_4]" class="form-control"
                         @if($obj->content && isset($obj->content['title_journey_block_4']))
                             value="{{ $obj->content['title_journey_block_4'] }}"
                         @endif
                     >
-                </div>
+                </div> --}}
                 <div class="form-group col-md-12">
                     <label>Content</label>
                     <textarea name="content[description_journey_block_4]" class="form-control editor">
@@ -168,14 +168,14 @@
 
             <h3>Journey Block 5</h3>
             <fieldset>
-                <div class="form-group col-md-12">
+                {{-- <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_journey_block_5]" class="form-control"
                         @if($obj->content && isset($obj->content['title_journey_block_5']))
                             value="{{ $obj->content['title_journey_block_5'] }}"
                         @endif
                     >
-                </div>
+                </div> --}}
                 <div class="form-group col-md-12">
                     <label>Content</label>
                     <textarea name="content[description_journey_block_5]" class="form-control editor">
@@ -219,14 +219,14 @@
                 >
             </div>
 
-            <div class="form-group col-md-12">
+            {{-- <div class="form-group col-md-12">
                 <label>Content</label>
                 <textarea name="content[description_history_block]" class="form-control editor">
                     @if($obj->content && isset($obj->content['description_history_block']))
                         {{ $obj->content['description_history_block'] }}
                     @endif
                 </textarea>
-            </div>
+            </div> --}}
 
             <div class="form-group">
                 @php
