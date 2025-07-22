@@ -2,7 +2,7 @@
 
     <h3>Home Banner</h3>
     <fieldset>
-        <div class="form-group">
+        {{-- <div class="form-group">
             @php
             $media_id_banner_image_1 = ($obj->content && isset($obj->content['media_id_banner_image_1'])) ? $obj->content['media_id_banner_image_1'] : null;
             @endphp
@@ -15,7 +15,7 @@
             'id' => 'media_id_banner_image_1',
             'display' => 'horizontal'
             ])
-        </div>
+        </div> --}}
         <div class="form-group col-md-12">
             <label>Title</label>
             <input type="text" name="content[banner_title]" class="form-control"
