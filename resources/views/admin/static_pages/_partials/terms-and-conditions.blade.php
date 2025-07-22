@@ -19,7 +19,7 @@
                         @endif
                     </textarea>
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     @php
                         $media_id_1 = ($obj->content && isset($obj->content['media_id_1'])) ? $obj->content['media_id_1'] : null;
                     @endphp
@@ -32,7 +32,7 @@
                         'id' => 'content_image_1',
                         'display' => 'horizontal'
                     ])
-                </div>
+                </div> --}}
 
                  <div class="form-group col-md-12">
                     <label>Email</label>
