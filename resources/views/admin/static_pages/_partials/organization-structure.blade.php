@@ -166,11 +166,11 @@
                     @if ($obj->content && isset($obj->content['head_of_community_activities'])) value="{{ $obj->content['head_of_community_activities'] }}" @endif>
             </div>
 
-            <div class="form-group col-md-6">
+            {{-- <div class="form-group col-md-6">
                 <label>Head of the Community Activities Name</label>
                 <input type="text" name="content[community_activity_head_name]" class="form-control"
                     @if ($obj->content && isset($obj->content['community_head_name'])) value="{{ $obj->content['community_head_name'] }}" @endif>
-            </div>
+            </div> --}}
         </div>
 
     </fieldset>
