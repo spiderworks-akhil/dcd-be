@@ -101,7 +101,7 @@
                                                                 <input type="text" name="designation" class="form-control" value="{{$obj->designation}}" id="designation">
                                                             </div>
                                                             @endfieldshow
-                                                            @fieldshow(team-short_description)
+                                                            {{-- @fieldshow(team-short_description)
                                                             <div class="form-group col-md-12">
                                                                 <label>Short Description</label>
                                                                 <textarea name="short_description" class="form-control" rows="2" id="short_description">{{$obj->short_description}}</textarea>
@@ -112,7 +112,7 @@
                                                                 <label>Content</label>
                                                                 <textarea name="content" class="form-control editor" id="content">{{$obj->content}}</textarea>
                                                             </div>
-                                                            @endfieldshow
+                                                            @endfieldshow --}}
                                                         </div>
                                                     </div>                                           
                                                 </div><!--end card-body-->
@@ -320,7 +320,7 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
-                                            @fieldshow(team-banner_image_id)
+                                            {{-- @fieldshow(team-banner_image_id)
                                             <div class="card">
                                                 <div class="card-header">
                                                     Banner Image
@@ -329,7 +329,7 @@
                                                     @include('admin.media.set_file', ['file'=>$obj->banner_image, 'title'=>'Banner Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'banner_image_id'])
                                                 </div>
                                             </div>
-                                            @endfieldshow
+                                            @endfieldshow --}}
                                             @fieldshow(team-og_image_id)
                                             <div class="card">
                                                 <div class="card-header">
