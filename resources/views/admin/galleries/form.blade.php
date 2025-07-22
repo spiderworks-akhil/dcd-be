@@ -151,12 +151,12 @@
                                                                 <textarea name="short_description" class="form-control" rows="2" id="short_description">{{$obj->short_description}}</textarea>
                                                             </div>
                                                             @endfieldshow
-                                                            @fieldshow(galleries-content)
+                                                            {{-- @fieldshow(galleries-content)
                                                             <div class="form-group col-md-12">
                                                                 <label>Content</label>
                                                                 <textarea name="content" class="form-control editor" id="content">{{$obj->content}}</textarea>
                                                             </div>
-                                                            @endfieldshow
+                                                            @endfieldshow --}}
                                                         </div>
                                                     </div>
                                                 </div>
