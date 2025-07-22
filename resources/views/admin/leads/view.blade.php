@@ -57,10 +57,13 @@
                                                                 <label>Name: </label>
                                                                 <b>{{$obj->name}}</b>
                                                             </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label>Phone Number: </label>
-                                                                <b>{{$obj->phone_number}}</b>
-                                                            </div>
+                                                            @if ($obj->phone_number)
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Phone Number: </label>
+                                                                    <b>{{$obj->phone_number}}</b>
+                                                                </div>
+                                                            @endif
+
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Email: </label>
                                                                 <b>{{$obj->email}}</b>
@@ -76,34 +79,59 @@
                                                                     </div>
                                                                 @endforeach
                                                             @endif
-                                                            <div class="form-group col-md-12">
-                                                                <label>Message: </label>
-                                                                {{$obj->message}}
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label>Lead Type: </label>
-                                                                {{$obj->lead_type}}
-                                                            </div>
+
+                                                            @if($obj->message)
+                                                                <div class="form-group col-md-12">
+                                                                    <label>Message: </label>
+                                                                    {{$obj->message}}
+                                                                </div>
+                                                            @endif
+
+                                                            @if($obj->lead_type)
+                                                                <div class="form-group col-md-6">
+                                                                    <label>Lead Type: </label>
+                                                                    {{$obj->lead_type}}
+                                                                </div>
+                                                            @endif
+
+                                                            @if($obj->utm_source)
+
                                                             <div class="form-group col-md-6">
                                                                 <label>Utm Source: </label>
                                                                 {{$obj->utm_source}}
                                                             </div>
+                                                            @endif
+                                                            @if($obj->source_url)
+
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Source Url: </label>
                                                                 <b>{{$obj->source_url}}</b>
                                                             </div>
+                                                            @endif
+
+                                                            @if($obj->ip_address)
+
                                                             <div class="form-group col-md-6">
                                                                 <label class="">IP Address: </label>
                                                                 <b>{{$obj->ip_address}}</b>
                                                             </div>
+                                                            @endif
+                                                            
+                                                            @if($obj->user_agent)
+
                                                             <div class="form-group col-md-6">
                                                                 <label class="">User Agent: </label>
                                                                 <b>{{$obj->user_agent}}</b>
                                                             </div>
-                                                            <div class="form-group col-md-6">
+                                                            @endif
+
+                                                            @if($obj->referrer_link)
+                                                                  <div class="form-group col-md-6">
                                                                 <label class="">Referrer Link: </label>
                                                                 <b>{{$obj->referrer_link}}</b>
                                                             </div>
+                                                            @endif
+                                                          
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Status: </label>
                                                                 @if($obj->status == 'Open')

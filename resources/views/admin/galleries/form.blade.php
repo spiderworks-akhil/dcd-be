@@ -153,7 +153,7 @@
                                                             @endfieldshow
                                                             {{-- @fieldshow(galleries-content)
                                                             <div class="form-group col-md-12">
-                                                                <label>Content</label>
+                                         s                       <label>Content</label>
                                                                 <textarea name="content" class="form-control editor" id="content">{{$obj->content}}</textarea>
                                                             </div>
                                                             @endfieldshow --}}
