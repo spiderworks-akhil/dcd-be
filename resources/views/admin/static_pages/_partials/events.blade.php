@@ -37,7 +37,7 @@
             >
         </div>
         
-        <div class="form-group row">
+        {{-- <div class="form-group row">
             <div class="col-md-6">
                 <label>Featured Events Title</label>
                 <input type="text" name="content[featured_events_title]" class="form-control"
@@ -54,7 +54,7 @@
                 @endif
                 >
             </div>
-        </div>
+        </div> --}}
         
 
         <div class="form-group col-md-12">
