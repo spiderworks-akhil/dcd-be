@@ -7,6 +7,7 @@ use App\Traits\ResourceTrait;
 
 use Haruncpi\LaravelUserActivity\Models\Log;
 use App\Models\Category;
+use View,Redirect, DB;
 
 class LogController extends Controller
 {
@@ -24,9 +25,9 @@ class LogController extends Controller
         $this->resourceConstruct();
 
     }
-    
+
     protected function getCollection() {
-        return $this->model->select('logs.id', 'users.name', 'table_name', 'log_type', 'log_date')->leftJoin('users', 'logs.user_id', '=', 'users.id');
+        return $this->model->select('logs.id', 'admins.name', 'table_name', 'log_type', 'log_date')->leftJoin('admins', 'logs.user_id', '=', 'admins.id');
     }
 
     protected function setDTData($collection) {
@@ -35,9 +36,10 @@ class LogController extends Controller
             ->editColumn('date', function($obj){
                 return date('d M, Y h:i A', strtotime($obj->log_date));
             })
-            ->addColumn('action_edit', function($obj) use ($route) { 
-                return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" data-popup-size="large" title="View Details" ><i class="fas fa-eye"></i></a>';     
+            ->addColumn('action_edit', function($obj) use ($route) {
+                return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" data-popup-size="large" title="View Details" ><i class="fas fa-eye"></i></a>';
             })
+
             ->rawColumns(['action_edit', 'action_delete', 'status']);
     }
 

@@ -82,7 +82,7 @@
         var my_columns = [
             {data: 'log_date', name: 'log_date'},
             {data: null, name: 'id'},
-            {data: 'name', name: 'users.name'},
+            {data: 'name', name: 'admins.name'},
             {data: 'table_name', name: 'table_name'},
             {data: 'log_type', name: 'log_type'},
             {data: 'date', name: 'log_date'},
