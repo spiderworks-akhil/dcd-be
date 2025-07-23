@@ -48,21 +48,7 @@ class Job extends Model
         return $this->parent_validate($data);
     }
 
-    public function featured_image()
-    {
-        return $this->belongsTo('App\Models\Media', 'featured_image_id');
-    }
-
-    public function banner_image()
-    {
-        return $this->belongsTo('App\Models\Media', 'banner_image_id');
-    }
-
-    public function og_image()
-    {
-        return $this->belongsTo('App\Models\Media', 'og_image_id');
-    }
-
+   
     public function department()
     {
         return $this->belongsTo('App\Models\Department', 'department_id');
