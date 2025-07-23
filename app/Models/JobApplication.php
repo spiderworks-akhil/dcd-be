@@ -45,9 +45,9 @@ class JobApplication extends Model
         return $this->belongsTo('App\Models\Job', 'careers_id');
     }
 
-    public function updated_user()
-    {
-        return $this->belongsTo('App\Models\User', 'updated_by');
-    }
+    // public function updated_user()
+    // {
+    //     return $this->belongsTo('App\Models\User', 'updated_by');
+    // }
 
 }
