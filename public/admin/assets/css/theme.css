@@ -310,3 +310,18 @@ a.logo.logo-admin img {
 .calendar-table thead {
     background-color: #fff !important;
 }
+
+@media (max-width: 1440px) {
+.wizard.vertical > .content { 
+    width: 59%;
+}
+ 
+}
+
+
+@media (max-width: 1024px) {
+.wizard.vertical > .content { 
+    width: 95%;
+} 
+}
+
