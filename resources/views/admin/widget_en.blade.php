@@ -324,17 +324,18 @@
                                     value="@if (!empty($data['popup']['close_button_title'])) {{ $data['popup']['close_button_title'] }} @endif">
                             </div>
 
-                        <div class="form-group col-md-6">
-                            <label>Show Popup</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="section[show_popup]" id="popupYes" value="yes" @if (!empty($data['popup']['show_popup']) && $data['popup']['show_popup'] == 'yes') checked @endif>
-                                <label class="form-check-label" for="popupYes">Yes</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="section[show_popup]" id="popupNo" value="no" @if (!empty($data['popup']['show_popup']) && $data['popup']['show_popup'] == 'no') checked @endif>
-                                <label class="form-check-label" for="popupNo">No</label>
+                        <div class="form-group col-md-12 mt-3">
+                            <div class="form-check">
+                                <input type="hidden" name="show_popup" value="no">
+
+                                <input class="form-check-input" type="checkbox" id="showPopupCheckbox" name="section[show_popup]" value="yes"
+                                    @if (!empty($data['popup']['show_popup']) && $data['popup']['show_popup'] == 'yes') checked @endif>
+                                <label class="form-check-label" for="showPopupCheckbox">
+                                    Show Popup
+                                </label>
                             </div>
                         </div>
+
 
                             
 
