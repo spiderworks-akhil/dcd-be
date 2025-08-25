@@ -324,7 +324,7 @@
                                     value="@if (!empty($data['popup']['close_button_title'])) {{ $data['popup']['close_button_title'] }} @endif">
                             </div>
 
-                        <div class="form-group col-md-12 mt-3">
+                        <div class="form-group col-md-6">
                             <div class="form-check">
                                 <input type="hidden" name="show_popup" value="no">
 
