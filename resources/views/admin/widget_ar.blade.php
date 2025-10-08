@@ -248,10 +248,13 @@
                                         value="@if (!empty($data['join_the_club']['button_link'])) {{ $data['join_the_club']['button_link'] }} @endif">
                                 </div>
                             </div>
-                             <div class="form-group col-md-12">
-                                <a href="{{ route('admin.listing-items.index', [33]) }}" class="btn btn-sm btn-danger"
+                            
+
+                        <div class="form-group col-md-12">
+                            <input type="hidden" name="section[join_the_club_listing_id]" value="32">
+                            <a href="{{ route('admin.listing-items.index', [33]) }}" class="btn btn-sm btn-danger"
                                     target="_blank"> Images List </a>
-                            </div>
+                        </div>
 
                         </div>
                     </div>
