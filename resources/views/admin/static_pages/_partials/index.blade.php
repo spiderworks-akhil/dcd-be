@@ -170,14 +170,14 @@
             >
         </div>
 
-        <div class="form-group col-md-6">
+        {{-- <div class="form-group col-md-6">
             <label>Image title</label>
             <input type="text" name="content[image_title_1]" class="form-control"
                 @if($obj->content && isset($obj->content['image_title_1']))
                     value="{{ $obj->content['image_title_1'] }}"
                 @endif
             >
-        </div>
+        </div> --}}
         <div class="form-group  col-md-6">
             <label>Image 1</label>
 
@@ -191,6 +191,87 @@
                 'type' => 'Image',
                 'holder_attr' => 'content[media_id_2]',
                 'id' => 'content_image_2',
+                'display' => 'horizontal',
+            ])
+        </div>
+         <div class="form-group  col-md-6">
+            <label>Image 2</label>
+
+            @php
+                $media_id_media_story_1 = $obj->content && isset($obj->content['media_id_media_story_1']) ? $obj->content['media_id_media_story_1'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_media_story_1,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_media_story_1]',
+                'id' => 'media_story_1',
+                'display' => 'horizontal',
+            ])
+        </div>
+
+         <div class="form-group  col-md-6">
+            <label>Image 3</label>
+
+            @php
+                $media_id_media_story_2 = $obj->content && isset($obj->content['media_id_media_story_2']) ? $obj->content['media_id_media_story_2'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_media_story_2,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_media_story_2]',
+                'id' => 'media_story_2',
+                'display' => 'horizontal',
+            ])
+        </div>
+         <div class="form-group  col-md-6">
+            <label>Image 4</label>
+
+            @php
+                $media_id_media_story_3 = $obj->content && isset($obj->content['media_id_media_story_3']) ? $obj->content['media_id_media_story_3'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_media_story_3,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_media_story_3]',
+                'id' => 'media_story_3',
+                'display' => 'horizontal',
+            ])
+        </div>
+         <div class="form-group  col-md-6">
+            <label>Image 5</label>
+
+            @php
+                $media_id_media_story_4 = $obj->content && isset($obj->content['media_id_media_story_4']) ? $obj->content['media_id_media_story_4'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_media_story_4,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_media_story_4]',
+                'id' => 'media_story_4',
+                'display' => 'horizontal',
+            ])
+        </div>
+         <div class="form-group  col-md-6">
+            <label>Image 6</label>
+
+            @php
+                $media_id_media_story_5 = $obj->content && isset($obj->content['media_id_media_story_5']) ? $obj->content['media_id_media_story_5'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_media_story_5,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_media_story_5]',
+                'id' => 'media_story_5',
                 'display' => 'horizontal',
             ])
         </div>
