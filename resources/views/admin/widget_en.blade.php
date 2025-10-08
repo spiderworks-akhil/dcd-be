@@ -35,8 +35,7 @@
 
 <div class="row">
     <div class="col-12">
-        <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm"
-            data-validate=true>
+        <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm" data-validate=true>
             @csrf
             <input type="hidden" name="id" value="2">
             <div class="card">
@@ -83,7 +82,7 @@
 
         </form>
     </div>
-</div> 
+</div>
 
 <div class="row">
     <div class="col-12">
@@ -178,8 +177,7 @@
                         <div class="row" style="text-align: center;">
                             <div class="form-group col-md-12">
                                 Short Description
-                                <textarea name="section[short_description]" id="short_description" cols="30" rows="2"
-                                    class="form-control">
+                                <textarea name="section[short_description]" id="short_description" cols="30" rows="2" class="form-control">
 @if (!empty($data['volunteer']['short_description']))
 {{ $data['volunteer']['short_description'] ?? '' }}
 @endif
@@ -324,20 +322,21 @@
                                     value="@if (!empty($data['popup']['close_button_title'])) {{ $data['popup']['close_button_title'] }} @endif">
                             </div>
 
-                        <div class="form-group col-md-6">
-                            <div class="form-check">
-                                <input type="hidden" name="show_popup" value="no">
+                            <div class="form-group col-md-6">
+                                <div class="form-check">
+                                    <input type="hidden" name="show_popup" value="no">
 
-                                <input class="form-check-input" type="checkbox" id="showPopupCheckbox" name="section[show_popup]" value="yes"
-                                    @if (!empty($data['popup']['show_popup']) && $data['popup']['show_popup'] == 'yes') checked @endif>
-                                <label class="form-check-label" for="showPopupCheckbox">
-                                    Show Popup
-                                </label>
+                                    <input class="form-check-input" type="checkbox" id="showPopupCheckbox"
+                                        name="section[show_popup]" value="yes"
+                                        @if (!empty($data['popup']['show_popup']) && $data['popup']['show_popup'] == 'yes') checked @endif>
+                                    <label class="form-check-label" for="showPopupCheckbox">
+                                        Show Popup
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                            
+
 
                         </div>
                     </div>
@@ -378,4 +377,45 @@
     </div>
     </form>
 </div>
+
+
+
+
+<div class="row">
+    <div class="col-12">
+        <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm"
+            data-validate=true>
+            @csrf
+            <input type="hidden" name="id" value="11">
+            <div class="card">
+                <div class="card-header">
+                    Subscribe
+                </div>
+                <div class="card-body row">
+                    <div class="col-md-12">
+                        <div class="row" style="text-align: center;">
+
+                            <div class="form-group col-md-6">
+                                Title
+                                <input type="text" name="section[subscribe_title]" class="form-control"
+                                    value="@if (!empty($data['subscribe']['subscribe_title'])) {{ $data['subscribe']['subscribe_title'] }} @endif">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                 Description
+                                <input type="text" name="section[subscribe_description]" class="form-control"
+                                    value="@if (!empty($data['subscribe']['subscribe_description'])) {{ $data['subscribe']['subscribe_description'] }} @endif">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button class="btn btn-sm btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 </div>
