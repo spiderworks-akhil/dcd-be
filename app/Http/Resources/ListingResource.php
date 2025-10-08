@@ -30,6 +30,7 @@ class ListingResource extends JsonResource
             'url' => $this->url,
             'date' => $this->date,
             'author_id' => new Author($this->author),
+            'priority' => $this->priority,
 
         ];
     }
