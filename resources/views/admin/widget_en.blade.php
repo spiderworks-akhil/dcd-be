@@ -414,6 +414,12 @@
                                     value="@if (!empty($data['subscribe']['subscribe_description'])) {{ $data['subscribe']['subscribe_description'] }} @endif">
                             </div>
 
+                             <div class="form-group col-md-6">
+                                 Button Text
+                                <input type="text" name="section[subscribe_button_text]" class="form-control"
+                                    value="@if (!empty($data['subscribe']['button_text'])) {{ $data['subscribe']['button_text'] }} @endif">
+                            </div>
+
                         </div>
                     </div>
                 </div>
