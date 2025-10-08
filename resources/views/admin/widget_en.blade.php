@@ -386,7 +386,7 @@
         <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm"
             data-validate=true>
             @csrf
-            <input type="hidden" name="id" value="11">
+            <input type="hidden" name="id" value="15">
             <div class="card">
                 <div class="card-header">
                     Subscribe
