@@ -199,6 +199,24 @@
 
                         </div>
 
+                         <div class="form-group col-md-12">
+                            <label>Logo</label>
+                            @php
+                                $media_id_logo = isset($data['volunteer']['media_id_logo'])
+                                    ? (object) $data['volunteer']['media_id_logo']
+                                    : null;
+                            @endphp
+                            @include('admin.media.set_file', [
+                                'file' => $media_id_logo,
+                                'title' => 'Image',
+                                'popup_type' => 'single_image',
+                                'type' => 'Image',
+                                'holder_attr' => 'section[media_id_logo]',
+                                'id' => 'media_id_logo',
+                                'display' => 'horizontal',
+                            ])
+                        </div>
+
                     </div>
 
                 </div>
