@@ -457,6 +457,51 @@
 </fieldset>
 <h3>Awards Section</h3>
 <fieldset>
+ <div class="form-group col-md-12">
+        <label>Short Title</label>
+        <input type="text" name="content[award_short_title]" class="form-control"
+            @if($obj->content && isset($obj->content['award_short_title']))
+                value="{{ $obj->content['award_short_title'] }}"
+            @endif
+        >
+    </div>
+
+    <div class="row">
+
+    <div class="form-group  col-md-6">
+            <label>Image 1</label>
+
+            @php
+                $media_id_award_image_1 = $obj->content && isset($obj->content['media_id_award_image_1']) ? $obj->content['media_id_award_image_1'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_award_image_1,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_award_image_1]',
+                'id' => 'award_image_1',
+                'display' => 'horizontal',
+            ])
+        </div>
+        <div class="form-group  col-md-6">
+            <label>Image 2</label>
+
+            @php
+                $media_id_award_image_2 = $obj->content && isset($obj->content['media_id_award_image_2']) ? $obj->content['media_id_award_image_2'] : null;
+            @endphp
+            @include('admin.media.set_file', [
+                'file' => $media_id_award_image_2,
+                'title' => 'Image',
+                'popup_type' => 'single_image',
+                'type' => 'Image',
+                'holder_attr' => 'content[media_id_award_image_2]',
+                'id' => 'award_image_2',
+                'display' => 'horizontal',
+            ])
+        </div>
+    </div>
+    
     <div class="form-group col-md-12">
         <label>Title</label>
         <input type="text" name="content[awards_title]" class="form-control"
@@ -480,6 +525,7 @@
 
     </div>
     <div class="row">
+        
         <div class="form-group col-md-6">
             <label>Button Text</label>
             <input type="text" name="content[social_btn_text]" class="form-control"
@@ -496,6 +542,7 @@
                 @endif
             >
         </div>
+        
     </div>
 </fieldset>
 <h3>News Section</h3>
