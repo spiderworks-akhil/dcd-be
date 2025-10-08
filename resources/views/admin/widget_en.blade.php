@@ -417,7 +417,7 @@
                              <div class="form-group col-md-6">
                                  Button Text
                                 <input type="text" name="section[subscribe_button_text]" class="form-control"
-                                    value="@if (!empty($data['subscribe']['button_text'])) {{ $data['subscribe']['button_text'] }} @endif">
+                                    value="@if (!empty($data['subscribe']['subscribe_button_text'])) {{ $data['subscribe']['subscribe_button_text'] }} @endif">
                             </div>
 
                         </div>
