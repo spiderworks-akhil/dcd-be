@@ -42,6 +42,22 @@
                         <a href="{{route('admin.listing-items.index',[5])}}" class="btn btn-sm btn-danger" target="_blank"> Add Awards </a>
                     @endif
                 </div>
+                 <div class="form-group col-md-12">
+                    <label>Achievements</label>
+                    <input type="text" name="content[achievements]" class="form-control"
+                        @if($obj->content && isset($obj->content['achievements']))
+                            value="{{ $obj->content['achievements'] }}"
+                        @endif
+                    >
+                </div>
+                 <div class="form-group col-md-12">
+                    <label>All Awards</label>
+                    <input type="text" name="content[all_awards]" class="form-control"
+                        @if($obj->content && isset($obj->content['all_awards']))
+                            value="{{ $obj->content['all_awards'] }}"
+                        @endif
+                    >
+                </div>
             </fieldset>
             
         </div>
