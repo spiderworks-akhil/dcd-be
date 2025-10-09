@@ -253,5 +253,82 @@
 
 </fieldset>
 
+<h3>Follow Us</h3>
+<fieldset>
+
+           <div class="form-group col-md-12">
+            <label>Follow Us</label>
+            <input type="text" name="content[follow_us]" class="form-control"
+                @if($obj->content && isset($obj->content['follow_us']))
+                    value="{{ $obj->content['follow_us'] }}"
+                @endif
+            >
+            </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Twitter</label>
+            <input type="text" name="content[twitter]" class="form-control"
+                @if($obj->content && isset($obj->content['twitter']))
+                    value="{{ $obj->content['twitter'] }}"
+                @endif
+            >
+            </div>
+
+            <div class="form-group col-md-6">
+            <label>FaceBook</label>
+            <input type="text" name="content[facebook]" class="form-control"
+                @if($obj->content && isset($obj->content['facebook']))
+                    value="{{ $obj->content['facebook'] }}"
+                @endif
+            >
+            </div>
+
+    </div>
+
+     <div class="row">
+        <div class="form-group col-md-6">
+            <label>Instagram</label>
+            <input type="text" name="content[instagram]" class="form-control"
+                @if($obj->content && isset($obj->content['instagram']))
+                    value="{{ $obj->content['instagram'] }}"
+                @endif
+            >
+            </div>
+
+            <div class="form-group col-md-6">
+            <label>YouTube</label>
+            <input type="text" name="content[youtube]" class="form-control"
+                @if($obj->content && isset($obj->content['youtube']))
+                    value="{{ $obj->content['youtube'] }}"
+                @endif
+            >
+            </div>
+
+    </div>
+
+     <div class="row">
+        <div class="form-group col-md-6">
+            <label>TikTok</label>
+            <input type="text" name="content[tiktok]" class="form-control"
+                @if($obj->content && isset($obj->content['tiktok']))
+                    value="{{ $obj->content['tiktok'] }}"
+                @endif
+            >
+            </div>
+
+            <div class="form-group col-md-6">
+            <label>Snapchat</label>
+            <input type="text" name="content[snapchat]" class="form-control"
+                @if($obj->content && isset($obj->content['snapchat']))
+                    value="{{ $obj->content['snapchat'] }}"
+                @endif
+            >
+            </div>
+
+    </div>
+
+
+</fieldset>
+
 
 </div>
