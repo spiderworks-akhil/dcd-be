@@ -74,6 +74,14 @@
                     >
                 </div>
                 </div>
+                  <div class="form-group col-md-6">
+                    <label>Play Video</label>
+                    <input type="text" name="content[play_video]" class="form-control"
+                        @if($obj->content && isset($obj->content['play_video']))
+                            value="{{ $obj->content['play_video'] }}"
+                        @endif
+                    >
+                </div>
 
             </fieldset>
 
