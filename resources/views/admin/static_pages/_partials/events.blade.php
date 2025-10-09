@@ -46,9 +46,8 @@
             @endif
             >
         </div>
-        
-        <div class="form-group row">
-            <div class="col-md-6">
+
+         <div class="col-md-12">
                 <label>Featured Events Title</label>
                 <input type="text" name="content[featured_events_title]" class="form-control"
                     @if($obj->content && isset($obj->content['featured_events_title']))
@@ -56,11 +55,23 @@
                 @endif
                 >
             </div>
+        
+        <div class="form-group row">
+           
             <div class="col-md-6">
-                <label>Featured Events Sub Title</label>
-                <input type="text" name="content[featured_events_subtitle]" class="form-control"
-                    @if($obj->content && isset($obj->content['featured_events_subtitle']))
-                value="{{ $obj->content['featured_events_subtitle'] }}"
+                <label>Featured Events Sub Title 1</label>
+                <input type="text" name="content[featured_events_subtitle_1]" class="form-control"
+                    @if($obj->content && isset($obj->content['featured_events_subtitle_1']))
+                value="{{ $obj->content['featured_events_subtitle_1'] }}"
+                @endif
+                >
+            </div>
+
+             <div class="col-md-6">
+                <label>Featured Events Sub Title 2</label>
+                <input type="text" name="content[featured_events_subtitle_2]" class="form-control"
+                    @if($obj->content && isset($obj->content['featured_events_subtitle_2']))
+                value="{{ $obj->content['featured_events_subtitle_2'] }}"
                 @endif
                 >
             </div>
