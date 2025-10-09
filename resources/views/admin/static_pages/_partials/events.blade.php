@@ -24,11 +24,21 @@
             @endif
             >
         </div>
+       
     </fieldset>
 
     <h3>Events & Updates</h3>
     <fieldset>
         <div class="form-group">
+            <label> Short Title</label>
+            <input type="text" name="content[short_title]" class="form-control"
+                @if($obj->content && isset($obj->content['short_title']))
+            value="{{ $obj->content['short_title'] }}"
+            @endif
+            >
+        </div>
+
+         <div class="form-group">
             <label> Upcoming Events Title</label>
             <input type="text" name="content[events_updates_title]" class="form-control"
                 @if($obj->content && isset($obj->content['events_updates_title']))
@@ -37,7 +47,7 @@
             >
         </div>
         
-        {{-- <div class="form-group row">
+        <div class="form-group row">
             <div class="col-md-6">
                 <label>Featured Events Title</label>
                 <input type="text" name="content[featured_events_title]" class="form-control"
@@ -54,7 +64,7 @@
                 @endif
                 >
             </div>
-        </div> --}}
+        </div>
         
 
         <div class="form-group col-md-12">
@@ -66,6 +76,37 @@
             <a href="{{route('admin.listing-items.index',[7])}}" class="btn btn-sm btn-danger" target="_blank" >  Add Event Updates  </a>
         @endif
     </div>
+
+    <div class="form-group row">
+
+        <div class="col-md-6">
+            <label>Category Title</label>
+            <input type="text" name="content[category_title]" class="form-control"
+                @if($obj->content && isset($obj->content['category_title']))
+            value="{{ $obj->content['category_title'] }}"
+            @endif
+            >
+        </div>
+
+        <div class="col-md-6">
+            <label>Event Heading 1</label>
+            <input type="text" name="content[event_heading_1]" class="form-control"
+                @if($obj->content && isset($obj->content['event_heading_1']))
+            value="{{ $obj->content['event_heading_1'] }}"
+            @endif
+            >
+        </div>
+
+  </div>
+
+    <div class="col-md-6">
+            <label>Event Heading 2</label>
+            <input type="text" name="content[event_heading_2]" class="form-control"
+                @if($obj->content && isset($obj->content['event_heading_2']))
+            value="{{ $obj->content['event_heading_2'] }}"
+            @endif
+            >
+        </div>
 
     </fieldset>
     <h3>Rewinds Gallery</h3>
