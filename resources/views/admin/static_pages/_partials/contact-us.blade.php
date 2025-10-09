@@ -219,11 +219,19 @@
 <h3>Email Us</h3>
 <fieldset>
 
+     <div class="form-group col-md-12">
+        <label>Short Title</label>
+        <input type="text" name="content[email_us_short_title]" class="form-control"
+            @if($obj->content && isset($obj->content['email_us_short_title']))
+                value="{{ $obj->content['email_us_short_title'] }}"
+            @endif
+        >
+
         <div class="form-group col-md-12">
         <label>Title</label>
-        <input type="text" name="content[email_us_title_1]" class="form-control"
-            @if($obj->content && isset($obj->content['email_us_title_1']))
-                value="{{ $obj->content['email_us_title_1'] }}"
+        <input type="text" name="content[email_us_title]" class="form-control"
+            @if($obj->content && isset($obj->content['email_us_title']))
+                value="{{ $obj->content['email_us_title'] }}"
             @endif
         >
 
