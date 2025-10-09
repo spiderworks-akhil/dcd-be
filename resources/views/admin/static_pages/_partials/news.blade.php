@@ -33,5 +33,34 @@
             </textarea>
         </div>
 
+        <div class="row">
+         <div class="form-group col-md-6">
+            <label>Featured News Heading</label>
+            <input type="text" name="content[featured]" class="form-control"
+                @if($obj->content && isset($obj->content['featured']))
+            value="{{ $obj->content['featured'] }}"
+            @endif
+            >
+        </div>
+
+         <div class="form-group col-md-6">
+            <label>Latest News Heading</label>
+            <input type="text" name="content[latest]" class="form-control"
+                @if($obj->content && isset($obj->content['latest']))
+            value="{{ $obj->content['latest'] }}"
+            @endif
+            >
+        </div>
+        </div>
+
+          <div class="form-group col-md-6">
+            <label>All News Heading</label>
+            <input type="text" name="content[all_news]" class="form-control"
+                @if($obj->content && isset($obj->content['all_news']))
+            value="{{ $obj->content['all_news'] }}"
+            @endif
+            >
+        </div>
+
     </fieldset>
 </div>
