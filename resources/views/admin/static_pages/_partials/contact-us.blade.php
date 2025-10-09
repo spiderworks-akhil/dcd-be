@@ -107,6 +107,16 @@
 
     <h3>Membership and Volunteer Section</h3>
 <fieldset>
+
+    <div class="form-group col-md-12">
+        <label>Section Heading</label>
+        <input type="text" name="content[section_heading]" class="form-control"
+            @if($obj->content && isset($obj->content['section_heading']))
+                value="{{ $obj->content['section_heading'] }}"
+            @endif
+        >
+    </div>
+
     <div class="form-group col-md-12">
         <label>Left Side - Image</label>
         @php
@@ -204,6 +214,35 @@
             @endif
         >
     </div>
+</fieldset>
+
+<h3>Email Us</h3>
+<fieldset>
+
+        <div class="form-group col-md-12">
+        <label>Title</label>
+        <input type="text" name="content[email_us_title_1]" class="form-control"
+            @if($obj->content && isset($obj->content['email_us_title_1']))
+                value="{{ $obj->content['email_us_title_1'] }}"
+            @endif
+        >
+
+            <div class="form-group col-md-12">
+            <label>Bottom Content</label>
+            <input type="text" name="content[email_us_bottom_content]" class="form-control"
+                @if($obj->content && isset($obj->content['email_us_bottom_content']))
+                    value="{{ $obj->content['email_us_bottom_content'] }}"
+                @endif
+            >
+    </div>
+        <div class="form-group col-md-12">
+        <label>Send Message</label>
+        <input type="text" name="content[send_message]" class="form-control"
+            @if($obj->content && isset($obj->content['send_message']))
+                value="{{ $obj->content['send_message'] }}"
+            @endif
+        >
+
 </fieldset>
 
 
