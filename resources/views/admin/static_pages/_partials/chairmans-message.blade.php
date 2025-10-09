@@ -3,11 +3,30 @@
 
             <h3>Top Content</h3>
             <fieldset>
+
+                 <div class="form-group col-md-12">
+                    <label>Heading</label>
+                    <input type="text" name="content[heading_1]" class="form-control"
+                        @if($obj->content && isset($obj->content['heading_1']))
+                            value="{{ $obj->content['heading_1'] }}"
+                        @endif
+                    >
+                </div>
+
                 <div class="form-group col-md-12">
                     <label>Title</label>
                     <input type="text" name="content[title_1]" class="form-control"
                         @if($obj->content && isset($obj->content['title_1']))
                             value="{{ $obj->content['title_1'] }}"
+                        @endif
+                    >
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Short Title</label>
+                    <input type="text" name="content[short_title_1]" class="form-control"
+                        @if($obj->content && isset($obj->content['short_title_1']))
+                            value="{{ $obj->content['short_title_1'] }}"
                         @endif
                     >
                 </div>
@@ -118,5 +137,6 @@
                     ])
                 </div>
             </fieldset> -->
+            
         </div>
         
