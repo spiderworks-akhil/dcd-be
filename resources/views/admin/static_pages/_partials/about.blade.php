@@ -421,14 +421,14 @@
 <h3>Related Links Block</h3>
 <fieldset>
     {{-- Chairman Message --}}
-    {{-- <div class="form-group col-md-6">
-        <label>Sub Title</label>
-        <input type="text" name="content[sub_title_related_links_block]" class="form-control"
-            @if($obj->content && isset($obj->content['sub_title_related_links_block']))
-                value="{{ $obj->content['sub_title_related_links_block'] }}"
+    <div class="form-group col-md-6">
+        <label>Heading</label>
+        <input type="text" name="content[related_links_block_heading]" class="form-control"
+            @if($obj->content && isset($obj->content['related_links_block_heading']))
+                value="{{ $obj->content['related_links_block_heading'] }}"
             @endif
         >
-    </div> --}}
+    </div>
     <div class="form-group col-md-6">
         <label>Chairman's Message Title</label>
         <input type="text" name="content[title_chairman_block]" class="form-control"
