@@ -44,7 +44,7 @@
                 </div>
 
                  <div class="form-group col-md-12">
-                    <label>Featured <Article></Article></label>
+                    <label>Featured Article</label>
                     <input type="text" name="content[featured_articles]" class="form-control"
                         @if($obj->content && isset($obj->content['featured_articles']))
                             value="{{ $obj->content['featured_articles'] }}"
