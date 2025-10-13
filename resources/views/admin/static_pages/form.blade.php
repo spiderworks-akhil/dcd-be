@@ -239,7 +239,7 @@
                                     <div class="card-header">
                                         Available Languages
                                     </div>
-                                        <div class="card-body">
+                                        <div class=" ">
                                             <div class="row m-0">
                                                     <div class="form-group w-100 mb-2">
                                                         <div class="card-footer text-muted">
@@ -249,8 +249,9 @@
                                                                 <option value="en_draft" @if ($obj->type == 'en_draft') selected @endif>English Draft</option>
                                                                 <option value="ar_draft" @if ($obj->type == 'ar_draft') selected @endif>Arabic Draft</option>
                                                             </select>
+                                                            <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
                                                         </div>
-                                                        <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
+                                                        
                                                     </div>
                                             </div>
                                         </div>

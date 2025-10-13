@@ -45,7 +45,7 @@
                 <div class="card-body row">
                     <div class="col-md-12">
 
-                        <div class="row" style="text-align: center;">
+                        <div class="row " style="text-align: center;">
                             <div class="form-group col-md-12">
                                 Title
                                 <input type="text" name="section[title]" class="form-control"

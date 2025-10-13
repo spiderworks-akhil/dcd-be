@@ -6,12 +6,12 @@
 }
 
 body{
-    background: #FFF !important;
+    /* background: #FFF !important; */
     color: black;
 }
-.card{
+/* .card{
     background: #f1f1f1 !important;
-}
+} */
 .button-menu-mobile{background: var(--primary-color) !important;}
 .btn {background: var(--primary-color) !important;} 
 .btn-primary{background: var(--primary-color) !important;}

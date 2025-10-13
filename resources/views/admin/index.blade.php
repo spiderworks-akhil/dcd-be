@@ -24,7 +24,7 @@
             <!-- Top Bar End -->
 
             <!-- Page Content-->
-            <div class="page-content">
+            <div class="page-content dashboard-home">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-12">
@@ -65,8 +65,8 @@
                                 <div class="card-header">
                                     Header
                                 </div>
-                                <div class="card-body">
-                                    <div class="form-group col-md-12">
+                                <div class="card-body" >
+                                    <div class="form-group  ">
                                         <a href="{{route('admin.static-pages.edit',[encrypt(42)])}}"  target="_blank"> view </a>
                                     </div>
                                 </div>
@@ -74,12 +74,12 @@
                         </div>
 
                         <div class="col-md-4">
-                            <div class="card">
+                            <div class="card flex justify-between">
                                 <div class="card-header">
                                     Footer
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group  ">
                                         <a href="{{route('admin.static-pages.edit',[encrypt(43)])}}"  target="_blank"> view </a>
                                     </div>
                                 </div>

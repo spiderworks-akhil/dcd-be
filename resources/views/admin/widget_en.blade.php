@@ -45,7 +45,7 @@
                 <div class="card-body row">
                     <div class="col-md-12">
 
-                        <div class="row" style="text-align: center;">
+                        <div class="row get-touch"  >
                             <div class="form-group col-md-12">
                                 Title
                                 <input type="text" name="section[title]" class="form-control"
@@ -99,7 +99,7 @@
                     <div class="col-md-12">
                         <input type="hidden" name="section[etihad_rail_listing_id]" value="1">
 
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
 
                             <div class="form-group col-md-12">
                                 Title
@@ -161,7 +161,7 @@
                             ])
                         </div>
 
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
                             <div class="form-group col-md-6">
                                 Small Title
                                 <input type="text" name="section[small_title]" class="form-control"
@@ -174,7 +174,7 @@
                                     value="@if (!empty($data['volunteer']['main_title'])) {{ $data['volunteer']['main_title'] ?? '' }} @endif">
                             </div>
                         </div>
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
                             <div class="form-group col-md-12">
                                 Short Description
                                 <textarea name="section[short_description]" id="short_description" cols="30" rows="2" class="form-control">
@@ -184,7 +184,7 @@
 </textarea>
                             </div>
                         </div>
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
                             <div class="form-group col-md-6">
                                 Button Link
                                 <input type="text" name="section[button_link]" class="form-control"
@@ -240,7 +240,7 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
                             <div class="form-group col-md-12">
                                 Title
                                 <input type="text" name="section[title]" class="form-control"
@@ -297,7 +297,7 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
 
                             <div class="form-group col-md-12">
                                 Title
@@ -418,7 +418,7 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
-                        <div class="row" style="text-align: center;">
+                        <div class="row" style="text-align: left;">
 
                             <div class="form-group col-md-6">
                                 Title
