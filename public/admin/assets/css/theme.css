@@ -57,6 +57,7 @@ img {
 
 .login-bg .logo img{
   filter: invert(1);
+  width: 150px !important;
 
 }
 
