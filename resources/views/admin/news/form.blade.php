@@ -176,7 +176,9 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4  publish-cntr">
+
+
                                             <div class="card">
                                                 <div class="card-header">
                                                     Publish
@@ -198,19 +200,20 @@
                                                             </select>
                                                         </div>
 
-                                                        <div class="form-group w-100  mb-2">
+                                                        <div class="form-group col-12  mb-4">
                                                             <div class="custom-control custom-switch switch-primary float-left">
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="status" name="status" @if(!$obj->id || $obj->status == 1) checked="" @endif>
                                                                 <label class="custom-control-label" for="status">Status</label>
                                                             </div>
+                                                            
 
-                                                            <div class="custom-control custom-switch switch-primary float-right">
+                                                            <div class="custom-control custom-switch switch-primary float-left">
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="is_featured" name="is_featured" @if($obj->is_featured == 1) checked="checked" @endif>
                                                                 <label class="custom-control-label" for="is_featured">Featured</label>
                                                             </div>
 
                                                         </div>
-                                                        <div class="form-group w-100 mb-1">
+                                                        <div class="form-group col-12 col-md-6   mb-4">
                                                             <label for="name">Created On: </label>
                                                             @if(!$obj->id)
                                                                 {{date('d M, Y h:i A')}}
@@ -218,7 +221,7 @@
                                                                 {{date('d M, Y h:i A', strtotime($obj->created_at))}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-12 col-md-6   mb-4">
                                                             <label for="name">Last Updated On: </label>
                                                             @if(!$obj->id)
                                                                 {{date('d M, Y h:i A')}}
@@ -226,7 +229,7 @@
                                                                 {{date('d M, Y h:i A', strtotime($obj->updated_at))}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-12 col-md-6   mb-4">
                                                             <label for="name">Created By: </label>
                                                             @if(!$obj->id)
                                                                 {{auth()->user()->name}}
@@ -234,7 +237,7 @@
                                                                 {{$obj->created_user->name}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-12 col-md-6   mb-4">
                                                             <label for="name">Last Updated By: </label>
                                                             @if(!$obj->id)
                                                                 {{auth()->user()->name}}
@@ -248,7 +251,7 @@
                                                     <button class="btn btn-sm btn-primary float-right">Save</button>
                                                 </div>
                                             </div>
-
+ 
 
                                             <div class="card">
                                                 <div class="card-header">
@@ -267,11 +270,22 @@
                                                                     </div>
                                                                     @if($obj->id)
                                                                     
-                                                                    <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
+                                                                    
+                                                                       <div class="card-footer text-muted">
+                                                    <button class="btn btn-sm btn-primary float-right" type="button" id="submitBtn">Go</button>
+                                                                   
+                                                </div>
+                                                                   
                                                                     @endif
                                                                 </div>
                                                         </div>
                                                     </div>
+
+                                        </div>
+
+
+                                                     
+
                                             @fieldshow(blogs-category_id)
                                             <div class="card">
                                                 <div class="card-header">

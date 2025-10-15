@@ -331,7 +331,7 @@
                                             </div>
                                             @endfieldshow
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4  publish-cntr">
                                             <div class="card">
                                                 <div class="card-header">
                                                     Publish

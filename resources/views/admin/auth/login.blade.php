@@ -14,6 +14,7 @@
         <link href="{{asset('admin/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('admin/assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('admin/assets/css/custom.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('admin/assets/css/theme.css')}}" rel="stylesheet" type="text/css" />
 <style>
     img {
         max-width: 100%;
@@ -21,15 +22,20 @@
 </style>
     </head>
 
-    <body class="account-body accountbg">
+    <body class="login-bg"  >
 
         <!-- Log In page -->
-        <div class="container">
-            <div class="row vh-100 d-flex justify-content-center">
-                <div class="col-12 align-self-center">
+         
+            <div class="row m-0 vh-100 d-flex justify-content-center w-100">
+
+            <div class="col-6 p-0 align-self-center vh-100">
+                <img src="{{asset('admin/assets/images/logbg.png')}}" class="left-img"/>
+ 
+</div>
+                <div class="col-6 align-self-center">
                     <div class="row">
-                        <div class="col-lg-5 mx-auto">
-                            <div class="card">
+                        <div class="col-lg-7 mx-auto">
+                            <div class="card" style="padding:20px;">
                                 <div class="card-body p-0 auth-header-box">
                                     <div class="text-center p-3">
                                         <a class="logo logo-admin">
@@ -63,7 +69,7 @@
 
                                                 <form method="POST" id="RequestOtpForm" action="{{route('admin.auth.request-otp')}}" @if($admin->id) style="display: none;" @endif>
                                                     @csrf
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group ">
                                                         <input type="text" class="form-control" name="email" placeholder="Email"  value=""  />
                                                     </div>
                                                     <button type="submit" class="btn btn-primary">Request Otp</button>
@@ -93,7 +99,7 @@
                     </div><!--end row-->
                 </div><!--end col-->
             </div><!--end row-->
-        </div><!--end container-->
+         
         <!-- End Log In page -->
 
         

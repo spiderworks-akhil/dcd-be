@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #000;
+    --primary-color: #1E43A5;
     --secondary-color: #2ecc71;
     --background-color: #f4f4f4;
     --text-color: #333333;
@@ -13,8 +13,14 @@ body{
     background: #f1f1f1 !important;
 } */
 .button-menu-mobile{background: var(--primary-color) !important;}
-.btn {background: var(--primary-color) !important;} 
-.btn-primary{background: var(--primary-color) !important;}
+.btn {
+      background: #1E43A5  !important;
+    background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
+} 
+.btn-primary{
+  background: #1E43A5  !important;
+    background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
+}
 .dataTables_empty{
     background: #ffffff;
     height: 50vh;
@@ -50,6 +56,7 @@ div.dataTables_wrapper div.dataTables_filter input {
     justify-content: center;
     align-items: center;
     border: 2px dashed #e1e3ed;
+    border-radius: 25px;
 }
 .create-image-icon img {
     width: 70px;

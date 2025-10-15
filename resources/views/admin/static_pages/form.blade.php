@@ -168,7 +168,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 ">
+                        <div class="col-md-3 publish-cntr">
                             <div class="card-publish">
 
 
@@ -179,7 +179,7 @@
                                     @if ($obj->id)
                                         <div class="card-body">
                                             <div class="row m-0">
-                                                <div class="form-group w-100  mb-2">
+                                                <div class="form-group w-100  mb-3">
                                                     <div class="custom-control custom-switch switch-primary float-left">
                                                         <input type="checkbox" class="custom-control-input"
                                                             value="1" id="status" name="status"
@@ -187,7 +187,8 @@
                                                         <label class="custom-control-label" for="status">Status</label>
                                                     </div>
                                                 </div>
-                                                <div class="form-group w-100 mb-1 time-info">
+
+                                                <div class="form-group col-12 col-md-6 mb-4 p-0 time-info">
                                                     <label for="name">Created On </label>
                                                     @if (!$obj->id)
                                                         {{ date('d M, Y h:i A') }}
@@ -195,7 +196,7 @@
                                                         {{ date('d M Y H:i', strtotime($obj->created_at)) }}
                                                     @endif
                                                 </div>
-                                                <div class="form-group w-100  mb-1  time-info">
+                                                <div class="form-group w-100  mb-4 col-12 col-md-6 p-0 time-info">
                                                     <label for="name">Last Updated On </label>
                                                     @if (!$obj->id)
                                                         {{ date('d M, Y h:i A') }}
@@ -203,7 +204,7 @@
                                                         {{ date('d M Y H:i', strtotime($obj->updated_at)) }}
                                                     @endif
                                                 </div>
-                                                <div class="form-group w-100  mb-1  time-info">
+                                                <div class="form-group w-100  mb-4 col-12 col-md-6 p-0 time-info">
                                                     <label for="name">Created By </label>
                                                     @if (!$obj->id)
                                                         {{ auth()->user()->name }}
@@ -211,7 +212,7 @@
                                                         {{ $obj->created_user->name }}
                                                     @endif
                                                 </div>
-                                                <div class="form-group w-100  mb-1  time-info">
+                                                <div class="form-group w-100  mb-4 col-12 col-md-6 p-0 time-info">
                                                     <label for="name">Last Updated By </label>
                                                     @if (!$obj->id)
                                                         {{ auth()->user()->name }}
@@ -223,7 +224,7 @@
                                         </div>
                                     @endif
                                     <div class="card-footer text-muted">
-                                        <select name="status" class="form-control">
+                                        <select name="status" class="form-control mb-3">
                                             <option value="1" @if ($obj->status == 1) selected @endif>
                                                 Publish</option>
                                             <option value="0" @if ($obj->status == 0) selected @endif>Draft
@@ -243,7 +244,7 @@
                                             <div class="row m-0">
                                                     <div class="form-group w-100 mb-2">
                                                         <div class="card-footer text-muted">
-                                                            <select name="type" class="form-control" id="languageSelect">
+                                                            <select name="type" class="form-control mb-3" id="languageSelect">
                                                                 <option value="en" @if ($obj->type == 'en') selected @endif>English</option>
                                                                 <option value="ar" @if ($obj->type == 'ar') selected @endif>Arabic</option>
                                                                 <option value="en_draft" @if ($obj->type == 'en_draft') selected @endif>English Draft</option>
@@ -267,7 +268,7 @@
                                     </div>
                                     <div class="card-body text-center">
                                         <a href="{{ route('admin.faq.index', [$obj->id, 'FrontendPage']) }}"
-                                            class="webadmin-open-ajax-popup btn btn-sm btn-warning" title="SET FAQ"
+                                            class="webadmin-open-ajax-popup btn btn-sm btn-primary" title="SET FAQ"
                                             data-popup-size="large">
                                             @if (count($obj->faq) > 0)
                                                 Update FAQ

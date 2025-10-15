@@ -13,7 +13,6 @@ img {
 }
 .brand {
     height: 85px !important;
-    background-color: #000;
 }
 .brand img {
     padding: 5px;
@@ -47,6 +46,30 @@ img {
     margin: 0 0 20px;
     border-bottom: 1px solid #f5f5f5;
 }
+ .login-bg{
+  background-color: #fff !important;
+ }
+.login-bg .left-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-bg .logo img{
+  filter: invert(1);
+
+}
+
+.login-bg h4{
+color: #1E43A5 !important;
+font-size: 24px !important;
+}
+.login-bg label.error{
+  display: none !important;
+}
+.login-bg .form-control.error{
+  border: 1px solid red !important;
+}
 
 
 /* .topbar {
@@ -66,8 +89,9 @@ img {
     color: var(--blue);
 }
 .left-sidenav-menu li.mm-active>a {
-    color: #fff;
+    color: #fff !important;
     border-radius: 0;
+    background: unset !important;
 }
 .left-sidenav-menu li ul li>a { 
     color: #fff; 
@@ -77,6 +101,7 @@ img {
     width: 25px !important;
 }
 .left-sidenav {
+  color: #2b3f6c;
 }
 .left-sidenav-menu li {
     margin-top: 0px;
@@ -92,6 +117,7 @@ img {
     background: transparent;
 }
 .card { 
+  border-radius: 20px !important;
     overflow: hidden;
     background: #fff;   
     margin: 15px 0;
@@ -115,13 +141,7 @@ thead {
 /* .left-sidenav {
     border-right: 1px solid var(--blue);
 } */
-.btn-primary {
-    color: #fff;
-    background-color: #ee3c35;
-    border-color: transparent;
-    padding: 8px 20px;
-    font-size: 14px;
-}
+
 .auth-form .btn {
     border-radius: 15px;
     height: 40px;
@@ -174,7 +194,8 @@ thead {
 } */
 
 .left-sidenav {
-    background: #000;
+     background: #1E43A5;
+background: linear-gradient(311deg,rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%);
     filter: drop-shadow(-23px 0px 32px rgba(98, 98, 98, 0.19));
     border-radius: 0 20px 20px 0 ;
     overflow: hidden;
@@ -202,7 +223,7 @@ a.btn.btn-info.btn-sm {
 
 .form-control {
     border: 1px solid rgba(217, 217, 217, 0.53) !important;
-    border-radius: 2px;
+    border-radius: 20px;
     padding: 12px 15px 12px 15px;
     margin-bottom: 5px;
     background: #fff;
@@ -211,8 +232,12 @@ a.btn.btn-info.btn-sm {
 }
 .card .card-header {
     border: 0;
+    color: #1E43A5;
 }
-
+table.dataTable{
+  border-radius: 15px;
+  overflow: hidden;
+}
 .account-body {
     background-color: #fff;
 }
@@ -323,13 +348,37 @@ a.logo.logo-admin img {
     background-color: #000;
     color: #fff;
 }
-
-.card .btn {
-    min-width: 100px;
-     padding: 10px 20px;
-     border: 0;
+.publish-cntr .card .btn{
+  max-width: 400px;
+  width: 100%;
 }
+.card .btn {
+  min-width: 150px;
+     padding: 10px 20px;
+
+  
+     border-radius: 25px;
+  background: transparent  !important;
+ background: linear-gradient(311deg, rgba(30, 67, 165, 0) 35%, rgba(69, 114, 237, 0) 100%) !important;
+    border: 1px solid #1E43A5;
+transition: all .3s;
+}
+
+.card .btn:hover {
+  background: #1E43A5  !important;
+    background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
+
+}
+.card .btn {
+    color: #1E43A5;
+}
+
+.card .btn:hover {
+    color: #fff;
+}
+
 form label{
+  color: #afafaf;
     text-align: left !important;
     display: block !important;
 }
@@ -339,21 +388,47 @@ form label{
 
  .wizard>.steps .current a .number, .wizard>.steps .current a:active .number, .wizard>.steps .current a:hover .number {
     color: #fff;
-    background-color: #000;
+    background: #1E43A5  !important;
+    background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
 }
 .wizard>.steps .current a, .wizard>.steps .current a:active, .wizard>.steps .current a:hover {
     font-weight: 600;
-    color: #000; 
+    color: #1E43A5; 
 }
-.thumbnail .card-text{
+.thumbnail .card-body .card-text{
     overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; 
+  text-align: left;
 }
+.thumbnail .card-body .card-text:nth-child(2){
+         color: #00b412;
+    margin-left: auto;
+    display: block;
+    width: 100px;
+    border: 1px solid #00b412;
+    background-color: rgba(221, 221, 221, 0.3) ;
+    border-radius: 10px;
+    padding: 2px;
+    text-align: center;
+    font-size: 10px;
+}
+.thumbnail .card-body a{
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: rgb(0, 170, 255);
+}
+.thumbnail .card-body a.image-remove{ 
+  background-color:red;
+}
+
 .breadcrumb-item.active{
     color: #000 !important;
     font-weight: 600;
 }
+
+
 
 /* ====== FLEX CONTAINERS ====== */
 .flex {
@@ -554,15 +629,17 @@ form label{
   place-self: stretch;
 }
 #add-new-image-container{
-    border: 1px dashed #e3ebf6 !important;
+  border: 1px dashed #e3ebf6 !important;
 }
 #add-new-image-content i{
     color: #000 !important;
 }
 .custom-switch.switch-primary .custom-control-input:checked ~ .custom-control-label::before {
     color: #fff;
-    border-color: #000;
-    background-color: #000;
+    border-color: #1E43A5;
+      background: #1E43A5  !important;
+    background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
+
 }
 
 .left-sidenav-menu li.mm-active .nav-item.active a.nav-link.active { 
@@ -570,7 +647,7 @@ form label{
     font-weight: 600;
 }
 .left-sidenav-menu li.mm-active .mm-active>a.active {
-  color: #fff;
+    color: #fff;
     font-weight: 600;
 }
 .btn.btn-soft-primary{
@@ -578,9 +655,26 @@ form label{
     background-color: #ccc !important;
 }
 .btn.btn-secondary {
- color: #000;
+    color: #000;
     background-color: #ccc !important;
 }
+
+.form-horizontal.form-wizard-wrapper{
+  display: flex;
+}
+.form-horizontal.form-wizard-wrapper .steps {
+   width: 100%;
+   max-width: 250px;
+}
+.form-horizontal.form-wizard-wrapper .content {
+  margin-right: 0;
+  width: calc(100% - 250px);
+}
+
+.form-horizontal.form-wizard-wrapper .content fieldset{
+  padding: 0;
+}
+
 @media (max-width: 1440px) {
 .wizard.vertical > .content { 
     width: 59%;
