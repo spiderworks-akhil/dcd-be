@@ -56,7 +56,7 @@ div.dataTables_wrapper div.dataTables_filter input {
     justify-content: center;
     align-items: center;
     border: 2px dashed #e1e3ed;
-    border-radius: 25px;
+    border-radius: 20px;
 }
 .create-image-icon img {
     width: 70px;

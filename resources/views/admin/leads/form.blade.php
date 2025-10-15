@@ -158,24 +158,30 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 publish-cntr">
                                             <div class="card">
                                                 <div class="card-header">
                                                     Publish
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row m-0">
-                                                        <div class="form-group w-100  mb-2">
+                                                        <div class="form-group col-md-6 p-0  mb-3">
                                                             <div class="custom-control custom-switch switch-primary float-left">
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="status" name="status" @if(!$obj->id || $obj->status == 1) checked="" @endif>
                                                                 <label class="custom-control-label" for="status">Status</label>
                                                             </div>
-                                                            <div class="custom-control custom-switch switch-primary float-right">
+                                                        </div>
+
+
+                                                          <div class="form-group col-md-6 p-0  mb-3">
+                                                              <div class="custom-control custom-switch switch-primary float-right">
                                                                 <input type="checkbox" class="custom-control-input" value="1" id="is_featured" name="is_featured" @if($obj->is_featured == 1) checked="checked" @endif>
                                                                 <label class="custom-control-label" for="is_featured">Featured</label>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group w-100 mb-1">
+
+
+                                                        <div class="form-group col-md-6 p-0  mb-3">
                                                             <label for="name">Created On: </label>
                                                             @if(!$obj->id)
                                                                 {{date('d M, Y h:i A')}}
@@ -183,7 +189,7 @@
                                                                 {{date('d M, Y h:i A', strtotime($obj->created_at))}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-md-6 p-0  mb-3">
                                                             <label for="name">Last Updated On: </label>
                                                             @if(!$obj->id)
                                                                 {{date('d M, Y h:i A')}}
@@ -191,7 +197,7 @@
                                                                 {{date('d M, Y h:i A', strtotime($obj->updated_at))}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-md-6 p-0  mb-3">
                                                             <label for="name">Created By: </label>
                                                             @if(!$obj->id)
                                                                 {{auth()->user()->name}}
@@ -199,7 +205,7 @@
                                                                 {{$obj->created_user->name}}
                                                             @endif
                                                         </div>
-                                                        <div class="form-group w-100  mb-1">
+                                                        <div class="form-group col-md-6 p-0  mb-3">
                                                             <label for="name">Last Updated By: </label>
                                                             @if(!$obj->id)
                                                                 {{auth()->user()->name}}

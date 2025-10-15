@@ -138,15 +138,27 @@
 
     <div class="row">
 
-        <div class="form-group col-md-4">
-            <label>Video Description</label>
+        <div class="form-group col-md-6">
+            <label>Card 1 - Video Description</label>
             <input type="text" name="content[video_description_1]" class="form-control"
                 @if($obj->content && isset($obj->content['video_description_1']))
                     value="{{ $obj->content['video_description_1'] }}"
                 @endif
             >
         </div>
-        <div class="form-group col-md-4">
+        
+
+         <div class="form-group col-md-6">
+            <label>Link </label>
+            <input type="text" name="content[link_1]" class="form-control"
+                @if($obj->content && isset($obj->content['link_1']))
+                    value="{{ $obj->content['link_1'] }}"
+                @endif
+            >
+        </div>
+
+
+        <div class="form-group col-md-6">
                 @php
                     $media_id_1 = $obj->content && isset($obj->content['media_id_1']) ? $obj->content['media_id_1'] : null;
                 @endphp
@@ -161,14 +173,28 @@
                 ])
         </div>
 
-         <div class="form-group col-md-4">
-            <label>Link 1</label>
-            <input type="text" name="content[link_1]" class="form-control"
-                @if($obj->content && isset($obj->content['link_1']))
-                    value="{{ $obj->content['link_1'] }}"
+        <div class="form-group col-md-12"></div>
+
+
+         <div class="form-group col-md-6">
+            <label>Card 2 - Image Description</label>
+            <input type="text" name="content[image_short_description_1]" class="form-control"
+                @if($obj->content && isset($obj->content['image_short_description_1']))
+                    value="{{ $obj->content['image_short_description_1'] }}"
                 @endif
             >
         </div>
+
+          <div class="form-group col-md-6">
+            <label>Link </label>
+            <input type="text" name="content[link_2]" class="form-control"
+                @if($obj->content && isset($obj->content['link_2']))
+                    value="{{ $obj->content['link_2'] }}"
+                @endif
+            >
+        </div>
+
+
 
         {{-- <div class="form-group col-md-6">
             <label>Image title</label>
@@ -179,7 +205,7 @@
             >
         </div> --}}
         <div class="form-group  col-md-6">
-            <label>Image 1</label>
+            <label>  Image  </label>
 
             @php
                 $media_id_2 = $obj->content && isset($obj->content['media_id_2']) ? $obj->content['media_id_2'] : null;
@@ -195,7 +221,7 @@
             ])
         </div>
          <div class="form-group  col-md-6">
-            <label>Image 2</label>
+            <label>Logo  Image 1</label>
 
             @php
                 $media_id_media_story_1 = $obj->content && isset($obj->content['media_id_media_story_1']) ? $obj->content['media_id_media_story_1'] : null;
@@ -212,7 +238,7 @@
         </div>
 
          <div class="form-group  col-md-6">
-            <label>Image 3</label>
+            <label>Logo Image 2</label>
 
             @php
                 $media_id_media_story_2 = $obj->content && isset($obj->content['media_id_media_story_2']) ? $obj->content['media_id_media_story_2'] : null;
@@ -228,7 +254,7 @@
             ])
         </div>
          <div class="form-group  col-md-6">
-            <label>Image 4</label>
+            <label>Logo Image 3</label>
 
             @php
                 $media_id_media_story_3 = $obj->content && isset($obj->content['media_id_media_story_3']) ? $obj->content['media_id_media_story_3'] : null;
@@ -244,7 +270,7 @@
             ])
         </div>
          <div class="form-group  col-md-6">
-            <label>Image 5</label>
+            <label>Logo Image 4</label>
 
             @php
                 $media_id_media_story_4 = $obj->content && isset($obj->content['media_id_media_story_4']) ? $obj->content['media_id_media_story_4'] : null;
@@ -260,7 +286,7 @@
             ])
         </div>
          <div class="form-group  col-md-6">
-            <label>Image 6</label>
+            <label>Logo Image 5</label>
 
             @php
                 $media_id_media_story_5 = $obj->content && isset($obj->content['media_id_media_story_5']) ? $obj->content['media_id_media_story_5'] : null;
@@ -276,34 +302,29 @@
             ])
         </div>
 
+        
+
          <div class="form-group col-md-6">
-            <label>Image Short Description</label>
-            <input type="text" name="content[image_short_description_1]" class="form-control"
-                @if($obj->content && isset($obj->content['image_short_description_1']))
-                    value="{{ $obj->content['image_short_description_1'] }}"
-                @endif
-            >
-        </div>
-
-          <div class="form-group col-md-6">
-            <label>Link 2</label>
-            <input type="text" name="content[link_2]" class="form-control"
-                @if($obj->content && isset($obj->content['link_2']))
-                    value="{{ $obj->content['link_2'] }}"
-                @endif
-            >
-        </div>
-
-         <div class="form-group col-md-4">
-            <label>Image title </label>
+            <label>Card 3 - Image title </label>
             <input type="text" name="content[image_title_2]" class="form-control"
                 @if($obj->content && isset($obj->content['image_title_2']))
                     value="{{ $obj->content['image_title_2'] }}"
                 @endif
             >
         </div>
-        <div class="form-group  col-md-4">
-            <label>Image 2</label>
+
+        <div class="form-group col-md-6">
+            <label>Link </label>
+            <input type="text" name="content[link_3]" class="form-control"
+                @if($obj->content && isset($obj->content['link_3']))
+                    value="{{ $obj->content['link_3'] }}"
+                @endif
+            >
+        </div>
+
+
+        <div class="form-group  col-md-6">
+            <label>Image  </label>
 
             @php
                 $media_id_3 = $obj->content && isset($obj->content['media_id_3']) ? $obj->content['media_id_3'] : null;
@@ -319,17 +340,27 @@
             ])
         </div>
 
-          <div class="form-group col-md-4">
-            <label>Link 3</label>
-            <input type="text" name="content[link_3]" class="form-control"
-                @if($obj->content && isset($obj->content['link_3']))
-                    value="{{ $obj->content['link_3'] }}"
+        <div class="form-group  col-md-12"></div>
+
+
+         
+
+
+          <div class="form-group col-md-6">
+            <label>Card 4 - Link </label>
+            <input type="text" name="content[link_4]" class="form-control"
+                @if($obj->content && isset($obj->content['link_4']))
+                    value="{{ $obj->content['link_4'] }}"
                 @endif
             >
         </div>
 
+       
+
+          
+
          <div class="form-group  col-md-6">
-            <label>Image 3</label>
+            <label>Image  </label>
 
             @php
                 $media_id_4 = $obj->content && isset($obj->content['media_id_4']) ? $obj->content['media_id_4'] : null;
@@ -345,25 +376,29 @@
             ])
         </div>
 
-          <div class="form-group col-md-6">
-            <label>Link 4</label>
-            <input type="text" name="content[link_4]" class="form-control"
-                @if($obj->content && isset($obj->content['link_4']))
-                    value="{{ $obj->content['link_4'] }}"
-                @endif
-            >
-        </div>
 
-         <div class="form-group col-md-4">
-            <label>Image title </label>
+         <div class="form-group col-md-6">
+            <label>Card 5 - Image title </label>
             <input type="text" name="content[image_title_4]" class="form-control"
                 @if($obj->content && isset($obj->content['image_title_4']))
                     value="{{ $obj->content['image_title_4'] }}"
                 @endif
             >
         </div>
-        <div class="form-group  col-md-4">
-            <label>Image 4</label>
+
+
+          <div class="form-group col-md-6">
+            <label>Link </label>
+            <input type="text" name="content[link_5]" class="form-control"
+                @if($obj->content && isset($obj->content['link_5']))
+                    value="{{ $obj->content['link_5'] }}"
+                @endif
+            >
+        </div>
+
+        
+        <div class="form-group  col-md-6">
+            <label>  Image </label>
 
             @php
                 $media_id_5 = $obj->content && isset($obj->content['media_id_5']) ? $obj->content['media_id_5'] : null;
@@ -379,18 +414,20 @@
             ])
         </div>
 
-          <div class="form-group col-md-4">
-            <label>Link 5</label>
-            <input type="text" name="content[link_5]" class="form-control"
-                @if($obj->content && isset($obj->content['link_5']))
-                    value="{{ $obj->content['link_5'] }}"
+        <div class="form-group col-md-12"></div>
+
+        
+<div class="form-group col-md-6">
+            <label>Card 6 - Link </label>
+            <input type="text" name="content[link_6]" class="form-control"
+                @if($obj->content && isset($obj->content['link_6']))
+                    value="{{ $obj->content['link_6'] }}"
                 @endif
             >
         </div>
 
-
         <div class="form-group  col-md-6">
-            <label>Image 5</label>
+            <label>Image  </label>
 
             @php
                 $media_id_6 = $obj->content && isset($obj->content['media_id_6']) ? $obj->content['media_id_6'] : null;
@@ -406,25 +443,29 @@
             ])
         </div>
 
-          <div class="form-group col-md-6">
-            <label>Link 6</label>
-            <input type="text" name="content[link_6]" class="form-control"
-                @if($obj->content && isset($obj->content['link_6']))
-                    value="{{ $obj->content['link_6'] }}"
-                @endif
-            >
-        </div>
+          
 
-           <div class="form-group col-md-4">
-            <label>Image title </label>
+           <div class="form-group col-md-6">
+            <label>Card 7 - Image title </label>
             <input type="text" name="content[image_title_6]" class="form-control"
                 @if($obj->content && isset($obj->content['image_title_6']))
                     value="{{ $obj->content['image_title_6'] }}"
                 @endif
             >
         </div>
-        <div class="form-group  col-md-4">
-            <label>Image 6</label>
+
+        <div class="form-group col-md-6">
+            <label>Link </label>
+            <input type="text" name="content[link_7]" class="form-control"
+                @if($obj->content && isset($obj->content['link_7']))
+                    value="{{ $obj->content['link_7'] }}"
+                @endif
+            >
+        </div>
+
+
+        <div class="form-group  col-md-6">
+            <label>Image  </label>
 
             @php
                 $media_id_7 = $obj->content && isset($obj->content['media_id_7']) ? $obj->content['media_id_7'] : null;
@@ -440,14 +481,7 @@
             ])
         </div>
 
-          <div class="form-group col-md-4">
-            <label>Link 7</label>
-            <input type="text" name="content[link_7]" class="form-control"
-                @if($obj->content && isset($obj->content['link_7']))
-                    value="{{ $obj->content['link_7'] }}"
-                @endif
-            >
-        </div>
+          
 
 
     </div>

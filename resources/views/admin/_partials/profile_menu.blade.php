@@ -4,7 +4,7 @@
                             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="false" aria-expanded="false">
                                 <span class="ml-1 nav-user-name hidden-sm">{{auth()->user()->name}}</span>
-                               <i class="far fa-user" style="font-size:20px"></i>                           
+                               <i class="far fa-user" style="font-size:20px; margin-left:10px;"></i>                           
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="{{route('admin.change-password')}}"><i data-feather="settings" class="align-self-center icon-xs icon-dual mr-1"></i> Change Password</a>

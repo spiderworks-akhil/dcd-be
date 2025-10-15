@@ -28,7 +28,11 @@
          
             <div class="row m-0 vh-100 d-flex justify-content-center w-100">
 
-            <div class="col-6 p-0 align-self-center vh-100">
+            <div class="col-6 p-0 align-self-center vh-100 " style="position:relative;">
+                <div class="log-cap">
+                    Website management made simple!
+
+                </div>
                 <img src="{{asset('admin/assets/images/logbg.png')}}" class="left-img"/>
  
 </div>
@@ -41,8 +45,16 @@
                                         <a class="logo logo-admin">
                                             <x-logo></x-logo>
                                         </a>
-                                        <h4 class="mt-3 mb-1 font-weight-semibold text-dark font-18"><x-site-name></x-site-name> Admin Panel</h4>   
-                                        <p class="text-dark  mb-0">Sign in to continue to <x-site-name></x-site-name>.</p>  
+                                        <h4 class="mt-3 mb-2 font-weight-semibold text-dark font-18">
+                                            <!-- <x-site-name></x-site-name> -->
+                                            
+                                           Hey, welcome back! 
+                                        
+                                        </h4>   
+                                        <p class="text-dark  mb-0">Securely sign in to continue. 
+                                            <!-- <x-site-name></x-site-name>. -->
+                                        
+                                        </p>  
                                     </div>
                                 </div>
                                 <div class="card-body p-0">
@@ -72,13 +84,13 @@
                                                     <div class="form-group ">
                                                         <input type="text" class="form-control" name="email" placeholder="Email"  value=""  />
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Request Otp</button>
+                                                    <button type="submit" class="btn btn-primary">Request OTP</button>
                                                 </form>
                                                 <form method="POST" id="ValidateOtpForm" action="{{ route('admin.auth.validate-otp') }}" @if(!$admin->id) style="display: none;" @endif>
                                                     @csrf
                                                     <input type="hidden" name="id" value="{{encrypt($admin->id)}}" />
                                                     <div class="form-group col-md-12">
-                                                        <p class="m-0">{{$admin->email}} <a href="javascript:void(0)" style="color: rgb(223, 129, 68)" id="change-email">Change</a></p>
+                                                        <h5 class="m-0">{{$admin->email}} <a href="javascript:void(0)" style="color: rgb(223, 129, 68)" id="change-email">Change</a></h5>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <input type="number" class="form-control" maxlength="6" name="otp" placeholder="Enter OTP" />
@@ -92,7 +104,10 @@
                                 </div><!--end card-body-->
                                
                                 <div class="card-body bg-light-alt text-center">
-                                    <span class="text-muted d-none d-sm-inline-block"><x-site-name></x-site-name> © {{date('Y')}}</span>                                            
+                                    <span class="text-muted d-none d-sm-inline-block">
+                                        <!-- <x-site-name></x-site-name> -->
+                                        
+                                        Dubai Club for People of Determination © {{date('Y')}}</span>                                            
                                 </div>
                             </div><!--end card-->
                         </div><!--end col-->
