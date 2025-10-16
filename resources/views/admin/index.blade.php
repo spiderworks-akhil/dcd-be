@@ -41,29 +41,171 @@
                         </div><!--end col-->
                     </div><!--end row-->
                     <div class="row">
-                        {{-- <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="text-center">
 
 
-                                        <h4 class="page-title">Welcome Administrator</h4>
-                                        <h6 class="mb-3 font-weight-normal text-muted">{{auth()->user()->name}} ({{auth()->user()->email}})</h6>
-                                        <div id="animationSandbox">
-                                            <div class="p-4 d-inline-block">
-                                                <x-logo></x-logo>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                    <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #e5f1fd;">
+                                <div class="card-header">
+                                    Total Number of Pages 
+                                </div>
+                                <div class="card-body" >
+                                     <h4>99</h4>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #e5def0;">
+                                <div class="card-header">
+                                   News Published (English)
+                                </div>
+                                <div class="card-body" >
+                                     <h4>150</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #d6edd9;">
+                                <div class="card-header">
+                                  News Published (Arabic)
+                                </div>
+                                <div class="card-body" >
+                                     <h4>150</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                          <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #f6f0d8;">
+                                <div class="card-header">
+                                  Blogs Published (English)
+                                </div>
+                                <div class="card-body" >
+                                     <h4>105</h4>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #ffe0cb;">
+                                <div class="card-header">
+                                  Blogs Published (Arabic)
+                                </div>
+                                <div class="card-body" >
+                                     <h4>105</h4>
+                                </div>
+                            </div>
+                        </div>
+
+
+                            <div class="col-md-4">
+                            <div class="card dashboard_list" style="background: #eceff6;">
+                                <div class="card-header">
+                                  Events Published 
+                                </div>
+                                <div class="card-body" >
+                                     <h4>52</h4>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                             <div class="col-md-6">
+                            <div class="card dashboard_news"  >
+                                <div class="card-header">
+                                 Recent News published (Arabic) 
+                                </div>
+                                <div class="card-body" >
+
+
+                                      <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>Sheikha Latifa honours winners of Holy Quran competition, praises qualitative shift witnessed at event</h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+                                      <hr/>
+
+                                       <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>  UAE finish with 21 medals in Fazza Para Athletics GP 2025 </h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+
+                                      <hr/>
+
+
+                                       <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>  2025 Fazza International C’ships: Strategic partner and sponsors announced </h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                          <div class="col-md-6">
+                            <div class="card dashboard_news"  >
+                                <div class="card-header">
+                                 Recent News published (Arabic) 
+                                </div>
+                                <div class="card-body" >
+
+
+                                      <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>Sheikha Latifa honours winners of Holy Quran competition, praises qualitative shift witnessed at event</h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+                                      <hr/>
+
+                                       <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>  UAE finish with 21 medals in Fazza Para Athletics GP 2025 </h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+
+                                      <hr/>
+
+
+                                       <div class="dashboard_news_list flex items-center"> 
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <div>
+                                            <h4>  2025 Fazza International C’ships: Strategic partner and sponsors announced </h4>
+                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        </div> 
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        
+
+
+ 
+
+
+                         
+
+                        <!-- <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
-                                    Header
+                                    Header 
                                 </div>
                                 <div class="card-body" >
                                     <div class="form-group  ">
@@ -84,7 +226,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
