@@ -113,10 +113,10 @@
 
 
 
-                             <div class="col-md-6">
-                            <div class="card dashboard_news"  >
+                             <div class="col-md-6" style=" margin-bottom:50px;">
+                            <div class="card dashboard_news  " style="height:100%;  " >
                                 <div class="card-header">
-                                 Recent News published (Arabic) 
+                                 Recent News published (English) 
                                 </div>
                                 <div class="card-body" >
 
@@ -153,28 +153,28 @@
                         </div>
 
 
-                          <div class="col-md-6">
-                            <div class="card dashboard_news"  >
+                          <div class="col-md-6" style=" margin-bottom:50px;" >
+                            <div class="card dashboard_news dashboard_news_arabic  " style="height:100%; " >
                                 <div class="card-header">
-                                 Recent News published (Arabic) 
+                                 آخر الأخبار المنشورة
                                 </div>
                                 <div class="card-body" >
 
 
                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
                                         <div>
-                                            <h4>Sheikha Latifa honours winners of Holy Quran competition, praises qualitative shift witnessed at event</h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
+                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
                                         </div> 
                                       </div>
                                       <hr/>
 
                                        <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
-                                        <div>
-                                            <h4>  UAE finish with 21 medals in Fazza Para Athletics GP 2025 </h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
+                                      <div>
+                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
+                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
                                         </div> 
                                       </div>
 
@@ -182,10 +182,10 @@
 
 
                                        <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
-                                        <div>
-                                            <h4>  2025 Fazza International C’ships: Strategic partner and sponsors announced </h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
+                                       <div>
+                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
+                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
                                         </div> 
                                       </div>
                                 </div>

@@ -981,13 +981,27 @@ form label {
 
 .dashboard_news_list h4{
     font-size: 16px;
-    line-height: 20px;
+    line-height: 20px; 
 }
 
 .dashboard_news_list p{
     font-size: 13px;
     line-height: 16px;
     color: #c1c1c1;
+}
+.dashboard_news_arabic{
+    direction: rtl;
+}
+.dashboard_news_arabic .dashboard_news_list h4{
+   text-align: right;
+}
+
+.dashboard_news_arabic .dashboard_news_list p{
+     text-align: right;
+}
+
+.dashboard_news_arabic .card-header{
+    text-align: right;
 }
 
 @media (max-width: 1440px) {
