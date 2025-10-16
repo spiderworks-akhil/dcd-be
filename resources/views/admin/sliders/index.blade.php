@@ -60,14 +60,14 @@
                                                                     <label>Slider Name</label>
                                                                     <input type="text" name="slider_name" class="form-control" value="" >
                                                                 </div>
-                                                                <div class="form-group col-md-3">
+                                                                {{-- <div class="form-group col-md-3">
                                                                     <label>Width</label>
                                                                     <input type="text" name="width" class="form-control" value="" maxLength="4" >
                                                                 </div>
                                                                 <div class="form-group col-md-3">
                                                                     <label>Height</label>
                                                                     <input type="text" name="height" class="form-control" value="" maxLength="4" >
-                                                                </div>
+                                                                </div> --}}
                                                             </div>
                                                             
                                                         </div>
@@ -93,8 +93,8 @@
                                         <tr>
                                             <th class="nosort nosearch span1" width="30">Slno</th>
                                             <th>Slider Name</th>
-                                            <th>Width</th>
-                                            <th>Height</th>
+                                            {{-- <th>Width</th>
+                                            <th>Height</th> --}}
                                             <th class="nosort nosearch" width="30">Manage</th>
                                             <th class="nosort nosearch" width="30">Delete</th>
                                         </tr>
@@ -123,8 +123,8 @@
       var my_columns = [
           {data: null, name: 'slno'},
           {data: 'slider_name', name: 'slider_name'},
-          {data: 'width', name: 'width'},
-          {data: 'height', name: 'height'},
+        //   {data: 'width', name: 'width'},
+        //   {data: 'height', name: 'height'},
           {data: 'action_edit', name: 'action_edit'},
           {data: 'action_delete', name: 'action_delete'}
       ];
