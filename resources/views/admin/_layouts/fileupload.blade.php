@@ -48,4 +48,31 @@
     <script src="{{ asset('admin/assets/js/jquery.imgcheckbox.js')}}"></script>
     <script src="{{ asset('admin/plugins/ckeditor/build/ckeditor.js')}}"></script>
     <script src="{{asset('admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+
+     <script>
+        let isFormDirty = false;
+
+        const form = document.getElementById('InputFrm');
+        form.addEventListener('input', () => { isFormDirty = true; });
+        form.addEventListener('submit', () => { isFormDirty = false; });
+
+        // Warn on page unload
+        window.addEventListener('beforeunload', function (e) {
+            if (isFormDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Warn on clicking internal links
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (isFormDirty) {
+                    const confirmLeave = $.confirm("You have unsaved changes. Are you sure you want to leave?");
+                    if (!confirmLeave) e.preventDefault();
+                }
+            });
+        });
+
+</script>
 @endsection
