@@ -90,11 +90,11 @@
                                                     @csrf
                                                     <input type="hidden" name="id" value="{{encrypt($admin->id)}}" />
                                                     <div class="form-group col-md-12">
-                                                        <h5 class="m-0">{{$admin->email}} <a href="javascript:void(0)" style="color: rgb(223, 129, 68)" id="change-email">Change</a></h5>
+                                                        <h5 class="m-0">{{$admin->email}} <a href="javascript:void(0)" style="color: rgb(229 0 0);" id="change-email">Change</a></h5>
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <input type="number" class="form-control" maxlength="6" name="otp" placeholder="Enter OTP" />
-                                                        <label style="float: right;"><a href="{{route('admin.auth.resend-otp', [encrypt($admin->id)])}}" class="resend-otp-btn" style="color: rgb(223, 129, 68)">Resend OTP</a></label>
+                                                        <label style="float: right;"><a href="{{route('admin.auth.resend-otp', [encrypt($admin->id)])}}" class="resend-otp-btn" style="color: rgb(229 0 0);">Resend OTP</a></label>
                                                     </div>
                                                     
                                                     <button type="submit" class="btn btn-primary">Verify</button>
