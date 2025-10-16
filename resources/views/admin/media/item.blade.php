@@ -16,7 +16,7 @@
 	    <hr/>
 	    <div class="text-center">
 	    	@if(auth()->user()->can($permissions['edit']))
-	    	<a href="{{route($route.'.edit', [encrypt($file->id)])}}" class="webadmin-open-ajax-popup item-meida" title="Edit Image Details" data-popup-size="large"><i class="fas fa-pencil-alt"></i></a>
+	    	<a href="{{route($route.'.edit', [encrypt($file->id)])}}" class="media-edit webadmin-open-ajax-popup item-meida" title="Edit Image Details" data-popup-size="large"><i class="fas fa-pencil-alt"></i></a>
 	    	@endif
 	    	@if(auth()->user()->can($permissions['delete']))
 	    	<a href="{{route($route.'.index.post')}}" data-id="{{$file->id}}" class="media-delete ml-2"><i class="fas fa-trash"></i></a>

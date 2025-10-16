@@ -144,7 +144,7 @@
                                                     <label for="exampleInputPassword1">Url</label>
                                                     <input type="text" name="custom_url" class="form-control" id="inputCustomUrl">
                                                   </div>
-                                                  <div class="form-group mb-2">
+                                                  <div class="form-group mb-2 ml-4">
                                                     <div class="checkbox">
                                                       <input type="checkbox" id="inputTarget"><label for="inputTarget"> New Window</label>
                                                     </div>
@@ -169,10 +169,15 @@
                                         </div>
                                         <hr>
                                         <div class="row">
-                                            <div class="col-sm-12 text-right">
+                                            <div class="col-sm-6 text-right">
                                                 <a href="{{ route($route.'.index') }}" class="btn btn-soft-primary">Back to List</a>
-                                                <button type="button" id="save-btn" class="btn btn-primary px-4">Submit</button>
+                                             </div>
+
+                                              <div class="col-sm-6 text-right">
+                                                 <button type="button" id="save-btn" class="btn btn-primary px-4">Submit</button>
                                             </div>
+
+
                                         </div>
                                     </form>                                                                   
                                 </div><!--end card-body-->

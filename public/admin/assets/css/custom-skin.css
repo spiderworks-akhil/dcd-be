@@ -48,6 +48,7 @@ div.dataTables_wrapper div.dataTables_filter input {
     font-style: italic;
 }
 .create-image-icon{
+    font-size: 15px;
     background: #ffffff;
     height: 100px;
     width: 100%;

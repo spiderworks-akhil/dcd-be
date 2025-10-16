@@ -12,7 +12,7 @@
 
             <div class="row bottom-btn m-0">
                 <div class="col-md-12" align="right">
-                    <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary">Submit</button>
+                    <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary">Submit </button>
                 </div>
             </div>
         </form>               

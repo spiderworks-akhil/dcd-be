@@ -26,7 +26,7 @@
 <!-- Top Bar End -->
 
 <!-- Page Content-->
-<div class="page-content">
+<div class="page-content all-widget-page">
     <div class="container-fluid">
         <!-- Page-Title -->
         <div class="row">
@@ -56,9 +56,12 @@
             $type = (!empty(request()->input('type')))?request()->input('type'):'en';
         @endphp
 
-        <div class="row" style="justify-content: center;">
-            <a style="margin: 3px;" href="{{ url('sw-admin/widgets?type=en') }}"   class="btn btn-info @if($type == 'en') w-active @endif" >EN</a>
+        <div class="  card  " style="background: none !important; border:0;"  >
+            <div class="flex items-center justify-center">
+                 <a style="margin: 3px;" href="{{ url('sw-admin/widgets?type=en') }}"   class="btn btn-info @if($type == 'en') w-active @endif" >EN</a>
             <a style="margin: 3px;" href="{{ url('sw-admin/widgets?type=ar') }}"  class="btn btn-info  @if($type == 'ar') w-active @endif" >AR</a>
+
+            </div> 
         </div>
 
         @if($type == 'en')

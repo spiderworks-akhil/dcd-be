@@ -4,7 +4,7 @@
             <div class="card-body">
                 <form class="filter-form" id="searchForm">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="username">Date</label>
                                 <input type="text" class="form-control datatable-advanced-search date-range-picker" name="date_between-job_applications.created_at">
@@ -36,9 +36,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group mt-4">
-                                <button type="button" class="btn btn-primary px-4" onclick="dt();">Filter</button>
+                        <div class="col-md-3">
+                            <div class="form-group mt-4 flex items-center">
+                                <button type="button" class="btn btn-primary px-4 mr-2" onclick="dt();">Filter</button>
                                 <button type="button" class="btn btn-secondary px-4" id="search-table-clear-btn">Clear</button>
                             </div>
                         </div>

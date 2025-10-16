@@ -73,7 +73,7 @@
                                 <div id="files" class="files col-md-12"></div>
                                 
                                 <div class="media-list-head row">
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     @if(auth()->user()->can($permissions['delete']))
                                       <a href="javascript:void(0);" class="btn btn-danger bulk-select">Bulk Select</a>
                                       <div class="bulk-delete-action" style="display: none;">
@@ -82,9 +82,9 @@
                                       </div>
                                     @endif
                                   </div>
-                                  <div class="col-md-6 text-right row">
+                                  <div class="col-md-8 text-right row">
                                       <div class="col-md-6">
-                                        <label>
+                                        <label class="d-block">
                                           <select class="form-control input-sm" id="mediaSort">
                                             <option value="">Sort By</option>
                                             <option value="SHL">Size (High to Low)</option>
@@ -93,7 +93,7 @@
                                         </label>
                                       </div>
                                       <div class="col-md-6">
-                                        <label>
+                                        <label class="d-block">
                                           <input class="form-control input-sm" placeholder="Search..." aria-controls="datatable" type="search" id="mediaSearchInput">
                                         </label>
                                       </div>

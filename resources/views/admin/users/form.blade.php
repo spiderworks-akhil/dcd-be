@@ -97,9 +97,11 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-sm-12 text-right">
+                                            <div class="col-sm-6 text-right  ">
                                                 <a href="{{ route($route.'.index') }}" class="btn btn-soft-primary">Back to List</a>
-                                                <button type="submit" class="btn btn-primary px-4">Submit</button>
+                                            </div>
+                                            <div class="col-sm-6 text-right  ">
+                                                 <button type="submit" class="btn btn-primary px-4">Submit</button>
                                             </div>
                                         </div>
                                     </form>                                                                   

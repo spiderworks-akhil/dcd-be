@@ -78,10 +78,13 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-sm-12 text-right">
+                                            <div class="col-sm-4 text-right">
                                                 <a href="{{route('admin.media.popup', ['popup_type'=>'slider', 'type'=>'Image-Video', 'holder_attr'=>'slider-list', 'title'=>'Gallery', 'related_id'=>encrypt($obj->id)])}}" class="webadmin-open-ajax-popup btn btn-warning" title="Media Files" data-popup-size="xlarge"><i class="fa fa-plus-sign"></i> Add Medias</a>
-
+</div>
+                                                <div class="col-sm-4 text-right">
                                                 <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                              <div class="col-sm-4 text-right">  
                                                 <a href="{{ route($route.'.index') }}" class="btn btn-soft-primary">Cancel</a>
                                             </div>
                                         </div>

@@ -58,7 +58,7 @@
         <!--end row-->
         <!-- end page title end breadcrumb -->
         @include('admin.leads._partials.search_settings', ['search_settings'=>$search_settings])
-        <div class="row  float-right m-2">
+        <div class="row  float-right m-2 card">
             <button type="button" class="btn btn-success" id="export-to-excel">
                 <i class="fas fa-download"></i> Export to Excel
             </button>

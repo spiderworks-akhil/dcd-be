@@ -143,7 +143,7 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label>Image</label>
                             @php
                                 $media_id_1 = isset($data['volunteer']['media_id_1'])
@@ -199,7 +199,7 @@
 
                         </div>
 
-                         <div class="form-group col-md-12">
+                         <div class="form-group col-md-6">
                             <label>Logo</label>
                             @php
                                 $media_id_logo = isset($data['volunteer']['media_id_logo'])
@@ -305,7 +305,7 @@
                                     value="@if (!empty($data['popup']['title'])) {{ $data['popup']['title'] }} @endif">
                             </div>
 
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
                                 <label>Image</label>
                                 @php
                                     $media_id_2 = isset($data['popup']['media_id_2'])
@@ -322,6 +322,8 @@
                                     'display' => 'horizontal',
                                 ])
                             </div>
+
+                            <div class="form-group col-md-12"></div>
 
                             <div class="form-group col-md-12">
                                 Button Link
@@ -366,7 +368,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-right">
+                <div class="  card-footer text-right">
                     <button class="btn btn-sm btn-primary">Update</button>
                 </div>
             </div>
@@ -396,7 +398,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-right">
+            <div class="card card-footer text-right">
                 <button class="btn btn-sm btn-primary">Update</button>
             </div>
     </div>

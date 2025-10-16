@@ -1,17 +1,17 @@
-<div class="settings-item w-100 confirm-wrap">
+<div class="settings-item w-100 confirm-wrap card" style="border:0; background:none;">
   <div class="row m-0">
     <form id="inputForm" data-validate=true class="w-100" method="POST" @if($obj->id) action="{{ route($route.'.update') }}" @else action="{{ route($route.'.store') }}" @endif enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="id" @if($obj->id) value="{{encrypt($obj->id)}}" @endif />
-        <div class="form-group">
+        <div class="form-group col-md-12">
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" name="name" value="{{$obj->name}}">
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-12">
           Configurations
           <hr/>
         </div>
-        <div class="row">
+        <div class="row m-0">
           <div class="form-group col-md-6">
               <label for="name">Title</label>
               <select class="form-control" name="title">
@@ -121,7 +121,12 @@
         </div>
 
         </div>
-        <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary float-right">Submit</button>
+        <div class="  col-md-12">
+           <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary float-right">Submit</button>
+
+        </div>
+
+       
     </form>
   </div>
 </div>

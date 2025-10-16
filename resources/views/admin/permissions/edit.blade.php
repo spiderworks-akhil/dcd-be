@@ -12,9 +12,9 @@
                     <input type="text" class="form-control" name="route" id="route" value="{{$obj->route}}">
                 </div>
             </div>               
-            <div class="row bottom-btn m-0">
+            <div class="row bottom-btn m-0 card" style="backgroud:none; border:0;">
                 <div class="col-md-12" align="right">
-                    <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary">Submit</button>
+                    <button type="button" id="webadmin-ajax-form-submit-btn" class="btn btn-primary">Submit   </button>
                 </div>
              </div>
         </form>               

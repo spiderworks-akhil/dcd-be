@@ -163,7 +163,7 @@
                         <div class="card-body">
                             @foreach($other_data as $odata)
                             <div class="settings-item row">
-                                <div class="form-group col-md-5">
+                                <div class="form-group col-md-6">
                                     <label>Key</label>
                                     <input type="text" name="code[]" class="form-control" value="{{$odata->code}}" readonly="">
                                 </div>
@@ -177,7 +177,7 @@
                             </div>
                             @endforeach
                             <div class="settings-item row">
-                                <div class="form-group col-md-5">
+                                <div class="form-group col-md-6">
                                     <label>Key</label>
                                     <input type="text" name="code[]" class="form-control" value="">
                                 </div>
@@ -189,15 +189,20 @@
 
                                 </div>
                             </div>
+                           
                             <div class="row bottom-btn">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <a href="javascript:void(0);" class="btn btn-soft-primary btn-sm btn-addnew">Add New</a>
+                                </div>
+
+                                <div class="col-md-6">
+                                     <button class="btn btn-sm btn-primary">Save</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer text-right">
+                        <!-- <div class="card-footer text-right">
                             <button class="btn btn-sm btn-primary">Save</button>
-                        </div>
+                        </div> -->
                     </div>
                 </form>
             </div>
