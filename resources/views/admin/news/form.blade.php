@@ -76,11 +76,11 @@
                                                         <div class="row m-0">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="">
+                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="" readonly>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Slug (for url)</label>
-                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug">
+                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug" readonly>
                                                                 <small class="text-muted">The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small>
                                                             </div>
 
@@ -108,10 +108,10 @@
                                                                 <textarea name="iframe_code" class="form-control" rows="2">{{$obj->iframe_code}}</textarea>
                                                             </div> --}}
 
-                                                            <div class="form-group col-md-12">
+                                                            {{-- <div class="form-group col-md-12">
                                                                 <label>Bottom content</label>
                                                                 <textarea name="bottom_content" class="form-control editor" rows="2">{{$obj->bottom_content}}</textarea>
-                                                            </div>
+                                                            </div> --}}
 
 
 
