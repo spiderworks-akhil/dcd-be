@@ -29,11 +29,19 @@ class WebadminController extends Controller {
 	public function index()
 	{
         $front_end_pages = FrontendPage::where('status',1)->count();
-        $news = News::where('status',1)->count();
-        $events = Event::where('status',1)->count();
+        $news_en = News::where('status',1)->where('type','en')->count();
+        $news_ar = News::where('status',1)->where('type','ar')->count();
+        $events_en = Event::where('status',1)->where('type','en')->count();
+        $events_ar = Event::where('status',1)->where('type','ar')->count();
+
+        $recent_news_en = News::with('category')->where('status',1)->where('type','en')->limit('3')->orderBy('created_at','desc')->get();
+        $recent_news_ar = News::with('category')->where('status',1)->where('type','ar')->limit('3')->orderBy('created_at','desc')->get();
+
+        // dd($recent_news_en->toArray());
+
         $blogs = Blog::where('status',1)->count();
 
-		return view('admin.index',compact('front_end_pages','news','events','blogs'));
+		return view('admin.index',compact('front_end_pages','news_en','blogs','news_ar','events_en','events_ar','recent_news_en','recent_news_ar'));
 	}
 
     public function MediaCentre() {
