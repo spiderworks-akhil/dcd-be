@@ -34,6 +34,16 @@
                 </div>
             </fieldset>
 
+             <h3>Middle Content</h3>
+            <fieldset>
+                <div class="form-group col-md-12">
+                  <div class="form-group col-md-12">
+                        <a href="{{route('admin.team.index')}}" class="btn btn-sm btn-danger" target="_blank" > Add Team </a>
+                </div>
+            </fieldset>
+
+       
+
             
         </div>
         

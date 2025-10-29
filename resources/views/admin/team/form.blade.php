@@ -18,7 +18,10 @@
                 <!-- end navbar-->
             </div>
             <!-- Top Bar End -->
-
+            @php
+                $user = auth()->user();
+                $roleName = $user->roles->pluck('name')->first();
+            @endphp
             <!-- Page Content-->
             <div class="page-content">
                 <div class="container-fluid">
@@ -71,12 +74,12 @@
                                                         <div class="row m-0">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="">
+                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                             </div>
                                                             @fieldshow(team-title)
                                                             <div class="form-group col-md-6">
                                                                 <label>Heading</label>
-                                                                <input type="text" name="title" class="form-control" value="{{$obj->title}}" required="">
+                                                                <input type="text" name="title" class="form-control" value="{{$obj->title}}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                             </div>
                                                             @endfieldshow
                                                             <div class="form-group col-md-12">

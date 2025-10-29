@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\BaseController as Controller;
-use App\Traits\ResourceTrait;
-
 use App\Models\Role;
+use App\Models\Language;
+
 use App\Models\Permission;
+use App\Traits\ResourceTrait;
 
 use Illuminate\Http\Request as Reqst;
 use Request, View, Redirect, DB, Image, Validator;
+use App\Http\Controllers\Admin\BaseController as Controller;
 
 class RoleController extends Controller
 {
@@ -49,14 +50,18 @@ class RoleController extends Controller
     public function create()
     {
         $permissions = Permission::where('public', 1)->get();
-        return view($this->views . '.form')->with('obj', $this->model)->with('r_permissions', $permissions);
+        $languages = Language::where('status', 1)->get();
+
+        return view($this->views . '.form')->with('obj', $this->model)->with('r_permissions', $permissions)->with('languages', $languages);
     }
 
     public function edit($id) {
         $id = decrypt($id);
         if($obj = $this->model->find($id)){
             $permissions = Permission::where('public', 1)->get();
-            return view($this->views . '.form')->with('obj', $obj)->with('r_permissions', $permissions);
+            $languages = Language::where('status', 1)->get();
+            $role_languages = DB::table('language_roles')->where('role_id', $obj->id)->pluck('language_id')->toArray();
+            return view($this->views . '.form')->with('obj', $obj)->with('r_permissions', $permissions)->with('languages', $languages)->with('role_languages', $role_languages);;
         } else {
             return $this->redirect('notfound');
         }
@@ -96,6 +101,19 @@ class RoleController extends Controller
                         DB::table('role_has_permissions')->insert(['role_id'=>$obj->id, 'permission_id'=>$value]);
                     }
                 }
+
+            // ----- Handle Languages -----
+            DB::table('language_roles')->where('role_id', $obj->id)->delete();
+
+            // Insert new selected languages
+            if (isset($data['languages'])) { 
+                foreach ($data['languages'] as $languageId) {
+                    DB::table('language_roles')->insert([
+                        'role_id' => $obj->id,
+                        'language_id' => $languageId
+                    ]);
+                }
+            }
             }
             $this->clear_cache();
             return Redirect::to(route('admin.roles.edit', array('id'=>encrypt($obj->id))))->withSuccess('Role successfully updated!');

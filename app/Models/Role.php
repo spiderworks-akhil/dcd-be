@@ -50,4 +50,9 @@ class Role extends Model
         return $this->belongsToMany('App\Models\Permission', 'role_has_permissions', 'role_id', 'permission_id');
     }
 
+    
+
+
+
+   
 }

@@ -65,6 +65,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email|max:250',
             'roles' => 'required'
         ]);
+        
         if ($validator->fails()){
             if (Request::ajax())
                 $response = response()->json(['errors' => $validator->errors()->all()]);

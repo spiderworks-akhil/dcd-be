@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Input, View, Validator, Redirect, Auth, DB, Session, Config;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Widget;
+use App\Models\News;
+use App\Models\Page;
 use App\Models\User;
-use App\Events\LoginHistory;
+use App\Models\Widget;
 use App\Models\Setting;
+use App\Events\LoginHistory;
+use App\Models\FrontendPage;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Blog;
+use App\Models\Event;
+use Illuminate\Support\Facades\Hash;
+use Input, View, Validator, Redirect, Auth, DB, Session, Config;
 
 class WebadminController extends Controller {
 
@@ -23,7 +28,12 @@ class WebadminController extends Controller {
 	 */
 	public function index()
 	{
-		return view('admin.index');
+        $front_end_pages = FrontendPage::where('status',1)->count();
+        $news = News::where('status',1)->count();
+        $events = Event::where('status',1)->count();
+        $blogs = Blog::where('status',1)->count();
+
+		return view('admin.index',compact('front_end_pages','news','events','blogs'));
 	}
 
     public function MediaCentre() {

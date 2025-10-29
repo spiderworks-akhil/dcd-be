@@ -43,6 +43,10 @@
                 </div><!--end col-->
             </div><!--end row-->
             <!-- end page title end breadcrumb -->
+              @php
+                $user = auth()->user();
+                $roleName = $user->roles->pluck('name')->first();
+            @endphp
 
             <div class="row">
                 <div class="col-lg-12">
@@ -70,12 +74,12 @@
                                                 <label>Name</label>
                                                 <input type="text" name="name"
                                                     class="form-control @if (!$obj->id) copy-name @endif"
-                                                    value="{{ $obj->name }}" required="">
+                                                    value="{{ $obj->name }}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label class="">Slug (for url)</label>
                                                 <input type="text" name="slug" class="form-control"
-                                                    value="{{ $obj->slug }}" id="slug">
+                                                    value="{{ $obj->slug }}" id="slug" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                 <small class="text-muted">The “slug” is the URL-friendly version of the
                                                     name. It is usually all lowercase and contains only letters, numbers,
                                                     and hyphens.</small>
@@ -179,14 +183,26 @@
                                     @if ($obj->id)
                                         <div class="card-body">
                                             <div class="row m-0">
-                                                <div class="form-group w-100  mb-3">
-                                                    <div class="custom-control custom-switch switch-primary float-left">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            value="1" id="status" name="status"
-                                                            @if (!$obj->id || $obj->status == 1) checked="" @endif>
-                                                        <label class="custom-control-label" for="status">Status</label>
-                                                    </div>
+                                              <div class="form-group w-100 mb-3 d-flex justify-content-between align-items-center">
+    
+                                                <div class="custom-control custom-switch switch-primary">
+                                                    <input type="checkbox" class="custom-control-input" value="1" id="status" name="status"
+                                                        @if(!$obj->id || $obj->status == 1) checked @endif>
+                                                    <label class="custom-control-label" for="status">Status</label>
                                                 </div>
+
+                                            <div class="form-group w-100  mb-4 col-12 col-md-6 p-0 time-info">
+                                                         <span class="badge badge-pill ml-3
+                                                        @if($obj->status == 1) badge-success @else badge-secondary @endif
+                                                    ">
+                                                        @if ($obj->status == 1) Publish @else Draft @endif
+                                                    </span>
+
+                                                </div>
+                                                
+                                          
+                                                 </div>
+
 
                                                 <div class="form-group col-12 col-md-6 mb-4 p-0 time-info">
                                                     <label for="name">Created On </label>
@@ -223,16 +239,19 @@
                                             </div>
                                         </div>
                                     @endif
+                                   
                                     <div class="card-footer text-muted">
-                                        <select name="status" class="form-control mb-3">
-                                            <option value="1" @if ($obj->status == 1) selected @endif>
-                                                Publish</option>
-                                            <option value="0" @if ($obj->status == 0) selected @endif>Draft
-                                            </option>
-                                        </select>
+                                        
+                                        {{-- <select name="status" class="form-control mb-3" disabled>
+                                            <option  @if ($obj->status == 1) selected @endif>Publish</option>
+                                            <option value="0" @if ($obj->status == 0) selected @endif>Draft</option>
+                                        </select> --}}
+                                            {{-- <h5> @if ($obj->status == 1)  Publish @endif</h5>
+                                            <h5> @if ($obj->status == 0)  Draft @endif</h5> --}}
 
                                         <button class="btn btn-sm btn-primary float-right">Save</button>
                                     </div>
+
                                 </div>
                                 @if ($obj->id)
 

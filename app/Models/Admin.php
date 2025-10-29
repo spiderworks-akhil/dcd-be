@@ -18,5 +18,6 @@ class Admin extends Authenticatable
         'email',
         'phone_number',
     ];
-        
+
+   
 }

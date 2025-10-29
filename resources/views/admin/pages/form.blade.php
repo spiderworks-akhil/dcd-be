@@ -71,11 +71,11 @@
                                                         <div class="row m-0">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="">
+                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="" readonly>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Slug (for url)</label>
-                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug">
+                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug" readonly>
                                                                 <small class="text-muted">The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small>
                                                             </div>
                                                             @fieldshow(pages-title)

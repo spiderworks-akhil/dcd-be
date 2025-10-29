@@ -144,7 +144,6 @@ trait ResourceTrait {
     public function store(HttpRequest $request)
     {
         $data = $request->all();
-        dd($data);
     	$this->model->validate($data);
         return $this->_store($data);
     }
@@ -179,6 +178,7 @@ trait ResourceTrait {
         if($obj = $this->model->find($id)){
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
+            $data['status'] = (!empty($data['status']))?$data['status']:0;
         	$obj->update($data);
             return $this->redirect('updated','success', 'edit', [encrypt($obj->id)]);
         } else {

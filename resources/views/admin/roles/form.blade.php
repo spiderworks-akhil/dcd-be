@@ -87,6 +87,27 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                    <label>Select Languages (only selected languages will be displayed to the user)</label>
+                                                        <div class="row m-0">
+                                                            @foreach($languages as $language)
+                                                                <div class="form-group col-md-3">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input 
+                                                                            type="checkbox" 
+                                                                            class="custom-control-input checkSingle" 
+                                                                            value="{{ $language->id }}" 
+                                                                            id="language-{{ $language->id }}" 
+                                                                            name="languages[]" 
+                                                                            @if(in_array($language->id, $role_languages ?? [])) checked @endif
+                                                                        >
+                                                                        <label class="custom-control-label" for="language-{{ $language->id }}">
+                                                                            {{ $language->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+
                                                             <hr/>
                                                             <div class="row ml-2">
                                                                 <div class="custom-control custom-checkbox">
