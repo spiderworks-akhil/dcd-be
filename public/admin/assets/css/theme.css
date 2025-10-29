@@ -201,6 +201,8 @@ img {
 .card .card-header {
     font-weight: 600;
     font-size: 16px;
+    background: transparent;
+    border: 0;
 }
 .navbar-custom {
     border-bottom: 0;
@@ -587,6 +589,10 @@ form label {
     color: #fff;
     background-color: red;
 }
+
+.gallery-item-remove{
+ background-color: red !important;
+}
 .breadcrumb-item.active {
     color: #000 !important;
     font-weight: 600;
@@ -947,6 +953,55 @@ form label {
     color: #fff;
     background: #1E43A5 !important;
     background: linear-gradient(311deg, rgba(30, 67, 165, 1) 35%, rgba(69, 114, 237, 1) 100%) !important;
+}
+.dashboard_list{
+    padding: 25px;
+    margin: 10px 0;
+}
+.dashboard_list h4{
+    color: #333;
+    font-size: 78px;
+    font-weight: 600;
+    line-height: 80px;
+    letter-spacing: 2.18px;
+        font-family: 'Chreed Bold';
+        margin:0;
+}
+
+.dashboard_news{
+    padding: 25px;
+    margin: 10px 0;
+}
+.dashboard_news_list img{
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.dashboard_news_list h4{
+    font-size: 16px;
+    line-height: 20px; 
+}
+
+.dashboard_news_list p{
+    font-size: 13px;
+    line-height: 16px;
+    color: #c1c1c1;
+}
+.dashboard_news_arabic{
+    direction: rtl;
+}
+.dashboard_news_arabic .dashboard_news_list h4{
+   text-align: right;
+}
+
+.dashboard_news_arabic .dashboard_news_list p{
+     text-align: right;
+}
+
+.dashboard_news_arabic .card-header{
+    text-align: right;
 }
 
 @media (max-width: 1440px) {
