@@ -34,10 +34,8 @@ class WebadminController extends Controller {
         $events_en = Event::where('status',1)->where('type','en')->count();
         $events_ar = Event::where('status',1)->where('type','ar')->count();
 
-        $recent_news_en = News::with('category')->where('status',1)->where('type','en')->limit('3')->orderBy('created_at','desc')->get();
-        $recent_news_ar = News::with('category')->where('status',1)->where('type','ar')->limit('3')->orderBy('created_at','desc')->get();
-
-        // dd($recent_news_en->toArray());
+        $recent_news_en = News::with('category','featured_image')->where('status',1)->where('type','en')->limit('3')->orderBy('created_at','desc')->get();
+        $recent_news_ar = News::with('category','featured_image')->where('status',1)->where('type','ar')->limit('3')->orderBy('created_at','desc')->get();
 
         $blogs = Blog::where('status',1)->count();
 

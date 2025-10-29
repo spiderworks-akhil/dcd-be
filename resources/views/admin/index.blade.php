@@ -42,7 +42,6 @@
                     </div><!--end row-->
                     <div class="row">
 
-
                        <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #e5f1fd;">
                                 <div class="card-header">
