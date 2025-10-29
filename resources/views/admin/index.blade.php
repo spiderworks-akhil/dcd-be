@@ -124,7 +124,7 @@
                                     @foreach ($recent_news_en as $en_news)
                                         
                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{ $en_news->featured_image->file_path ?? ""}}" class="mr-3"/>
+                                        <img src="{{ asset($en_news->featured_image->file_path ?? "")}}" class="mr-3"/>
                                         <div>
                                             <h4>{{$en_news->name}}</h4>
                                             <p>{{ \Carbon\Carbon::parse($en_news->published_on)->format('F d, Y') }} {{$en_news->category->name ?? ""}}</p>
@@ -147,7 +147,7 @@
                                     @foreach ($recent_news_ar as $ar_news)
 
                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{ $ar_news->featured_image->file_path ?? ""}}" class="ml-3"/>
+                                        <img src="{{ asset($ar_news->featured_image->file_path ?? "")}}" class="ml-3"/>
                                         <div>
                                             <h4> {{$ar_news->name}}</h4>
                                              <p>{{ \Carbon\Carbon::parse($ar_news->published_on)->format('F d, Y') }} {{$ar_news->category->name ?? ""}}</p>
