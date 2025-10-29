@@ -29,11 +29,22 @@ class BladeServiceProvider extends ServiceProvider
             $expression = 0;
             if(in_array($field, $field_array))
                 $expression = 1;
-            return "<?php if($expression) : ?>";
+            // return "<?php if($expression) : >";
+            return "<?php 
+                \$field_array = config('admin.fields.{$page}');
+                \$expression = 0;
+                if (!empty(\$field_array) && in_array('{$field}', \$field_array)) {
+                    \$expression = 1;
+                }
+                if (\$expression) :
+            ?>";
+
         });
 
         Blade::directive('endfieldshow', function () {
             return '<?php endif; ?>';
         });
     }
+
+    
 }
