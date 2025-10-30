@@ -167,7 +167,7 @@ class CommonController extends Controller
                     (object)['slug' => 'company'],
                     (object)['slug' => 'event'],
                     (object)['slug' => 'news'],
-                    (object)['slug' => 'event_category'],
+                    (object)['slug' => 'event-category'],
                     (object)['slug' => 'static_page']
                 ]);
                 break;
