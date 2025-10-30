@@ -139,8 +139,13 @@ class CommonController extends Controller
                 $urls = $this->processSlug($urls,$type);
                 break;
 
-            case "event":
-                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
+            case "events":
+                $slug = request()->slug;
+                $category = DB::table('categories')->where('slug', $slug)->where('status', 1)->where('type', $type)->where('deleted_at', null)->first();
+                if(!$category)
+                    return response()->json(['error' => 'Not found'], 404);
+
+                $urls = DB::table('events')->where('category_id', $category->id)->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type,'events');
                 break;
 
