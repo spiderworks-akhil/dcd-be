@@ -152,17 +152,23 @@ class CommonController extends Controller
             case "news_category":
             case "event_category":
             case "gallery_category":
-                $catType = str_replace("_category", "", $page); 
-                $categories = DB::table('categories')->where('categories.status', 1);
-                if($catType == 'events'){
-                    $categories->join('events', 'events.category_id', '=', 'categories.id')->where('categories.category_type', $catType)
-                    ->where('categories.type', $type)->where('categories.deleted_at', null)->get();
-                }else{
-                    $categories->where('categories.category_type', $catType)->where('categories.type', $type)->where('categories.deleted_at', null)->get();
-                }
-                $urls = $this->buildCategoryTree($type,$catType,$categories);
-                break;
+                
+            $catType = str_replace("_category", "", $page); 
 
+            $categoriesQuery = DB::table('categories')
+                ->where('categories.status', 1)
+                ->where('categories.deleted_at', null)
+                ->where('categories.category_type', $catType)
+                ->where('categories.type', $type);
+
+            if ($catType === 'event') {
+                $categoriesQuery->join('events', 'events.category_id', '=', 'categories.id');
+            }
+
+            $categories = $categoriesQuery->select('categories.id','categories.parent_id','categories.slug')->get();
+
+            $urls = $this->buildCategoryTree($type,$catType,$categories);
+                break;
             case "static_page":
                 $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type);
