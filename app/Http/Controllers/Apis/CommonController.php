@@ -123,16 +123,82 @@ class CommonController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function list_urls($page){
+  public function list_urls($page)
+    {
         $urls = [];
-        if($page == "company"){
-            $urls = DB::table('pages')->select('slug')->where('status', 1)->get();
+        $type = !empty(request()->language) ? request()->language : "en";
+
+        switch ($page) {
+            case "company":
+                $urls = DB::table('pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                break;
+
+            case "blog":
+                $urls = DB::table('blogs')->select('slug')->where('status', 1)->where('type', $type)->get();
+                break;
+
+            case "event":
+                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->get();
+                break;
+
+            case "news":
+                $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->get();
+                break;
+
+            case "news_category":
+            case "event_category":
+            case "gallery_category":
+                $catType = str_replace("_category", "", $page); 
+                $categories = DB::table('categories')->where('status', 1)->where('category_type', $catType)->where('type', $type)->get();
+                $urls = $this->buildCategoryTree($catType,$categories);
+                break;
+
+            case "static_page":
+                $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                break;
+
+            default:
+                $urls = collect([
+                    (object)['slug' => 'company'],
+                    (object)['slug' => 'event'],
+                    (object)['slug' => 'news'],
+                    (object)['slug' => 'news_category'],
+                    (object)['slug' => 'event_category'],
+                    (object)['slug' => 'gallery_category'],
+                    (object)['slug' => 'static_page']
+                ]);
+                break;
         }
-        elseif($page == "blog"){
-            $urls = DB::table('blogs')->select('slug')->where('status', 1)->get();
-        }
+
         return response()->json($urls);
     }
+
+
+    private function buildCategoryTree($catType,$items, $parentId = null)
+    {
+        $branch = [];
+
+        foreach ($items as $item) {
+            if ($item->parent_id == $parentId) {
+
+                $children = $this->buildCategoryTree($catType,$items, $item->id);
+
+                $node = [
+                    'slug' => $catType.$item->slug
+                ];
+
+                if (!empty($children)) {
+                    $node['children'] = $children;
+                }
+
+                $branch[] = $node;
+            }
+        }
+
+        return $branch;
+    }
+
+
 
     public function faq(Request $request){
 
