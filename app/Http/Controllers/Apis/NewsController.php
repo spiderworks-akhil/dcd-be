@@ -78,7 +78,7 @@ class NewsController extends Controller
                 if(!$news)
                     return response()->json(['error' => 'Not found'], 404);
 
-                $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
+                $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->where('status', 1)->take(5)->get();
                 return new NewsResource($news);
             }
             catch(\Exception $e){
@@ -87,32 +87,5 @@ class NewsController extends Controller
     }
 
 
-    // public function view(Request $request, $slug){
-    //     try{
-    //         $data = $request->all();
-    //         $type = !empty($data['language'])?$data['language']:"en";
-    //         $news = News::where('slug', $slug)->where('status', 1);
-
-    //         $isDraft = filter_var($data['draft'] ?? false, FILTER_VALIDATE_BOOLEAN);
-
-    //          if (!$isDraft) {
-    //             $news->where('type', $type);
-    //          } elseif ($isDraft) {
-    //             if($type == 'en') 
-    //                 $news->where('type','en_draft');
-    //             elseif($type == 'ar') 
-    //                 $news->where('type','ar_draft');  
-    //         } 
-    //         $news = $news->first();
-
-    //         if(!$news)
-    //             return response()->json(['error' => 'Not found'], 404);
-
-    //         $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
-    //         return new NewsResource($news);
-    //     }
-    //     catch(\Exception $e){
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
+   
 }

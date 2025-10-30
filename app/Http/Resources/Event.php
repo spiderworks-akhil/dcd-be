@@ -22,6 +22,7 @@ class Event extends JsonResource
             'id' => $this->id,
             'is_featured' => $this->is_featured,
             'title' => $this->title,
+            'type' => $this->type,
             'slug' => $this->slug,
             'short_description' => $this->short_description,
             'start_time' => $this->start_time,
