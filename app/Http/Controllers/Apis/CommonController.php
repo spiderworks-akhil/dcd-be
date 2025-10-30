@@ -150,7 +150,7 @@ class CommonController extends Controller
                 break;
 
             case "news_category":
-            case "events_category":
+            case "event_category":
             case "gallery_category":
                 
             $catType = str_replace("_category", "", $page); 
@@ -161,14 +161,13 @@ class CommonController extends Controller
                 ->where('categories.category_type', $catType)
                 ->where('categories.type', $type);
 
-            if ($catType === 'events') {
-                $categoriesQuery->join('events', 'events.category_id', '=', 'categories.id')->where('events.status', 1)
-                ->where('events.deleted_at', null);
+            if ($catType === 'event') {
+                $categoriesQuery->join('events', 'events.category_id', '=', 'categories.id')->where('events.status', 1);
             }
 
             $categories = $categoriesQuery->select('categories.id','categories.parent_id','categories.slug')->get();
 
-            $urls = $this->buildCategoryTree($type,$catType,$categories);
+            $urls = $this->buildCategoryTree($type,'events/category',$categories);
                 break;
             case "static_page":
                 $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
@@ -180,7 +179,7 @@ class CommonController extends Controller
                     (object)['slug' => 'company'],
                     (object)['slug' => 'event'],
                     (object)['slug' => 'news'],
-                    (object)['slug' => 'events_category'],
+                    (object)['slug' => 'event_category'],
                     (object)['slug' => 'static_page']
                 ]);
                 break;
@@ -200,17 +199,17 @@ class CommonController extends Controller
         });
     }
 
-    private function buildCategoryTree($type,$catType,$items, $parentId = null)
+    private function buildCategoryTree($type,$prefix,$items, $parentId = null)
     {
         $branch = [];
 
         foreach ($items as $item) {
             if ($item->parent_id == $parentId) {
 
-                $children = $this->buildCategoryTree($type,$catType,$items, $item->id);
+                $children = $this->buildCategoryTree($type,$prefix,$items, $item->id);
 
                 $node = [
-                    'slug' => $type.'/'.$catType.'/category/'.$item->slug
+                    'slug' => $type.'/'.$prefix.'/'.$item->slug
                 ];
 
                 if (!empty($children)) {
