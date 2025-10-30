@@ -153,14 +153,13 @@ class CommonController extends Controller
             case "event_category":
             case "gallery_category":
                 $catType = str_replace("_category", "", $page); 
-                $categories = DB::table('categories')->where('status', 1);
+                $categories = DB::table('categories')->where('categories.status', 1);
                 if($catType == 'events'){
                     $categories->join('events', 'events.category_id', '=', 'categories.id')->where('categories.category_type', $catType)
                     ->where('categories.type', $type)->where('categories.deleted_at', null)->get();
                 }else{
-                    $categories->where('category_type', $catType)->where('type', $type)->where('deleted_at', null)->get();
+                    $categories->where('categories.category_type', $catType)->where('categories.type', $type)->where('categories.deleted_at', null)->get();
                 }
-                return $categories;
                 $urls = $this->buildCategoryTree($type,$catType,$categories);
                 break;
 
