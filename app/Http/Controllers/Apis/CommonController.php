@@ -162,7 +162,7 @@ class CommonController extends Controller
                 $urls = $this->processSlug($urls,$type);
                 break;
 
-            default:
+             case "all":
                 $urls = collect([
                     (object)['slug' => 'company'],
                     (object)['slug' => 'event'],
