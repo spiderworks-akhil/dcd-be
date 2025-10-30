@@ -162,7 +162,8 @@ class CommonController extends Controller
                 ->where('categories.type', $type);
 
             if ($catType === 'event') {
-                $categoriesQuery->join('events', 'events.category_id', '=', 'categories.id');
+                $categoriesQuery->join('events', 'events.category_id', '=', 'categories.id')->where('events.status', 1)
+                ->where('events.deleted_at', null);
             }
 
             $categories = $categoriesQuery->select('categories.id','categories.parent_id','categories.slug')->get();
