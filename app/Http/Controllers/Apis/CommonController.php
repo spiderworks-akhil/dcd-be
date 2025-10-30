@@ -131,18 +131,22 @@ class CommonController extends Controller
         switch ($page) {
             case "company":
                 $urls = DB::table('pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);    
                 break;
 
             case "blog":
                 $urls = DB::table('blogs')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);
                 break;
 
             case "event":
                 $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);
                 break;
 
             case "news":
                 $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);
                 break;
 
             case "news_category":
@@ -155,6 +159,7 @@ class CommonController extends Controller
 
             case "static_page":
                 $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);
                 break;
 
             default:
@@ -173,6 +178,11 @@ class CommonController extends Controller
         return response()->json($urls);
     }
 
+    private function processSlug($urls,$type) : string {
+        return $urls->map(function ($url) use ($type) {
+            return (object)['slug' => $type.'/'.$url->slug];
+        });
+    }
 
     private function buildCategoryTree($catType,$items, $parentId = null)
     {
@@ -184,7 +194,7 @@ class CommonController extends Controller
                 $children = $this->buildCategoryTree($catType,$items, $item->id);
 
                 $node = [
-                    'slug' => $catType.$item->slug
+                    'slug' => $catType.'/'.$item->slug
                 ];
 
                 if (!empty($children)) {
