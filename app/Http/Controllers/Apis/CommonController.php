@@ -150,7 +150,7 @@ class CommonController extends Controller
                 break;
 
             case "news_category":
-            case "event_category":
+            case "events_category":
             case "gallery_category":
                 
             $catType = str_replace("_category", "", $page); 
@@ -180,7 +180,7 @@ class CommonController extends Controller
                     (object)['slug' => 'company'],
                     (object)['slug' => 'event'],
                     (object)['slug' => 'news'],
-                    (object)['slug' => 'event_category'],
+                    (object)['slug' => 'events_category'],
                     (object)['slug' => 'static_page']
                 ]);
                 break;
@@ -210,7 +210,7 @@ class CommonController extends Controller
                 $children = $this->buildCategoryTree($type,$catType,$items, $item->id);
 
                 $node = [
-                    'slug' => $type.'/'.$catType.'/'.$item->slug
+                    'slug' => $type.'/'.$catType.'/category/'.$item->slug
                 ];
 
                 if (!empty($children)) {
