@@ -141,12 +141,12 @@ class CommonController extends Controller
 
             case "event":
                 $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->get();
-                $urls = $this->processSlug($urls,$type);
+                $urls = $this->processSlug($urls,$type,'events');
                 break;
 
             case "news":
                 $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->get();
-                $urls = $this->processSlug($urls,$type);
+                $urls = $this->processSlug($urls,$type,'news');
                 break;
 
             case "news_category":
@@ -178,8 +178,10 @@ class CommonController extends Controller
         return response()->json($urls);
     }
 
-    private function processSlug($urls,$type) {
-        return $urls->map(function ($url) use ($type) {
+    private function processSlug($urls,$type,$prefix = null) {
+        return $urls->map(function ($url) use ($type,$prefix) {
+            if($prefix)
+                return ['slug' => $type.'/'.$prefix.'/'.$url->slug];
             return ['slug' => $type.'/'.$url->slug];
         });
     }
