@@ -156,9 +156,7 @@ class CommonController extends Controller
                 $categories = DB::table('categories')->where('status', 1);
                 if($catType == 'events'){
                     $categories->join('events', 'events.category_id', '=', 'categories.id')->where('categories.category_type', $catType)
-                    ->where('categories.type', $type)->where('categories.deleted_at', null)->where('events.deleted_at', null) 
-                    ->select('categories.*')
-                    ->get();
+                    ->where('categories.type', $type)->where('categories.deleted_at', null)->get();
                 }else{
                     $categories->where('category_type', $catType)->where('type', $type)->where('deleted_at', null)->get();
                 }
