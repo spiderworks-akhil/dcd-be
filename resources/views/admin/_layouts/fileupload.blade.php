@@ -53,7 +53,7 @@
     <script src="{{ asset('admin/plugins/ckeditor/build/ckeditor.js') }}"></script>
     <script src="{{ asset('admin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
-    <script>
+    {{-- <script>
         let isFormDirty = false;
 
         const form = document.getElementById('InputFrm');
@@ -93,5 +93,92 @@
                 }
             });
         });
-    </script>
-@endsection
+    </script> --}}
+
+    <script>
+    let isFormDirty = false;
+
+    const form = document.getElementById('InputFrm');
+    form.addEventListener('input', () => {
+        isFormDirty = true;
+    });
+    form.addEventListener('submit', () => {
+        isFormDirty = false;
+    });
+
+    // Current base URL (origin + path)
+    const currentBaseUrl = window.location.origin + window.location.pathname;
+
+    // Excluded routes
+    const excludedRoutes = [
+         // Event routes
+        'admin/events/store',
+        'admin/events/show',
+        'admin/events/media/edit',
+        'admin/events/media/update',
+        'admin/events/media/destroy',
+
+        // Media routes
+        'admin/media',
+        'admin/media/index',
+        'admin/media/destroy',
+        'admin/media/index/post',
+        'admin/media/popup',
+        'admin/media/save',
+        'admin/media/edit',
+        'admin/media/show',
+        'admin/media/store-extra',
+        'admin/media/update',
+        'admin/media/set-media',
+        'admin/media/editor-upload'
+        
+    ];
+
+    // Warn on clicking internal links
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = link.getAttribute('href') || '';
+
+            // Skip empty, hash, or JavaScript links
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+                return;
+            }
+
+            // Skip excluded routes
+            if (excludedRoutes.some(route => href.includes(route))) {
+                return;
+            }
+
+            // Check if base URL is changing
+            const targetUrl = new URL(href, window.location.href);
+            const targetBaseUrl = targetUrl.origin + targetUrl.pathname;
+            const isMainUrlChanging = targetBaseUrl !== currentBaseUrl;
+
+            if (isFormDirty && isMainUrlChanging) {
+                e.preventDefault(); // stop default navigation
+
+                $.confirm({
+                    title: 'Unsaved Changes',
+                    content: 'You have unsaved changes. Do you want to leave without saving?',
+                    buttons: {
+                        leave: {
+                            text: 'Leave',
+                            btnClass: 'btn-red',
+                            action: function() {
+                                window.location.href = link.href;
+                            }
+                        },
+                        stay: {
+                            text: 'Stay',
+                            btnClass: 'btn-blue',
+                            action: function() {}
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+    @endsection
