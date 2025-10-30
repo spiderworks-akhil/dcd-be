@@ -140,12 +140,7 @@ class CommonController extends Controller
                 break;
 
             case "events":
-                $slug = request()->slug;
-                $category = DB::table('categories')->where('slug', $slug)->where('status', 1)->where('type', $type)->where('deleted_at', null)->first();
-                if(!$category)
-                    return response()->json(['error' => 'Not found'], 404);
-
-                $urls = DB::table('events')->where('category_id', $category->id)->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
+                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type,'events');
                 break;
 
@@ -179,7 +174,7 @@ class CommonController extends Controller
              case "all":
                 $urls = collect([
                     (object)['slug' => 'company'],
-                    (object)['slug' => 'event'],
+                    (object)['slug' => 'events'],
                     (object)['slug' => 'news'],
                     (object)['slug' => 'event-category'],
                     (object)['slug' => 'static_page']
