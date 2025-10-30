@@ -153,7 +153,7 @@ class CommonController extends Controller
                 
                 $categoriesQuery = DB::table('categories')->where('categories.status', 1)->where('categories.deleted_at', null)
                 ->where('categories.category_type', 'Event')->where('categories.type', $type)
-                ->join('events', 'events.category_id', '=', 'categories.id')->where('events.status', 1)->get();
+                ->join('events', 'events.category_id', '=', 'categories.id')->select('categories.*')->where('events.status', 1)->get();
 
                 $urls = $this->buildCategoryTree($type,'events/category',$categoriesQuery);
                 break;
