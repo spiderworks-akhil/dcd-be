@@ -180,7 +180,7 @@ class CommonController extends Controller
 
     private function processSlug($urls,$type) : string {
         return $urls->map(function ($url) use ($type) {
-            return (object)['slug' => $type.'/'.$url->slug];
+            return ['slug' => $type.'/'.$url->slug];
         });
     }
 
