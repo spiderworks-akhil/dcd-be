@@ -36,7 +36,7 @@ class SendNewsContentNotification extends Mailable
     {
         $common_settings = $this->getSettings();
 
-        $subject = "Content Approval Request for {$this->approval->notifiable_type}: {$this->record->slug}";
+        $subject = "Content Approval Request for {$this->approval->notifiable_type}: {$this->record->name}";
 
         return $this->subject($subject)
             ->view('email.approval_preview')

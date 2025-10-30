@@ -46,20 +46,73 @@ class NewsController extends Controller
         return new NewsListingCollection($services);
     }
 
-    public function view(Request $request, $slug){
+    // public function view(Request $request, $slug){
+    //     try{
+    //         $data = $request->all();
+    //         $type = !empty($data['language'])?$data['language']:"en";
+    //         $news = News::where('slug', $slug)->where('type',$type)->where('status', 1)->first();
+    //         if(!$news)
+    //             return response()->json(['error' => 'Not found'], 404);
+
+    //         $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
+    //         return new NewsResource($news);
+    //     }
+    //     catch(\Exception $e){
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+    
+  public function view(Request $request, $slug){
         try{
             $data = $request->all();
             $type = !empty($data['language'])?$data['language']:"en";
-            $news = News::where('slug', $slug)->where('type',$type)->where('status', 1)->first();
-            if(!$news)
-                return response()->json(['error' => 'Not found'], 404);
+            $news = News::where('slug', $slug)->where('type',$type);
 
-            $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
-            return new NewsResource($news);
-        }
-        catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+            $query = News::where('slug', $slug)->where('type', $type);
+
+            if (!in_array($type, ['en_draft', 'ar_draft'])) {
+                $query->where('status', 1);
+            }
+
+            $news = $query->first();
+                if(!$news)
+                    return response()->json(['error' => 'Not found'], 404);
+
+                $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
+                return new NewsResource($news);
+            }
+            catch(\Exception $e){
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
     }
 
+
+    // public function view(Request $request, $slug){
+    //     try{
+    //         $data = $request->all();
+    //         $type = !empty($data['language'])?$data['language']:"en";
+    //         $news = News::where('slug', $slug)->where('status', 1);
+
+    //         $isDraft = filter_var($data['draft'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+    //          if (!$isDraft) {
+    //             $news->where('type', $type);
+    //          } elseif ($isDraft) {
+    //             if($type == 'en') 
+    //                 $news->where('type','en_draft');
+    //             elseif($type == 'ar') 
+    //                 $news->where('type','ar_draft');  
+    //         } 
+    //         $news = $news->first();
+
+    //         if(!$news)
+    //             return response()->json(['error' => 'Not found'], 404);
+
+    //         $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->take(5)->get();
+    //         return new NewsResource($news);
+    //     }
+    //     catch(\Exception $e){
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
 }

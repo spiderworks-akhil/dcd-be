@@ -25,7 +25,7 @@
                <div style="padding: 28px 23px 0 23px;  ">
                     <!-- Government Logo Placeholder -->
                     <div style="display: inline-block; vertical-align: middle; float: left;">
-                        <img src="https://dashboard.dcd.org.ae/uploads/settings/dcd%20logog68ef3e59894ca.png" style="max-height:50px; width: 150px;" />
+                        <img src="https://dashboard.dcd.org.ae/client/img/dcd_logo.png" style="max-height:50px; width: 150px;" />
 
                     </div>
                     
