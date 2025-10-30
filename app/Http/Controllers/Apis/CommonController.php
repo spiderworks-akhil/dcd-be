@@ -150,13 +150,22 @@ class CommonController extends Controller
                 break;
 
             case "event-category":
-                
-                $categoriesQuery = DB::table('categories')->where('categories.status', 1)->where('categories.deleted_at', null)
-                ->where('categories.category_type', 'Event')->where('categories.type', $type)
-                ->join('events', 'events.category_id', '=', 'categories.id')->select('categories.*')->where('events.status', 1)->get();
+               $categoriesQuery = DB::table('categories')
+                ->whereNull('categories.deleted_at')
+                ->where('categories.status', 1)
+                ->where('categories.category_type', 'Event')
+                ->where('categories.type', $type)
+                ->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('events')
+                        ->whereColumn('events.category_id', 'categories.id')
+                        ->where('events.status', 1);
+                })
+                ->select('categories.*')
+                ->get();
 
-                $urls = $this->buildCategoryTree($type,'events/category',$categoriesQuery);
-                break;
+            $urls = $this->buildCategoryTree($type, 'events/category', $categoriesQuery);
+            break;
             case "static_page":
                 $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type);
