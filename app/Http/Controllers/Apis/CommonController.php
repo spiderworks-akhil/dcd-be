@@ -171,6 +171,9 @@ class CommonController extends Controller
                     (object)['slug' => 'static_page']
                 ]);
                 break;
+            default :
+                return response()->json(['error' => 'Page not found!'], 404);
+                break;
         }
 
         return response()->json($urls);
