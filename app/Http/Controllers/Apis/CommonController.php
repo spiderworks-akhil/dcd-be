@@ -178,7 +178,7 @@ class CommonController extends Controller
         return response()->json($urls);
     }
 
-    private function processSlug($urls,$type) : string {
+    private function processSlug($urls,$type) {
         return $urls->map(function ($url) use ($type) {
             return ['slug' => $type.'/'.$url->slug];
         });
