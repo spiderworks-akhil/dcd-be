@@ -656,7 +656,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if ($obj->id)
+                                    {{-- @if ($obj->id)
                                         <div class="card">
                                             <div class="card-header">
                                                 FAQ
@@ -673,7 +673,7 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <div class="card">
                                         <div class="card-header">
                                             Featured Image
