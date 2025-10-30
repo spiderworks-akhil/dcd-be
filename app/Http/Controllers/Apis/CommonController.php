@@ -140,12 +140,12 @@ class CommonController extends Controller
                 break;
 
             case "event":
-                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type,'events');
                 break;
 
             case "news":
-                $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type,'news');
                 break;
 
@@ -153,12 +153,12 @@ class CommonController extends Controller
             case "event_category":
             case "gallery_category":
                 $catType = str_replace("_category", "", $page); 
-                $categories = DB::table('categories')->where('status', 1)->where('category_type', $catType)->where('type', $type)->get();
+                $categories = DB::table('categories')->where('status', 1)->where('category_type', $catType)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->buildCategoryTree($catType,$categories);
                 break;
 
             case "static_page":
-                $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
                 $urls = $this->processSlug($urls,$type);
                 break;
 
