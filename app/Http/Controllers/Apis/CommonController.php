@@ -154,7 +154,7 @@ class CommonController extends Controller
             case "gallery_category":
                 $catType = str_replace("_category", "", $page); 
                 $categories = DB::table('categories')->where('status', 1)->where('category_type', $catType)->where('type', $type)->where('deleted_at', null)->get();
-                $urls = $this->buildCategoryTree($catType,$categories);
+                $urls = $this->buildCategoryTree($type,$catType,$categories);
                 break;
 
             case "static_page":
@@ -186,17 +186,17 @@ class CommonController extends Controller
         });
     }
 
-    private function buildCategoryTree($catType,$items, $parentId = null)
+    private function buildCategoryTree($type,$catType,$items, $parentId = null)
     {
         $branch = [];
 
         foreach ($items as $item) {
             if ($item->parent_id == $parentId) {
 
-                $children = $this->buildCategoryTree($catType,$items, $item->id);
+                $children = $this->buildCategoryTree($type,$catType,$items, $item->id);
 
                 $node = [
-                    'slug' => $catType.'/'.$item->slug
+                    'slug' => $type.'/'.$catType.'/'.$item->slug
                 ];
 
                 if (!empty($children)) {
