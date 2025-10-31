@@ -120,7 +120,8 @@
                                                             </div> --}}
                                             <div class="form-group col-md-12">
                                                 <label>Description</label>
-                                                <textarea name="content" class="form-control text-direction editor" rows="2">{{ $obj->content }}</textarea>
+                                                
+                                                <textarea name="content" id="content"  class="form-control text-direction editor" rows="2" required>{{ $obj->content }}</textarea>
                                             </div>
 
                                             {{-- <div class="form-group col-md-12">
@@ -639,36 +640,59 @@ document.getElementById('submitBtn').addEventListener('click', function() {
 });
 
 </script>
-
-
-
-    <script type="text/javascript">
-        var validator = $('#InputFrm').validate({
-            ignore: [],
-            rules: {
-                "name": "required",
-                slug: {
-                    required: true,
-
-                },
-                "content": "required",
+<script type="text/javascript">
+    var validator = $('#InputFrm').validate({
+        ignore: [], 
+        rules: {
+            "name": "required",
+            "category_id": {
+                        required: true,
+                        min: 1 
+             },
+            slug: {
+                required: true,
             },
-            messages: {
-                "name": "News name cannot be blank",
-                slug: {
-                    required: "Slug cannot be blank",
-                },
-                "content": "News content cannot be blank",
+           
+            "content": "required",
+             "featured_image_id": {
+                            required: true
             },
+            "banner_image_id": {
+                required: true
+            },
+           
+        },
+        messages: {
+            "name": "News name cannot be blank",
+            slug: {
+                required: "Slug cannot be blank",
+            },
+            "category_id": {
+                    required: "Category cannot be blank",
+                    min: "Please select a valid category"
+            },
+            "content": "News content cannot be blank",
+             "featured_image_id": "Please add Featured image",
+             "banner_image_id": "Please add Banner image",
+        },
+        errorPlacement: function(error, element) {
+            if (element.hasClass('webadmin-select2-input')) {
+                error.insertAfter(element.next('.select2'));
+            } else if (element.attr("id") === "content") {
+                error.insertAfter($('#content').closest('.form-group'));
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    $(function() {
+        $('.datetimepicker').datetimepicker({
+            format: 'd/m/Y H:i',
+            formatDate: 'd/m/Y'
         });
-
-        $(function() {
-            $('.datetimepicker').datetimepicker({
-                format: 'd/m/Y H:i',
-                formatDate: 'd/m/Y'
-            });
-        })
-    </script>
+    });
+</script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
