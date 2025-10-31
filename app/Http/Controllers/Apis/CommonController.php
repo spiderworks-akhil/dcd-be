@@ -123,16 +123,104 @@ class CommonController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function list_urls($page){
+  public function list_urls($page)
+    {
         $urls = [];
-        if($page == "company"){
-            $urls = DB::table('pages')->select('slug')->where('status', 1)->get();
+        $type = !empty(request()->language) ? request()->language : "en";
+
+        switch ($page) {
+            case "company":
+                $urls = DB::table('pages')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);    
+                break;
+
+            case "blog":
+                $urls = DB::table('blogs')->select('slug')->where('status', 1)->where('type', $type)->get();
+                $urls = $this->processSlug($urls,$type);
+                break;
+
+            case "events":
+                $urls = DB::table('events')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
+                $urls = $this->processSlug($urls,$type,'events');
+                break;
+
+            case "news":
+                $urls = DB::table('news')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
+                $urls = $this->processSlug($urls,$type,'news');
+                break;
+
+            case "event-category":
+               $categoriesQuery = DB::table('categories')
+                ->whereNull('categories.deleted_at')
+                ->where('categories.status', 1)
+                ->where('categories.category_type', 'Event')
+                ->where('categories.type', $type)
+                ->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                        ->from('events')
+                        ->whereColumn('events.category_id', 'categories.id')
+                        ->where('events.status', 1);
+                })
+                ->select('categories.*')
+                ->get();
+
+            $urls = $this->buildCategoryTree($type, 'events/category', $categoriesQuery);
+            break;
+            case "static_page":
+                $urls = DB::table('frontend_pages')->select('slug')->where('status', 1)->where('type', $type)->where('deleted_at', null)->get();
+                $urls = $this->processSlug($urls,$type);
+                break;
+
+             case "all":
+                $urls = collect([
+                    (object)['slug' => 'company'],
+                    (object)['slug' => 'events'],
+                    (object)['slug' => 'news'],
+                    (object)['slug' => 'event-category'],
+                    (object)['slug' => 'static_page']
+                ]);
+                break;
+            default :
+                return response()->json(['error' => 'Page not found!'], 404);
+                break;
         }
-        elseif($page == "blog"){
-            $urls = DB::table('blogs')->select('slug')->where('status', 1)->get();
-        }
+
         return response()->json($urls);
     }
+
+    private function processSlug($urls,$type,$prefix = null) {
+        return $urls->map(function ($url) use ($type,$prefix) {
+            if($prefix)
+                return ['slug' => $type.'/'.$prefix.'/'.$url->slug];
+            return ['slug' => $type.'/'.$url->slug];
+        });
+    }
+
+    private function buildCategoryTree($type,$catType,$items, $parentId = null)
+    {
+        $branch = [];
+
+        foreach ($items as $item) {
+            if ($item->parent_id == $parentId) {
+
+                $children = $this->buildCategoryTree($type,$catType,$items, $item->id);
+
+                $node = [
+                    'slug' => $type.'/'.$catType.'/'.$item->slug
+                ];
+
+                if (!empty($children)) {
+                    $node['children'] = $children;
+                }
+
+                $branch[] = $node;
+            }
+        }
+
+        return $branch;
+    }
+
+
 
     public function faq(Request $request){
 
