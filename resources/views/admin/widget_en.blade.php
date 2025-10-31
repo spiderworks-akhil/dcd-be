@@ -143,8 +143,8 @@
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
-                        <div class="form-group col-md-6">
-                            <label>Image</label>
+                        <div class="form-group col-md-6"> 
+                            <label>Image (width: 1440px X height: 600px) </label>
                             @php
                                 $media_id_1 = isset($data['volunteer']['media_id_1'])
                                     ? (object) $data['volunteer']['media_id_1']
@@ -200,7 +200,7 @@
                         </div>
 
                          <div class="form-group col-md-6">
-                            <label>Logo</label>
+                            <label>Logo (width: 80px X height: 95px)</label>
                             @php
                                 $media_id_logo = isset($data['volunteer']['media_id_logo'])
                                     ? (object) $data['volunteer']['media_id_logo']
