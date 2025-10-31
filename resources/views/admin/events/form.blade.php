@@ -272,7 +272,7 @@
                                     @if ($obj->is_scheduled == 0)
                                         <div class="card">
                                             <div class="card-header">
-                                                Volunteer Ad Image
+                                                Volunteer Ad Image (Width: 640px X Height: 140px)
                                             </div>
                                             <div class="card-body">
                                                 @include('admin.media.set_file', [
@@ -676,7 +676,7 @@
                                     @endif --}}
                                     <div class="card">
                                         <div class="card-header">
-                                            Featured Image
+                                            Featured Image (width: 750px X height: 1048px)
                                         </div>
                                         <div class="card-body">
                                             @include('admin.media.set_file', [
@@ -719,7 +719,7 @@
 
                                     <div class="card">
                                         <div class="card-header">
-                                            Banner Image
+                                            Banner Image (width: 1920px X height: 1080px)
                                         </div>
                                         <div class="card-body">
                                             @include('admin.media.set_file', [
