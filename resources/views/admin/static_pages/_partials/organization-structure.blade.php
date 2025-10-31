@@ -22,6 +22,7 @@
                 @if ($obj->content && isset($obj->content['title_2'])) value="{{ $obj->content['title_2'] }}" @endif>
         </div>
         <div class="form-group">
+              Image (width: 1920px X height: 1080px)
             @php
                 $media_id_2 = $obj->content && isset($obj->content['media_id_2']) ? $obj->content['media_id_2'] : null;
             @endphp
