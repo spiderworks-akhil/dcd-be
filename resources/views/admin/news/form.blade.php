@@ -491,7 +491,7 @@
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
-                                        Featured Image
+                                        Featured Image (width: 1600px X height: 600px)
                                     </div>
                                     <div class="card-body">
                                         @include('admin.media.set_file', [
@@ -505,7 +505,7 @@
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
-                                        Banner Image
+                                        Banner Image (width: 1600px X height: 600px)
                                     </div>
                                     <div class="card-body">
                                         @include('admin.media.set_file', [

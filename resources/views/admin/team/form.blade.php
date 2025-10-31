@@ -319,7 +319,7 @@
                                             @fieldshow(team-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
-                                                    Featured Image
+                                                    Featured Image (width: 350px X height: 470px)
                                                 </div>
                                                 <div class="card-body">
                                                     @include('admin.media.set_file', ['file'=>$obj->featured_image, 'title'=>'Featured Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'featured_image_id'])
