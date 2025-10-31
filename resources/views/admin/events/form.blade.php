@@ -890,6 +890,22 @@
                 rules: {
                     "name": "required",
                     "title": "required",
+                    "start_time": "required",
+                    "end_time": "required",
+                    "location": "required",
+                    "category_id": {
+                        required: true,
+                        min: 1 
+                    },
+                     "featured_image_id": {
+                            required: true
+                     },
+                      "banner_image_id": {
+                            required: true
+                     },
+                    "logo_image_id": {
+                            required: true
+                     },
                     slug: {
                         required: true,
                         remote: {
@@ -909,6 +925,17 @@
                 messages: {
                     "name": "Blog name cannot be blank",
                     "title": "Blog heading cannot be blank",
+                    "start_time": "Start Time  cannot be blank",
+                    "end_time": "End Time  cannot be blank",
+                    "location": "Location  cannot be blank",
+                    "category_id": {
+                                required: "Category cannot be blank",
+                                min: "Please select a valid category"
+                     },
+                       "featured_image_id": "Please add Featured image",
+                       "banner_image_id": "Please add Banner image",
+                       "logo_image_id": "Please add Logo image",
+
                     slug: {
                         required: "Slug cannot be blank",
                         remote: "Slug is already in use",
