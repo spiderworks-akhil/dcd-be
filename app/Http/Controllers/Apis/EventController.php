@@ -101,6 +101,10 @@ class EventController extends Controller
         try {
             $data = $request->all();
             $type = !empty($data['language']) ? $data['language'] : "en";
+
+            // Normalize type for related events
+            $baseType = str_contains($type, 'ar') ? 'ar' : 'en';
+
             $query = Event::where('slug', $slug)->where('type', $type);
 
             if (!in_array($type, ['en_draft', 'ar_draft'])) {
@@ -115,12 +119,12 @@ class EventController extends Controller
             $event->related_events = Event::where('id', '!=', $event->id)
                 ->where('category_id', $event->category_id)
                 ->where('status', 1)
-                ->where('type', $type)
+                ->where('type', $baseType)
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
                 ->get();
             $event->must_attend = Event::where('id', '!=', $event->id)
-                ->where('type', $type)
+                ->where('type', $baseType)
                 ->where('is_must_attend', 1)
                 ->where('status', 1)
                 ->orderBy('start_time', 'DESC')
