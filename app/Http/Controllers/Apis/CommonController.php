@@ -271,7 +271,10 @@ class CommonController extends Controller
     {
         $data = request()->all();
         $type = !empty($data['language'])?$data['language']:"en";
-        $widget = Widget::where('code', $code)->where('type',$type)->first();
+
+        $baseType = str_contains($type, 'ar') ? 'ar' : 'en';
+
+        $widget = Widget::where('code', $code)->where('type',$baseType)->first();
 
         if (!$widget) {
             return response()->json(['error' => 'Page not Found!'], 404);
