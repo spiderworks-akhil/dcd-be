@@ -408,11 +408,15 @@ public function showApprovalForm(Request $request, $id)
     else if ($approval_notification->notifiable_type === "Event") {
         $item = Event::find($approval_notification->notifiable_id);
         $modelType = 'event';
+
     }
     else {
         abort(404, 'Approval item not found');
     }
 
+    if (!$item) {
+        abort(404, 'Approval item not found');
+    }
     $preselect_status = $request->query('status');
 
     return view('admin.news.approval_form', [
