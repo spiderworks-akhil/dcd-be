@@ -81,8 +81,9 @@ class Event extends JsonResource
     private function getGallery($slug)
     {
         $type = request()->language??'en';
+        $baseType = str_contains($type, 'ar') ? 'ar' : 'en';
 
-        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
+        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$baseType)->first(); // for this the type is called lang_type
         return new GalleryResource($gallery);
     }
 }
