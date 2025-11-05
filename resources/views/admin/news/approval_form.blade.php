@@ -10,7 +10,7 @@
 
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">Review Content Before Publishing</h2>
+    <h2 class="mb-4">Check and Confirm Content Status</h2>
 
     <div class="card p-4">
 

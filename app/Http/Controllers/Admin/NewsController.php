@@ -12,6 +12,7 @@ use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\EventMedia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\EventSchedule;
 use App\Traits\ResourceTrait;
@@ -19,6 +20,7 @@ use App\Services\MailSettings;
 use Illuminate\Support\Facades\DB;
 use App\Models\ApprovalNotification;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\SendRejectionNotification;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Admin\NewsRequest;
 use App\Http\Controllers\Admin\BaseController as Controller;
@@ -193,12 +195,7 @@ class NewsController extends Controller
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
-
-            // if ($data['content']) {
-            //     $data['content'] = json_encode($data['content']);
-            // }
-
-
+            
             if($obj->update($data))
             {
                 if(!empty($data['tags']))
@@ -213,69 +210,6 @@ class NewsController extends Controller
         }
     }
 
-   
-
-// public function GetType(Request $request)
-// {
-//     $type = $request->query('type');
-//     $slug = $request->query('slug');
-//     $name = $request->query('name');
-//     $currentType = $request->query('currentType');
-
-//     $source = News::where('slug', $slug)->where('type', $currentType)->first();
-//     $target = News::where('slug', $slug)->where('type', $type)->first();
-
-//     $allowedSwaps = [
-//         ["en_draft", "en"], ["en", "en_draft"],
-//         ["ar_draft", "ar"], ["ar", "ar_draft"],
-//         ["en", "ar"], ["ar", "en"]
-//     ];
-
-//     if (!in_array([$currentType, $type], $allowedSwaps)) {
-//         return response()->json([
-//             'error' => "You can't change from '{$currentType}' to '{$type}'."
-//         ], 400);
-//     }
-
-//     // If source exists
-//     if ($source) {
-//         if ($target) {
-//             // Copy content and title from source to target
-//             $target->content = $source->content;
-//             $target->title = $source->title;
-//             $target->save();
-
-//             return response()->json([
-//                 'redirect_url' => route('admin.news.edit', ['id' => encrypt($target->id)])
-//             ]);
-//         } else {
-//             // Replicate source page if target doesn't exist
-//             $newPage = $source->replicate();
-//             $newPage->slug = $slug;
-//             $newPage->title = $name;
-//             $newPage->type = $type;
-//             $newPage->save();
-
-            
-
-//             return response()->json([
-//                 'redirect_url' => route('admin.news.edit', ['id' => encrypt($newPage->id)])
-//             ]);
-//         }
-//     }
-
-//     // fallback: if somehow target exists
-//     if ($target) {
-//         return response()->json([
-//             'redirect_url' => route('admin.news.edit', ['id' => encrypt($target->id)])
-//         ]);
-//     }
-
-//     // fallback error
-//     return response()->json([
-//         'error' => "You can't change from '{$currentType}' to '{$type}'."
-//     ], 400);
-// }
 
 public function GetType(Request $request)
 {
@@ -314,6 +248,7 @@ public function GetType(Request $request)
    
     return response()->json(['redirect_url' => route('admin.news.edit', ['id' => encrypt($target->id)])]);
 }
+
 public function sendApprovalMail(Request $request)
 {
     $request->validate([
@@ -363,23 +298,39 @@ public function sendApprovalMail(Request $request)
 
     $email_array = array_map('trim', array_filter(explode(',', $notif_emails->value_text)));
 
+      // --- Log file path ---
+    $logFile = storage_path('logs/approval_mail_log.txt');
+    $timestamp = now()->format('Y-m-d H:i:s');
+
     try {
         $approval = ApprovalNotification::create([
             'notifiable_type' => $modelName,
             'notifiable_id'   => $record->id,
-            'email_sent'      => 1,
             'created_by'      => auth()->id() ?? 1,
         ]);
 
         $mail = new MailSettings;
         $mail->to($email_array)->send(new \App\Mail\SendNewsContentNotification($record, $approval));
 
+         $approval->update(['email_sent' => 1]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Approval email has been sent.'
         ]);
 
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
+        $errorMsg = "[$timestamp]  Failed to send approval mail for {$modelName} ID {$record->id}:\n"
+                  . $e->getMessage() . "\n"
+                  . $e->getTraceAsString() . "\n\n";
+        file_put_contents($logFile, $errorMsg, FILE_APPEND);
+
+        \Log::error("Approval mail sending failed", [
+            'model'      => $modelName,
+            'record_id'  => $record->id,
+            'error'      => $e->getMessage(),
+        ]);
+
         if (isset($approval)) {
             $approval->update(['email_sent' => 0]);
         }
@@ -391,9 +342,6 @@ public function sendApprovalMail(Request $request)
         ]);
     }
 }
-
-
-
 
 
 public function showApprovalForm(Request $request, $id)
@@ -427,10 +375,40 @@ public function showApprovalForm(Request $request, $id)
     ]);
 }
 
+
+private function sendRejectionMail($approval, $record, $modelName)
+{
+    try {
+        $recipientEmail = $approval->user->email ?? null;
+
+        if (empty($recipientEmail)) {
+
+            $warning = "⚠️ No user email found for Approval ID {$approval->id}\n";
+            file_put_contents(storage_path('logs/rejection_mail_errors.txt'), $warning, FILE_APPEND);
+            \Log::warning(trim($warning));
+            
+        } else {
+            $mail = new MailSettings;
+            $mail->to([$recipientEmail])
+                ->send(new SendRejectionNotification($record, $approval));
+        }
+    } catch (\Throwable $e) {
+        $error = "Failed to send rejection mail for Approval ID {$approval->id}: "
+                . $e->getMessage() . "\n"
+                . $e->getTraceAsString() . "\n\n";
+
+        file_put_contents(storage_path('logs/rejection_mail_errors.txt'), $error, FILE_APPEND);
+        \Log::error("Failed to send rejection mail for Approval ID {$approval->id}: {$e->getMessage()}");
+    }
+
+    return redirect()->back();
+}
+
 public function submitApprovalForm(Request $request, $approvalId)
 {
     $approvalId = decrypt($approvalId);
     $approval = ApprovalNotification::findOrFail($approvalId);
+    $email_array = $approval->user->email;
 
     $approvalStatus = $request->status;
     $modelName = class_basename($approval->notifiable_type);
@@ -439,8 +417,20 @@ public function submitApprovalForm(Request $request, $approvalId)
         'status'      => $approvalStatus,
         'remarks'     => $request->remarks,
         'action_date' => now(),
-        'email_sent'  => 1,
     ]);
+
+     // --- Determine record (Event or News) ---
+    $record = $approval->notifiable;
+    if (!$record) {
+        $record = $approval->notifiable_type === 'Event'
+            ? Event::find($approval->notifiable_id)
+            : News::find($approval->notifiable_id);
+    }
+
+    // --- Handle Rejection Email ---
+    if ($approvalStatus === 'rejected') {
+        return $this->sendRejectionMail($approval, $record, $modelName);
+    }
 
     //  Only proceed if Approved
     if ($approvalStatus === 'approved') {

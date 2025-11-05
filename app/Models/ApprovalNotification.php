@@ -11,4 +11,10 @@ class ApprovalNotification extends Model
 
     protected $fillable = ['notifiable_type','notifiable_id','email_sent','created_by','status','remarks','remarks','action_date'];
 
+
+     public function user()
+    {
+        return $this->belongsTo('App\Models\Admin', 'created_by');
+    }
+
 }
