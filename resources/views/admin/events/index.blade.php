@@ -25,7 +25,7 @@
                     <!-- Page-Title -->
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="page-title-box">
+                            <div class="page-title-box sdsds">
                                 <div class="row">
                                     <div class="col">
                                         <h4 class="page-title">All Events</h4>
@@ -56,8 +56,8 @@
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10">ID</th>
                                             <th class="table-width-120">Type</th>
-                                            <th class="table-width-120">Slug</th>
-                                            <th class="table-width-120">Name</th>
+                                            <th class="table-width-120" width="190">Slug</th>
+                                            <th class="table-width-120" width="190">Name</th>
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
                                             <th class="nosort nosearch table-width-10">Status</th>

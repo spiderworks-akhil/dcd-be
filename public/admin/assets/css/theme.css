@@ -337,8 +337,8 @@ a.btn.btn-info.btn-sm {
 table.dataTable {
     border-radius: 15px;
     overflow: hidden;
-    line-height: 30px;
-    font-size: 16px;
+    line-height: 26px;
+    font-size: 14.5px;
 }
 .account-body {
     background-color: #fff;
