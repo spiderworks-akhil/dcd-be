@@ -67,24 +67,64 @@ class EventController extends Controller
         return new EventListingCollection($events);
     }
 
-    public function view(Request $request, $slug)
+    // public function view(Request $request, $slug)
+    // {
+    //     try {
+    //         $data = $request->all();
+    //         $type = !empty($data['language']) ? $data['language'] : "en";
+    //         $event = Event::where('slug', $slug)->where('type', $type)->where('status', 1)->first();
+    //         if (!$event)
+    //             return response()->json(['error' => 'Not found'], 404);
+
+    //         $event->related_events = Event::where('id', '!=', $event->id)
+    //             ->where('category_id', $event->category_id)
+    //             ->where('status', 1)
+    //             ->where('type', $type)
+    //             ->orderBy('start_time', 'DESC')
+    //             ->take(5)
+    //             ->get();
+    //         $event->must_attend = Event::where('id', '!=', $event->id)
+    //             ->where('type', $type)
+    //             ->where('is_must_attend', 1)
+    //             ->where('status', 1)
+    //             ->orderBy('start_time', 'DESC')
+    //             ->take(5)
+    //             ->get();
+    //         return new EventResource($event);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+     public function view(Request $request, $slug)
     {
         try {
             $data = $request->all();
             $type = !empty($data['language']) ? $data['language'] : "en";
-            $event = Event::where('slug', $slug)->where('type', $type)->where('status', 1)->first();
+
+            // Normalize type for related events
+            $baseType = str_contains($type, 'ar') ? 'ar' : 'en';
+
+            $query = Event::where('slug', $slug)->where('type', $type);
+
+            if (!in_array($type, ['en_draft', 'ar_draft'])) {
+                $query->where('status', 1);
+            }
+
+            $event = $query->first();
+
             if (!$event)
                 return response()->json(['error' => 'Not found'], 404);
 
             $event->related_events = Event::where('id', '!=', $event->id)
                 ->where('category_id', $event->category_id)
                 ->where('status', 1)
-                ->where('type', $type)
+                ->where('type', $baseType)
                 ->orderBy('start_time', 'DESC')
                 ->take(5)
                 ->get();
             $event->must_attend = Event::where('id', '!=', $event->id)
-                ->where('type', $type)
+                ->where('type', $baseType)
                 ->where('is_must_attend', 1)
                 ->where('status', 1)
                 ->orderBy('start_time', 'DESC')

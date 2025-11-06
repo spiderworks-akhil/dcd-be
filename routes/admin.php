@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TeamController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EventLogController;
+use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\RedirectController;
 use App\Http\Controllers\Admin\WebadminController;
 use App\Http\Controllers\Admin\AdminLinkController;
@@ -39,7 +41,6 @@ use App\Http\Controllers\Admin\LoginHistoryController;
 use App\Http\Controllers\Admin\PhotoGallaryController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
-use App\Http\Controllers\Admin\NewsController;
 
 $prefix = (config()->has('admin.url_prefix'))?config()->get('admin.url_prefix'):'admin';
 $middleware = (config()->has('admin.admin_middleware'))?config()->get('admin.admin_middleware'):'auth';
@@ -164,8 +165,8 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('news/update', [NewsController::class, 'update'])->name('admin.news.update');
         Route::get('news/show/{id}', [NewsController::class, 'show'])->name('admin.news.show');
         Route::get('news/get-type', [NewsController::class, 'GetType'])->name('admin.news.get-type');
-
-
+        Route::post('/send-approval-mail', [NewsController::class, 'sendApprovalMail'])->name('send.approval.mail');
+      
         //menus
         Route::get('menus', [MenuController::class, 'index'])->name('admin.menus.index');
         Route::get('menus/create', [MenuController::class, 'create'])->name('admin.menus.create');
@@ -258,7 +259,17 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('header', [StaticPageController::class, 'HeaderView'])->name('admin.header.view');
         Route::get('get-slug', [StaticPageController::class, 'GetSlug'])->name('admin.get-slug');
 
-        //pages
+        //languages 
+        Route::get('languages', [LanguageController::class, 'index'])->name('admin.languages.index');
+        Route::get('languages/create', [LanguageController::class, 'create'])->name('admin.languages.create');
+        Route::get('languages/edit/{id}', [LanguageController::class, 'edit'])->name('admin.languages.edit');
+        Route::get('languages/destroy/{id}', [LanguageController::class, 'destroy'])->name('admin.languages.destroy');
+        Route::get('languages/change-status/{id}', [LanguageController::class, 'changeStatus'])->name('admin.languages.change-status');
+        Route::post('languages/store', [LanguageController::class, 'store'])->name('admin.languages.store');
+        Route::post('languages/update', [LanguageController::class, 'update'])->name('admin.languages.update');
+        Route::get('languages/show/{id}', [LanguageController::class, 'show'])->name('admin.languages.show');
+
+        //languages
         Route::get('/pages/edit/{id}', [PageController::class, 'edit'])->name('admin.pages.edit');
         Route::get('/pages/destroy/{id}', [PageController::class, 'destroy'])->name('admin.pages.destroy');
         Route::get('/pages/create/{parent?}', [PageController::class, 'create'])->name('admin.pages.create');
@@ -514,6 +525,11 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
 
 	});
 
+    // Show the update form
+    Route::get('content/approval/{id}', [NewsController::class, 'showApprovalForm'])->name('approval.form');
+
+    // Submit the approval/rejection
+    Route::post('content/approval/{id}', [NewsController::class, 'submitApprovalForm'])->name('approval.submit');
 
     Route::get('/{id?}', [AuthenticateSessionOtpController::class, 'create'])->name('admin.auth.login');
 });

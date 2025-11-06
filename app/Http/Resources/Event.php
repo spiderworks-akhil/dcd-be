@@ -22,6 +22,7 @@ class Event extends JsonResource
             'id' => $this->id,
             'is_featured' => $this->is_featured,
             'title' => $this->title,
+            'type' => $this->type,
             'slug' => $this->slug,
             'short_description' => $this->short_description,
             'start_time' => $this->start_time,
@@ -80,8 +81,9 @@ class Event extends JsonResource
     private function getGallery($slug)
     {
         $type = request()->language??'en';
+        $baseType = str_contains($type, 'ar') ? 'ar' : 'en';
 
-        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$type)->first(); // for this the type is called lang_type
+        $gallery = \App\Models\Gallery::where('slug',$slug)->where('lang_type',$baseType)->first(); // for this the type is called lang_type
         return new GalleryResource($gallery);
     }
 }

@@ -49,6 +49,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                    <label>Journey Block 1 (Width: 360px X Height: 430px)</label>
                     @php
                         $media = $obj->content['media_id_journey_block_1'] ?? null;
                     @endphp
@@ -83,6 +84,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                    <label>Journey Block 2 (Width: 360px X Height: 430px)</label>
                     @php
                         $media = $obj->content['media_id_journey_block_2'] ?? null;
                     @endphp
@@ -117,6 +119,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                    <label>Journey Block 3 (Width: 360px X Height: 430px)</label>
                     @php
                         $media = $obj->content['media_id_journey_block_3'] ?? null;
                     @endphp
@@ -151,6 +154,8 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                    <label>Journey Block 4 (Width: 360px X Height: 430px)</label>
+
                     @php
                         $media = $obj->content['media_id_journey_block_4'] ?? null;
                     @endphp
@@ -185,6 +190,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                    <label>Journey Block 5 (Width: 360px X Height: 430px)</label>
                     @php
                         $media = $obj->content['media_id_journey_block_5'] ?? null;
                     @endphp
@@ -229,6 +235,7 @@
             </div> --}}
 
             <div class="form-group">
+                    <label>Journey Block 5 (Width: 200px X Height: 100px)</label>
                 @php
                     $media = $obj->content['media_id_history_block'] ?? null;
                 @endphp
@@ -243,6 +250,7 @@
                 ])
             </div>
             <div class="form-group">
+                    <label>Journey Block 5 (Width: 600px X Height: 500px)</label>
                 @php
                     $media = $obj->content['media_id_history_block_2'] ?? null;
                 @endphp
@@ -323,6 +331,7 @@
             </div>
 
             <div class="form-group">
+                    <label>Activities Image(Width: 770px X Height: 235px)</label>
                 @php
                     $media = $obj->content['media_id_activities_block'] ?? null;
                 @endphp
@@ -371,6 +380,7 @@
             </div>
 
             <div class="form-group">
+                    <label>Sports Image(Width: 770px X Height: 235px)</label>
                 @php
                     $media = $obj->content['media_id_sports_block'] ?? null;
                 @endphp

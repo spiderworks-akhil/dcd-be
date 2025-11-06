@@ -18,22 +18,29 @@ class BladeServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot(): void
-    {
-        
-        Blade::directive('fieldshow', function ($input) {
-            $input = explode('-', $input);
-            $page = $input[0];
-            $field = $input[1];
-            $field_array = config("admin.fields.{$page}");
-            $expression = 0;
-            if(in_array($field, $field_array))
-                $expression = 1;
-            return "<?php if($expression) : ?>";
-        });
+  public function boot(): void
+{
+    Blade::directive('fieldshow', function ($input) {
 
-        Blade::directive('endfieldshow', function () {
-            return '<?php endif; ?>';
-        });
-    }
+        // Remove quotes from the directive input
+        $input = str_replace(['"', "'"], '', $input);
+
+        // Split into page and field keys
+        $parts = explode('-', $input);
+        $page = $parts[0] ?? null;
+        $field = $parts[1] ?? null;
+
+        return "<?php 
+            \$field_array = config('admin.fields.{$page}') ?? [];
+            if (in_array('{$field}', \$field_array)) : 
+        ?>";
+    });
+
+    Blade::directive('endfieldshow', function () {
+        return "<?php endif; ?>";
+    });
+}
+
+
+    
 }

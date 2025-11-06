@@ -39,6 +39,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
+                   Featured Image (width: 1000px X height: 1260px)
                     @php
                         $media_id_1 = ($obj->content && isset($obj->content['media_id_1'])) ? $obj->content['media_id_1'] : null;
                     @endphp

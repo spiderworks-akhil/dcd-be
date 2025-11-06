@@ -42,14 +42,13 @@
                     </div><!--end row-->
                     <div class="row">
 
-
-                    <div class="col-md-4">
+                       <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #e5f1fd;">
                                 <div class="card-header">
-                                    Total Number of Pages 
+                                    <a href="{{ route('admin.static-pages.index')}}" style="color: #1e43a5">Total Number of Pages </a> 
                                 </div>
                                 <div class="card-body" >
-                                     <h4>99</h4>
+                                     <h4>{{ $front_end_pages }}</h4>
                                 </div>
                             </div>
                         </div>
@@ -57,10 +56,11 @@
                         <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #e5def0;">
                                 <div class="card-header">
-                                   News Published (English)
+
+                                    <a href="{{ route('admin.news.index')}}" style="color: #1e43a5">News Published (English) </a> 
                                 </div>
                                 <div class="card-body" >
-                                     <h4>150</h4>
+                                     <h4>{{$news_en}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -68,10 +68,10 @@
                          <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #d6edd9;">
                                 <div class="card-header">
-                                  News Published (Arabic)
+                                    <a href="{{ route('admin.news.index')}}" style="color: #1e43a5">News Published (Arabic) </a> 
                                 </div>
                                 <div class="card-body" >
-                                     <h4>150</h4>
+                                     <h4>{{$news_ar}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -79,10 +79,10 @@
                           <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #f6f0d8;">
                                 <div class="card-header">
-                                  Blogs Published (English)
+                                    <a href="{{ route('admin.events.index')}}" style="color: #1e43a5">Events Published (English) </a> 
                                 </div>
                                 <div class="card-body" >
-                                     <h4>105</h4>
+                                     <h4>{{$events_en}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -91,16 +91,17 @@
                         <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #ffe0cb;">
                                 <div class="card-header">
-                                  Blogs Published (Arabic)
+                                    <a href="{{ route('admin.events.index')}}" style="color: #1e43a5">Events Published (Arabic) </a> 
+
                                 </div>
                                 <div class="card-body" >
-                                     <h4>105</h4>
+                                   <h4>{{$events_ar}}</h4>
                                 </div>
                             </div>
                         </div>
 
 
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                             <div class="card dashboard_list" style="background: #eceff6;">
                                 <div class="card-header">
                                   Events Published 
@@ -109,7 +110,7 @@
                                      <h4>52</h4>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
 
 
@@ -120,38 +121,22 @@
                                 </div>
                                 <div class="card-body" >
 
-
+                                    @foreach ($recent_news_en as $en_news)
+                                        
                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
+                                        <img src="{{ asset($en_news->featured_image->file_path ?? "")}}" class="mr-3"/>
                                         <div>
-                                            <h4>Sheikha Latifa honours winners of Holy Quran competition, praises qualitative shift witnessed at event</h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
+                                            <h4>{{$en_news->name}}</h4>
+                                            <p>{{ \Carbon\Carbon::parse($en_news->published_on)->format('F d, Y') }} {{$en_news->category->name ?? ""}}</p>
                                         </div> 
                                       </div>
                                       <hr/>
-
-                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
-                                        <div>
-                                            <h4>  UAE finish with 21 medals in Fazza Para Athletics GP 2025 </h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
-                                        </div> 
-                                      </div>
-
-                                      <hr/>
+                                    @endforeach
 
 
-                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="mr-3"/>
-                                        <div>
-                                            <h4>  2025 Fazza International C’ships: Strategic partner and sponsors announced </h4>
-                                            <p>April 27, 2025 SOCIO-CULTURE</p>
-                                        </div> 
-                                      </div>
                                 </div>
                             </div>
                         </div>
-
 
                           <div class="col-md-6" style=" margin-bottom:50px;" >
                             <div class="card dashboard_news dashboard_news_arabic  " style="height:100%; " >
@@ -159,35 +144,20 @@
                                  آخر الأخبار المنشورة
                                 </div>
                                 <div class="card-body" >
-
+                                    @foreach ($recent_news_ar as $ar_news)
 
                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
+                                        <img src="{{ asset($ar_news->featured_image->file_path ?? "")}}" class="ml-3"/>
                                         <div>
-                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
-                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
+                                            <h4> {{$ar_news->name}}</h4>
+                                             <p>{{ \Carbon\Carbon::parse($ar_news->published_on)->format('F d, Y') }} {{$ar_news->category->name ?? ""}}</p>
+
                                         </div> 
                                       </div>
                                       <hr/>
+                                      @endforeach
 
-                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
-                                      <div>
-                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
-                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
-                                        </div> 
-                                      </div>
-
-                                      <hr/>
-
-
-                                       <div class="dashboard_news_list flex items-center"> 
-                                        <img src="{{asset('admin/assets/images/logbg.png')}}" class="ml-3"/>
-                                       <div>
-                                            <h4>  نادي دبي لأصحاب الهمم» يكرّم أبطال مهرجانه الرمضاني</h4>
-                                            <p>٧ أبريل الثقافة الاجتماعية ٢٠٢٥</p>
-                                        </div> 
-                                      </div>
+                                      
                                 </div>
                             </div>
                         </div>

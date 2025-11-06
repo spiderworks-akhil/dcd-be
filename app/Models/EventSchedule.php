@@ -19,13 +19,13 @@ class EventSchedule extends Model
      */
     protected $table = 'event_schedules';
 
-    protected $fillable = array('events_id', 'title', 'time','priority');
+    protected $fillable = array('event_id', 'title', 'time','priority');
 
     protected $dates = ['created_at','updated_at'];
 
 
     public function event() {
-        return $this->belongsTo('App\Models\Event', 'events_id');
+        return $this->belongsTo('App\Models\Event', 'event_id');
     }
 
 

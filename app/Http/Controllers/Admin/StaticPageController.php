@@ -59,6 +59,7 @@ class StaticPageController extends Controller
     {
         $request->validated();
     	$data = request()->all();
+        $data['status'] = $data['status'] ?? 0;
     	$id = decrypt($data['id']);
         if(!empty($data['content'])){
             $data['content'] = json_encode($data['content']);

@@ -118,7 +118,7 @@
     </div>
 
     <div class="form-group col-md-12">
-        <label>Left Side - Image</label>
+        <label>Left Side - Image (width: 270px X height: 235px)</label>
         @php
             $media_id_left_image = ($obj->content && isset($obj->content['media_id_left_image'])) ? $obj->content['media_id_left_image'] : null;
         @endphp
@@ -168,7 +168,7 @@
     <hr>
 
     <div class="form-group col-md-12">
-        <label>Right Side - Image</label>
+        <label>Right Side - Image (width: 270px X height: 235px) </label>
         @php
             $media_id_right_image = ($obj->content && isset($obj->content['media_id_right_image'])) ? $obj->content['media_id_right_image'] : null;
         @endphp

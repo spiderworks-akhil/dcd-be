@@ -18,7 +18,10 @@
                 <!-- end navbar-->
             </div>
             <!-- Top Bar End -->
-
+            @php
+                $user = auth()->user();
+                $roleName = $user->roles->pluck('name')->first();
+            @endphp
             <!-- Page Content-->
             <div class="page-content">
                 <div class="container-fluid">
@@ -71,12 +74,12 @@
                                                         <div class="row m-0">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="">
+                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                             </div>
                                                             @fieldshow(team-title)
                                                             <div class="form-group col-md-6">
                                                                 <label>Heading</label>
-                                                                <input type="text" name="title" class="form-control" value="{{$obj->title}}" required="">
+                                                                <input type="text" name="title" class="form-control" value="{{$obj->title}}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                             </div>
                                                             @endfieldshow
                                                             <div class="form-group col-md-12">
@@ -316,7 +319,7 @@
                                             @fieldshow(team-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
-                                                    Featured Image
+                                                    Featured Image (width: 350px X height: 470px)
                                                 </div>
                                                 <div class="card-body">
                                                     @include('admin.media.set_file', ['file'=>$obj->featured_image, 'title'=>'Featured Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'featured_image_id'])

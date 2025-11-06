@@ -19,6 +19,7 @@
             </div>
             <!-- Top Bar End -->
 
+            
             <!-- Page Content-->
             <div class="page-content">
                 <div class="container-fluid">
@@ -49,7 +50,10 @@
                         </div><!--end col-->
                     </div><!--end row-->
                     <!-- end page title end breadcrumb -->
-                    
+            @php
+                $user = auth()->user();
+                $roleName = $user->roles->pluck('name')->first();
+            @endphp
                     <div class="row">
                         <div class="col-lg-12">
                             @include('admin._partials.notifications')
@@ -71,11 +75,11 @@
                                                         <div class="row m-0">
                                                             <div class="form-group col-md-6">
                                                                 <label>Name</label>
-                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="">
+                                                                <input type="text" name="name" class="form-control @if(!$obj->id) copy-name @endif" value="{{$obj->name}}" required="" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label class="">Slug (for url)</label>
-                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug">
+                                                                <input type="text" name="slug" class="form-control" value="{{$obj->slug}}" id="slug" @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                                                 <small class="text-muted">The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small>
                                                             </div>
                                                             @fieldshow(services-title)

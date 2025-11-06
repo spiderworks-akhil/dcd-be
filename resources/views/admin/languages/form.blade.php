@@ -1,4 +1,4 @@
-@extends('admin._layouts.fileupload')
+@extends('admin._layouts.default')
 @section('content')
 <!-- Top Bar Start -->
             <div class="topbar">            
@@ -28,12 +28,22 @@
                             <div class="page-title-box">
                                 <div class="row">
                                     <div class="col">
-                                        <h4 class="page-title">All Sliders</h4>
+                                        @if($obj->id)
+                                            <h4 class="page-title">Edit Language</h4>
+                                        @else
+                                            <h4 class="page-title">Create new Language</h4>
+                                        @endif
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
-                                            <li class="breadcrumb-item active">All Menus</li>
+                                            <li class="breadcrumb-item"><a href="{{ route($route.'.index') }}">All Languages</a></li>
+                                            <li class="breadcrumb-item active">@if($obj->id)Edit @else Create new @endif User</li>
                                         </ol>
                                     </div><!--end col-->
+                                    @if(auth()->user()->can($permissions['create']))
+                                    <div class="col-auto align-self-center">
+                                        <a class=" btn btn-sm btn-primary" href="{{route($route.'.create')}}" role="button"><i class="fas fa-plus mr-2"></i>Create New</a>
+                                    </div>
+                                    @endif
                                 </div><!--end row-->                                                              
                             </div><!--end page-title-box-->
                         </div><!--end col-->
@@ -43,32 +53,33 @@
                     <div class="row">
                         <div class="col-lg-12">
                             @include('admin._partials.notifications')
-                            @if(auth()->user()->can($permissions['create']))
                             <div class="card">
                                 <div class="card-body">
-
-                                   <form method="POST" action="{{ route($route.'.store') }}" class="p-t-15" id="SliderFrm" data-validate=true>
-        
+                                    @if($obj->id)
+                                        <form method="POST" action="{{ route($route.'.update') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                                    @else
+                                        <form method="POST" action="{{ route($route.'.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                                    @endif
                                     @csrf
+                                    <input type="hidden" name="id" @if($obj->id) value="{{encrypt($obj->id)}}" @endif id="inputId">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div data-simplebar>
+                                                <div>
                                                     <div class="tab-content chat-list" id="pills-tabContent" >
                                                         <div class="tab-pane fade show active" id="tab1">
                                                             <div class="row m-0">
                                                                 <div class="form-group col-md-6">
-                                                                    <label>Slider Name</label>
-                                                                    <input type="text" name="slider_name" class="form-control" value="" >
+                                                                    <label for="name">Name</label>
+                                                                    <input type="text" class="form-control" id="name" name="name" value="{{$obj->name}}">
                                                                 </div>
-                                                                {{-- <div class="form-group col-md-3">
-                                                                    <label>Width</label>
-                                                                    <input type="text" name="width" class="form-control" value="" maxLength="4" >
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="name">Slug</label>
+                                                                    <input type="text" class="form-control" id="slug" name="slug" value="{{$obj->slug}}">
                                                                 </div>
-                                                                <div class="form-group col-md-3">
-                                                                    <label>Height</label>
-                                                                    <input type="text" name="height" class="form-control" value="" maxLength="4" >
-                                                                </div> --}}
+                                                                
                                                             </div>
+                                                            <hr/>
                                                             
                                                         </div>
                                                     </div>
@@ -77,38 +88,16 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-sm-12 text-right">
-                                                <button type="submit" class="btn btn-primary px-4">Create new Slider</button>
+                                            <div class="col-sm-6 text-right  ">
+                                                <a href="{{ route($route.'.index') }}" class="btn btn-soft-primary">Back to List</a>
+                                            </div>
+                                            <div class="col-sm-6 text-right  ">
+                                                 <button type="submit" class="btn btn-primary px-4">Submit</button>
                                             </div>
                                         </div>
                                     </form>                                                                   
                                 </div><!--end card-body-->
                             </div><!--end card-->
-                            @endif
-                            <div class="card">
-                                <div class="card-body">
-                                    <table class="table table-hover demo-table-search table-responsive-block" id="datatable"
-                                           data-datatable-ajax-url="{{ route($route.'.index') }}" >
-                                        <thead id="column-search">
-                                        <tr>
-                                            <th class="nosort nosearch span1" width="30">Slno</th>
-                                            <th>Slider Name</th>
-                                            {{-- <th>Width</th>
-                                            <th>Height</th> --}}
-                                            <th class="nosort nosearch" width="30">Manage</th>
-                                            <th class="nosort nosearch" width="30">Delete</th>
-                                        </tr>
-
-
-
-                                        </thead>
-
-                                        <tbody>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
                         </div><!--end col-->
                     </div><!--end row-->
 
@@ -119,45 +108,32 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-<script>
-      var my_columns = [
-          {data: null, name: 'slno'},
-          {data: 'slider_name', name: 'slider_name'},
-        //   {data: 'width', name: 'width'},
-        //   {data: 'height', name: 'height'},
-          {data: 'action_edit', name: 'action_edit'},
-          {data: 'action_delete', name: 'action_delete'}
-      ];
-      var slno_i = 0;
-      var order = [0, 'desc'];
-
-      var validator = $('#SliderFrm').validate({
+     <script type="text/javascript">
+        var validator = $('#InputFrm').validate({
             ignore: [],
             rules: {
-                "width": "required",
-                "height": "required",
-                slider_name: {
+                "name": "required",
+                slug: {
                   required: true,
                   remote: {
-                      url: "{{route('admin.sliders.unique-name')}}",
+                      url: "{{route('admin.unique-slug')}}",
                       data: {
                         id: function() {
                           return $( "#inputId" ).val();
                         },
+                        table: 'languages',
                     }
                   }
                 },
               },
               messages: {
-                "width": "Slider width cannot be blank",
-                "height": "Slider height cannot be blank",
-                slider_name: {
-                  required: "Slider name cannot be blank",
-                  remote: "Slider name is already in use",
+                "name": "Language name cannot be blank",
+                slug: {
+                  required: "Slug cannot be blank",
+                  remote: "Slug is already in use",
                 },
               },
             });
-
     </script>
 @parent
 @endsection

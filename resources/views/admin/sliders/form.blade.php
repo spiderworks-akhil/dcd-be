@@ -61,14 +61,14 @@
                                                                     <label>Slider Name</label>
                                                                     <input type="text" name="slider_name" class="form-control" value="{{$obj->slider_name}}" >
                                                                 </div>
-                                                                <div class="form-group col-md-3">
+                                                                {{-- <div class="form-group col-md-3">
                                                                     <label>Width</label>
                                                                     <input type="text" name="width" class="form-control" value="{{$obj->width}}" maxLength="4" >
                                                                 </div>
                                                                 <div class="form-group col-md-3">
                                                                     <label>Height</label>
                                                                     <input type="text" name="height" class="form-control" value="{{$obj->height}}" maxLength="4" >
-                                                                </div>
+                                                                </div> --}}
                                                             </div>
                                                             
                                                         </div>
