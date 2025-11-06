@@ -309,15 +309,17 @@ public function sendApprovalMail(Request $request)
             'created_by'      => auth()->id() ?? 1,
         ]);
 
-        $mail = new MailSettings;
-        $mail->to($email_array)->send(new \App\Mail\SendNewsContentNotification($record, $approval));
+        if ($approval->email_sent == 0) {
+            $mail = new MailSettings;
+            $mail->to($email_array)->send(new \App\Mail\SendNewsContentNotification($record, $approval));
 
-         $approval->update(['email_sent' => 1]);
+            $approval->update(['email_sent' => 1]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Approval email has been sent.'
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Approval email has been sent.'
+            ]);
+        }
 
     } catch (\Throwable $e) {
         $errorMsg = "[$timestamp]  Failed to send approval mail for {$modelName} ID {$record->id}:\n"
@@ -413,27 +415,30 @@ public function submitApprovalForm(Request $request, $approvalId)
     $approvalStatus = $request->status;
     $modelName = class_basename($approval->notifiable_type);
 
-    $approval->update([
+    $previousStatus = $approval->status;
+
+     // --- Determine record (Event or News) ---
+    $record = $approval->notifiable;
+
+     $approval->update([
         'status'      => $approvalStatus,
         'remarks'     => $request->remarks,
         'action_date' => now(),
     ]);
 
-     // --- Determine record (Event or News) ---
-    $record = $approval->notifiable;
     if (!$record) {
         $record = $approval->notifiable_type === 'Event'
             ? Event::find($approval->notifiable_id)
             : News::find($approval->notifiable_id);
     }
-
+    
     // --- Handle Rejection Email ---
-    if ($approvalStatus === 'rejected') {
+    if ($approvalStatus === 'rejected' && $previousStatus !== 'rejected') {
         return $this->sendRejectionMail($approval, $record, $modelName);
     }
 
     //  Only proceed if Approved
-    if ($approvalStatus === 'approved') {
+    if ($approvalStatus === 'approved' ) {
 
         $model = $modelName === "News"
             ? News::find($approval->notifiable_id)
