@@ -96,7 +96,7 @@ class LeadController extends Controller
     public function export(){
         $table_heads = ['Name', 'Email', 'Contact Number', 'Lead Type', 'Message'];
         $collection = $this->model->select('name', 'email', 'phone_number', 'lead_type', 'message', 'extra_data', 'utm_source', 'source_url', 'status', 'created_at');
-        if(request()->get('data'))
+        if(request()->all())
         {
             $collection = $this->applyFiltering($collection);
         }
@@ -104,9 +104,6 @@ class LeadController extends Controller
             $collection->where('status', 'Open');
         $leads = $collection->take(1000)->get();
 
-        // $leads = $leads->map(function($lead){
-
-        // })
         foreach($leads as $lead){
             if(!empty($lead->extra_data)){
                 $extra_data = json_decode($lead->extra_data, true);
@@ -127,6 +124,46 @@ class LeadController extends Controller
 
         $excel_name = 'lead_export_'.round(microtime(true) * 1000).'.xlsx';
         return (new LeadExport($leads, $table_heads))->download($excel_name);
+    }
+
+     protected function applyFiltering($collection)
+    {
+        $search = !empty(request()->get('data'))?request()->get('data'):request()->all();
+        if($search)
+        {
+            foreach ($search as $key => $value) {
+                if (strpos($key, 'leads_') !== false)
+                    $key = str_replace('leads_', 'leads.', $key);
+
+                $condition = null;
+                $keyArr =  explode('-', $key);
+                if(isset($keyArr[1]))
+                {
+                        $key = $keyArr[1];
+                        $condition = $keyArr[0];
+                 }
+                if($value)
+                {
+                    if($condition == 'date_between')
+                    {
+                            $date_array = explode('-', $value);
+                            $from_date = $this->formatDate($date_array[0]);
+                            $from_date = date('Y-m-d H:i:s', strtotime($from_date.' 00:00:00'));
+                            $to_date = $this->formatDate($date_array[1]);
+                            $to_date = date('Y-m-d H:i:s', strtotime($to_date.' 23:59:59'));
+                            $collection->whereBetween($key, [$from_date, $to_date]);
+                    }
+                    elseif($condition == 'like')
+                    {
+                        $collection->where($key, 'like', '%' . $value . '%');
+                    }
+                    else
+                        $collection->where($key,$value);
+                }
+            }
+        }
+
+        return $collection;
     }
 
 }
