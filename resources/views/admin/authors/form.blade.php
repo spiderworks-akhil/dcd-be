@@ -77,10 +77,10 @@
                                                                 <label>Designation</label>
                                                                 <input type="text" name="designation" class="form-control" value="{{$obj->designation}}" id="designation">
                                                             </div>
-                                                            <div class="form-group col-md-12">
+                                                            {{-- <div class="form-group col-md-12">
                                                                 <label>Short Description</label>
                                                                 <textarea name="short_description" class="form-control" rows="2" id="short_description">{{$obj->short_description}}</textarea>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                     </div>                                           
                                                 </div><!--end card-body-->
