@@ -89,11 +89,11 @@
                                                 <input type="text" name="title" class="form-control"
                                                     value="{{ $obj->title }}" required="">
                                             </div>
-                                            <div class="form-group col-md-12">
+                                            {{-- <div class="form-group col-md-12">
                                                 <label>Breadcrumbs</label>
                                                 <input type="text" name="breadcrumbs" class="form-control"
                                                     value="{{ $obj->breadcrumbs }}">
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div><!--end card-body-->
