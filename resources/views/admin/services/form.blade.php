@@ -256,7 +256,6 @@
                                                 </div>
                                             </div>
 
-                                            zsxdvfd
 
 
                                             @if ($obj->id)
