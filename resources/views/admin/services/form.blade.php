@@ -295,7 +295,7 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
-                                            @fieldshow(services-faq)
+                                            {{-- @fieldshow(services-faq)
                                                 @if($obj->id)
                                                 <div class="card">
                                                     <div class="card-header">
@@ -306,7 +306,7 @@
                                                     </div>
                                                 </div>
                                                 @endif
-                                            @endfieldshow
+                                            @endfieldshow --}}
                                             {{-- @fieldshow(services-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
