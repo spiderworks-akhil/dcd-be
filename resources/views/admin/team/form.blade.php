@@ -277,7 +277,7 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
-                                            @fieldshow(team-social_media_links)
+                                            {{-- @fieldshow(team-social_media_links)
                                             <div class="card">
                                                 <div class="card-header">
                                                     Social Media Links
@@ -315,7 +315,7 @@
                                                     @endfieldshow
                                                 </div>
                                             </div>
-                                            @endfieldshow
+                                            @endfieldshow --}}
                                             @fieldshow(team-featured_image_id)
                                             <div class="card">
                                                 <div class="card-header">
