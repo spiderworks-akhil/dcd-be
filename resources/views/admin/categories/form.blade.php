@@ -287,7 +287,7 @@
                                                     </div>
                                             </div>
                                             @endif
-                                            @fieldshow(categories-faq)
+                                            {{-- @fieldshow(categories-faq)
                                                 @if($obj->id)
                                                 <div class="card">
                                                     <div class="card-header">
@@ -298,7 +298,7 @@
                                                     </div>
                                                 </div>
                                                 @endif
-                                            @endfieldshow
+                                            @endfieldshow --}}
                                             @fieldshow(categories-priority)
                                             <div class="card">
                                                 <div class="card-header">
