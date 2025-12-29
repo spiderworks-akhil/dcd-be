@@ -33,7 +33,7 @@
 
 {{-- /upvc products --}}
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-12">
         <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm" data-validate=true>
             @csrf
@@ -129,7 +129,8 @@
 
         </form>
     </div>
-</div>
+</div> --}}
+
 <div class="row">
     <div class="col-12">
         <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm"

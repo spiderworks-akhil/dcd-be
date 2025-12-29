@@ -279,7 +279,7 @@
                                 </div>
 
                             </div>
-                            @if ($obj->id)
+                            {{-- @if ($obj->id)
 
                                 <div class="card">
                                     <div class="card-header">
@@ -297,7 +297,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                     </form>

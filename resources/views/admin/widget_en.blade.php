@@ -33,7 +33,7 @@
 
 {{-- /upvc products --}}
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-12">
         <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm" data-validate=true>
             @csrf
@@ -82,9 +82,9 @@
 
         </form>
     </div>
-</div>
+</div> --}}
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-12">
         <form method="POST" action="{{ route('admin.widgets.save') }}" class="p-t-15" id="InputFrm"
             data-validate=true>
@@ -107,12 +107,7 @@
                                     value="@if (!empty($data['learn_more']['title'])) {{ $data['learn_more']['title'] }} @endif">
                             </div>
 
-                            {{-- <div class="form-group col-md-12">
-                                Sub Title
-                                <input type="text" name="section[sub_title]" class="form-control"
-                                    value="@if (!empty($data['learn_more']['sub_title'])) {{ $data['learn_more']['sub_title'] }} @endif">
-                            </div> --}}
-
+                          
                             <div class="form-group col-md-12">
                                 <a href="{{ route('admin.listing-items.index', [1]) }}" class="btn btn-sm btn-danger"
                                     target="_blank"> Listing </a>
@@ -129,7 +124,7 @@
 
         </form>
     </div>
-</div>
+</div> --}}
 
 <div class="row">
     <div class="col-12">
