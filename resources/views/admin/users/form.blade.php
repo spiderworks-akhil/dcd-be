@@ -207,13 +207,7 @@
             "roles[]": "Please select at least one role",
         },
 
-        errorPlacement: function(error, element) {
-            if (element.attr("name") == "roles[]") {
-                error.insertAfter($('.ml-1'));
-            } else {
-                error.insertAfter(element);
-            }
-        }
+     
     });
 
 </script>
