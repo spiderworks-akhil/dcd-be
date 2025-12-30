@@ -63,7 +63,9 @@ class UserController extends Controller
         $validator = Validator::make($data, [
             'name' => 'required|max:250',
             'email' => 'required|email|unique:users,email|max:250',
-            'roles' => 'required'
+            'roles' => 'required',
+            'authentication_method' => 'required|in:otp,username',
+            'password' => 'required|min:6'
         ]);
         
         if ($validator->fails()){
@@ -75,6 +77,7 @@ class UserController extends Controller
         }
         else
         {
+            $this->model->password = bcrypt($request->password);
             $this->model->fill($data);
             if($this->model->save())
             {
@@ -96,7 +99,8 @@ class UserController extends Controller
         $validator = Validator::make($data, [
             'name' => 'required|max:250',
             'email' => 'required|email|max:250|unique:users,email,'.$id,
-            'roles' => 'required'
+            'roles' => 'required',
+            'authentication_method' => 'required|in:otp,username',
         ]);
         if ($validator->fails()){
              if (Request::ajax())
@@ -108,6 +112,12 @@ class UserController extends Controller
         else
         {
             if($obj = $this->model->find($id)){
+
+                if(!empty($request->password)){
+                    $data['password'] = bcrypt($request->password);
+                } else {
+                    unset($data['password']); 
+                }
             
                 if($obj->update($data))
                 {

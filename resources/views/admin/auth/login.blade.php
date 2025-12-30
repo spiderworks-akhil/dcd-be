@@ -1,3 +1,6 @@
+@php 
+    $method = $admin->authentication_method ?? 'otp'; 
+@endphp
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,12 +82,13 @@
                                                     @endforeach
                                                 @endif
 
+                                           @if($method == 'otp')
                                                 <form method="POST" id="RequestOtpForm" action="{{route('admin.auth.request-otp')}}" @if($admin->id) style="display: none;" @endif>
                                                     @csrf
                                                     <div class="form-group ">
                                                         <input type="text" class="form-control" name="email" placeholder="Email"  value=""  />
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Request OTP</button>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
                                                 </form>
                                                 <form method="POST" id="ValidateOtpForm" action="{{ route('admin.auth.validate-otp') }}" @if(!$admin->id) style="display: none;" @endif>
                                                     @csrf
@@ -99,6 +103,33 @@
                                                     
                                                     <button type="submit" class="btn btn-primary">Verify</button>
                                                 </form> 
+
+                                            @endif
+
+                                            @if($method == 'username')
+                                                {{-- PasswordLoginForm --}}
+                                                <form method="POST" action="{{ route('admin.auth.password-login') }}">
+                                                    @csrf
+
+                                                    <input type="hidden" name="id" value="{{ encrypt($admin->id) }}">
+
+                                                    <div class="form-group col-md-12">
+                                                        <h5 class="m-0">
+                                                            {{ $admin->email }}
+                                                            <a href="{{ route('admin.auth.login') }}" style="color:#e50000;">Change</a>
+                                                        </h5>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <input type="password" class="form-control"
+                                                            name="password" placeholder="Enter Password" required />
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Login</button>
+                                                </form>
+
+                                            @endif
+
                                             </div>
                                     </div>
                                 </div><!--end card-body-->

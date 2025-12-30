@@ -55,6 +55,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
     Route::get('/resend-otp/{id}', [AuthenticateSessionOtpController::class, 'resend_otp'])->name('admin.auth.resend-otp');
     Route::post('/logout', [AuthenticateSessionOtpController::class, 'logout'])->name('admin.auth.logout');
 
+    Route::post('/admin/auth/password-login', [AuthenticateSessionOtpController::class, 'passwordLogin'])->name('admin.auth.password-login');
+
+
     Route::get('validation/unique-slug', [WebadminController::class, 'unique_slug'])->name('admin.unique-slug');
 
     Route::get('select2/tags', [WebadminController::class, 'select2_tags'])->name('admin.select2.tags');

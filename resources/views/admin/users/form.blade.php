@@ -77,6 +77,37 @@
                                                                     <input type="email" class="form-control" id="email" name="email" value="{{$obj->email}}">
                                                                 </div>
                                                             </div>
+
+                                                            <div class="row m-0">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="password">Password</label>
+                                                                    <input 
+                                                                        type="password" 
+                                                                        class="form-control" 
+                                                                        id="password" 
+                                                                        name="password" 
+                                                                        placeholder="Enter password">
+                                                                    <small class="text-muted">
+                                                                        Leave blank if you don't want to change the password.
+                                                                    </small>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                <label for="authentication_method">Authentication Method</label>
+                                                                <select class="form-control" id="authentication_method" name="authentication_method">
+                                                                    <option value="">-- Select Authentication Method --</option>
+                                                                    <option value="otp" {{ $obj->authentication_method == 'otp' ? 'selected' : '' }}>
+                                                                        OTP-based Login
+                                                                    </option>
+                                                                    <option value="username" {{ $obj->authentication_method == 'username' ? 'selected' : '' }}>
+                                                                        Username-based Login
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            </div>
+
+
+                                                            
                                                             <hr/>
                                                             <h6 class="ml-1">Roles</h6>
                                                             <hr/>
@@ -117,34 +148,75 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-    <script type="text/javascript">
+   <script type="text/javascript">
 
-        var validator = $('#InputFrm').validate({
-            ignore: [],
-            rules: {
-                "name": "required",
-                email: {
-                  required: true,
-                  email: true,
-                  remote: {
-                      url: "{{route('admin.validation.users')}}",
-                      data: {
-                        id: function() {
-                          return $( "#inputId" ).val();
-                      }
+    var isEdit = $("#inputId").val() !== ""; // if id exists → editing
+
+    var validator = $('#InputFrm').validate({
+        ignore: [],
+        rules: {
+            name: {
+                required: true
+            },
+
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: "{{route('admin.validation.users')}}",
+                    data: {
+                        id: function () {
+                            return $("#inputId").val();
+                        }
                     }
-                  }
-                },
-              },
-              messages: {
-                "name": "User name cannot be blank",
-                email: {
-                  required: "Email address cannot be blank",
-                  remote: "Email is already in use",
-                },
-              },
-            });
+                }
+            },
 
-    </script>
+            authentication_method: {
+                required: true
+            },
+
+            password: {
+                required: function () {
+                    return !isEdit;  // required only when creating
+                },
+                minlength: 6
+            },
+
+            "roles[]": {
+                required: true
+            }
+        },
+
+        messages: {
+            name: "User name cannot be blank",
+
+            email: {
+                required: "Email address cannot be blank",
+                email: "Enter a valid email address",
+                remote: "Email is already in use",
+            },
+
+            authentication_method: "Please select an authentication method",
+
+            password: {
+                required: "Password is required",
+                minlength: "Password must be at least 6 characters"
+            },
+
+            "roles[]": "Please select at least one role",
+        },
+
+        errorPlacement: function(error, element) {
+            if (element.attr("name") == "roles[]") {
+                error.insertAfter($('.ml-1'));
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+</script>
+
 @parent
 @endsection
