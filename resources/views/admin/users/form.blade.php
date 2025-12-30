@@ -86,10 +86,10 @@
                                                                         class="form-control" 
                                                                         id="password" 
                                                                         name="password" 
-                                                                        placeholder="Enter password">
-                                                                    <small class="text-muted">
+                                                                        placeholder="Enter password"  @if($obj->id) value="{{ $obj->password }}" @endif>
+                                                                    {{-- <small class="text-muted">
                                                                         Leave blank if you don't want to change the password.
-                                                                    </small>
+                                                                    </small> --}}
                                                                 </div>
 
                                                                 <div class="form-group col-md-6">
