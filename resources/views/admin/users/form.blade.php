@@ -150,62 +150,64 @@
 @section('footer')
    <script type="text/javascript">
 
-    var isEdit = $("#inputId").val() !== ""; // if id exists → editing
-
     var validator = $('#InputFrm').validate({
-        ignore: [],
-        rules: {
-            name: {
-                required: true
-            },
+    ignore: [],
+    rules: {
+        name: {
+            required: true
+        },
 
-            email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: "{{route('admin.validation.users')}}",
-                    data: {
-                        id: function () {
-                            return $("#inputId").val();
-                        }
+        email: {
+            required: true,
+            email: true,
+            remote: {
+                url: "{{route('admin.validation.users')}}",
+                data: {
+                    id: function () {
+                        return $("#inputId").val();
                     }
                 }
-            },
-
-            authentication_method: {
-                required: true
-            },
-
-           password: {
-                minlength: 6
-            },
-
-            "roles[]": {
-                required: true
             }
         },
 
-        messages: {
-            name: "User name cannot be blank",
-
-            email: {
-                required: "Email address cannot be blank",
-                email: "Enter a valid email address",
-                remote: "Email is already in use",
-            },
-
-            authentication_method: "Please select an authentication method",
-
-            password: {
-                required: "Password is required",
-                minlength: "Password must be at least 6 characters"
-            },
-
-            "roles[]": "Please select at least one role",
+        authentication_method: {
+            required: true
         },
 
-     
-    });
+        password: {
+            required: {
+                depends: function(element) {
+                    return $('#authentication_method').val() === 'username';
+                }
+            },
+            minlength: 6
+        },
+
+        "roles[]": {
+            required: true
+        }
+    },
+
+    messages: {
+        name: "User name cannot be blank",
+
+        email: {
+            required: "Email address cannot be blank",
+            email: "Enter a valid email address",
+            remote: "Email is already in use",
+        },
+
+        authentication_method: "Please select an authentication method",
+
+        password: {
+            required: "Password is required for username-based login",
+            minlength: "Password must be at least 6 characters"
+        },
+
+        "roles[]": "Please select at least one role",
+    }
+});
+
 
 </script>
 
