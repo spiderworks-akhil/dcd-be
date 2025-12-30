@@ -65,7 +65,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email|max:250',
             'roles' => 'required',
             'authentication_method' => 'required|in:otp,username',
-            'password' => 'required|min:6'
+             'password' => 'nullable|string|max:255'
         ]);
         
         if ($validator->fails()){
@@ -101,6 +101,8 @@ class UserController extends Controller
             'email' => 'required|email|max:250|unique:users,email,'.$id,
             'roles' => 'required',
             'authentication_method' => 'required|in:otp,username',
+             'password' => 'nullable|string|max:255'
+
         ]);
         if ($validator->fails()){
              if (Request::ajax())

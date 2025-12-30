@@ -176,10 +176,7 @@
                 required: true
             },
 
-            password: {
-                required: function () {
-                    return !isEdit;  // required only when creating
-                },
+           password: {
                 minlength: 6
             },
 
