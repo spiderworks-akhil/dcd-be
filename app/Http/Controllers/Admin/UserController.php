@@ -118,7 +118,7 @@ class UserController extends Controller
                 if(!empty($request->password)){
                     $data['password'] = bcrypt($request->password);
                 } else {
-                    $data['password'] = null; 
+                     unset($data['password']);
                 }
             
                 if($obj->update($data))

@@ -93,7 +93,8 @@
                                                                     </select>
                                                                 </div>
 
-                                                                <div class="form-group col-md-6" id="passwordWrapper">
+                                                              <div class="form-group col-md-6" id="passwordWrapper" style="{{ $obj->authentication_method === 'username' ? '' : 'display:none' }}">
+
                                                                     <label for="password">Password</label>
                                                                     <input 
                                                                         type="password" 
@@ -101,9 +102,14 @@
                                                                         id="password" 
                                                                         name="password" 
                                                                         placeholder="Enter password"  @if($obj->id) value="{{ $obj->password }}" @endif>
-                                                                    {{-- <small class="text-muted">
-                                                                        Leave blank if you don't want to change the password.
-                                                                    </small> --}}
+                                                                        <input type="hidden" id="hasPassword" value="{{ $obj->password ? 1 : 0 }}">
+
+                                                                   @if($obj->password)
+                                                                        <small class="text-muted">
+                                                                            Leave blank if you don't want to change the password.
+                                                                        </small>
+                                                                    @endif
+
                                                                 </div>
 
                                                                 
@@ -151,9 +157,10 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-   <script type="text/javascript">
+   @section('footer')
+<script type="text/javascript">
 
-   function togglePasswordField() {
+function togglePasswordField() {
     if($('#authentication_method').val() === 'username'){
         $('#passwordWrapper').show();
     } else {
@@ -162,18 +169,19 @@
     }
 }
 
-// run on page load
+// Run on page load
 togglePasswordField();
 
-// run when dropdown changes
+// Run when dropdown changes
 $('#authentication_method').on('change', function () {
     togglePasswordField();
 });
 
 
-    var validator = $('#InputFrm').validate({
+var validator = $('#InputFrm').validate({
     ignore: [],
     rules: {
+
         name: {
             required: true
         },
@@ -196,10 +204,9 @@ $('#authentication_method').on('change', function () {
         },
 
         password: {
-            required: {
-                depends: function(element) {
-                    return $('#authentication_method').val() === 'username';
-                }
+            required: function () {
+                return $('#authentication_method').val() === 'username'
+                    && $('#hasPassword').val() == 0; // Only if NO existing password
             },
             minlength: 6
         },
@@ -229,8 +236,11 @@ $('#authentication_method').on('change', function () {
     }
 });
 
-
 </script>
+
+@parent
+@endsection
+
 
 @parent
 @endsection
