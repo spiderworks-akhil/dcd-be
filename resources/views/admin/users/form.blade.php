@@ -79,7 +79,21 @@
                                                             </div>
 
                                                             <div class="row m-0">
-                                                                <div class="form-group col-md-6">
+
+                                                                    <div class="form-group col-md-6">
+                                                                    <label for="authentication_method">Authentication Method</label>
+                                                                    <select class="form-control" id="authentication_method" name="authentication_method">
+                                                                        <option value="">-- Select Authentication Method --</option>
+                                                                        <option value="otp" {{ $obj->authentication_method == 'otp' ? 'selected' : '' }}>
+                                                                            OTP-based Login
+                                                                        </option>
+                                                                        <option value="username" {{ $obj->authentication_method == 'username' ? 'selected' : '' }}>
+                                                                            Username-based Login
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6" id="passwordWrapper">
                                                                     <label for="password">Password</label>
                                                                     <input 
                                                                         type="password" 
@@ -92,18 +106,7 @@
                                                                     </small> --}}
                                                                 </div>
 
-                                                                <div class="form-group col-md-6">
-                                                                <label for="authentication_method">Authentication Method</label>
-                                                                <select class="form-control" id="authentication_method" name="authentication_method">
-                                                                    <option value="">-- Select Authentication Method --</option>
-                                                                    <option value="otp" {{ $obj->authentication_method == 'otp' ? 'selected' : '' }}>
-                                                                        OTP-based Login
-                                                                    </option>
-                                                                    <option value="username" {{ $obj->authentication_method == 'username' ? 'selected' : '' }}>
-                                                                        Username-based Login
-                                                                    </option>
-                                                                </select>
-                                                            </div>
+                                                                
                                                             </div>
 
 
@@ -149,6 +152,24 @@
 @endsection
 @section('footer')
    <script type="text/javascript">
+
+   function togglePasswordField() {
+    if($('#authentication_method').val() === 'username'){
+        $('#passwordWrapper').show();
+    } else {
+        $('#passwordWrapper').hide();
+        $('#password').val('');
+    }
+}
+
+// run on page load
+togglePasswordField();
+
+// run when dropdown changes
+$('#authentication_method').on('change', function () {
+    togglePasswordField();
+});
+
 
     var validator = $('#InputFrm').validate({
     ignore: [],
@@ -200,7 +221,7 @@
         authentication_method: "Please select an authentication method",
 
         password: {
-            required: "Password is required for username-based login",
+            required: "Password is required",
             minlength: "Password must be at least 6 characters"
         },
 
