@@ -77,8 +77,11 @@ class UserController extends Controller
         }
         else
         {
-            $this->model->password = bcrypt($request->password);
             $this->model->fill($data);
+            
+            if($request->filled('password')){
+                $this->model->password = bcrypt($request->password);
+            }
             if($this->model->save())
             {
                 $this->model->assignRole($request->input('roles'));

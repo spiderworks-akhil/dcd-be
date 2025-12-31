@@ -12,7 +12,6 @@
                                 <i data-feather="menu" class="align-self-center topbar-icon"></i>
                             </button>
                         </li> 
-                          
                     </ul>
                 </nav>
                 <!-- end navbar-->
@@ -101,14 +100,20 @@
                                                                         class="form-control" 
                                                                         id="password" 
                                                                         name="password" 
-                                                                        placeholder="Enter password"  @if($obj->id) value="{{ $obj->password }}" @endif>
+                                                                          @if($obj->id) value="{{ $obj->password }}" @endif>
                                                                         <input type="hidden" id="hasPassword" value="{{ $obj->password ? 1 : 0 }}">
 
                                                                    @if($obj->password)
-                                                                        <small class="text-muted">
+                                                                        <small 
+                                                                            class="text-muted" 
+                                                                            id="passwordHelp"
+                                                                            style="{{ $obj->authentication_method === 'username' ? '' : 'display:none' }}"
+                                                                        >
                                                                             Leave blank if you don't want to change the password.
                                                                         </small>
-                                                                    @endif
+                                                                     @endif
+
+
 
                                                                 </div>
 
@@ -160,22 +165,34 @@
    @section('footer')
 <script type="text/javascript">
 
+
 function togglePasswordField() {
-    if($('#authentication_method').val() === 'username'){
+    const isUsername = $('#authentication_method').val() === 'username';
+    const hasPassword = $('#hasPassword').val() == 1;
+    const passwordEmpty = $('#password').val() === '';
+
+    if(isUsername){
         $('#passwordWrapper').show();
+
+        if(hasPassword && passwordEmpty){
+            $('#passwordHelp').show();
+        } else {
+            $('#passwordHelp').hide();
+        }
+
     } else {
         $('#passwordWrapper').hide();
         $('#password').val('');
+        $('#passwordHelp').hide();
     }
 }
 
-// Run on page load
+$('#password').on('input', togglePasswordField);
+$('#authentication_method').on('change', togglePasswordField);
+
+// On page load
 togglePasswordField();
 
-// Run when dropdown changes
-$('#authentication_method').on('change', function () {
-    togglePasswordField();
-});
 
 
 var validator = $('#InputFrm').validate({
@@ -228,7 +245,7 @@ var validator = $('#InputFrm').validate({
         authentication_method: "Please select an authentication method",
 
         password: {
-            required: "Password is required",
+            required: "Password cannot be blank",
             minlength: "Password must be at least 6 characters"
         },
 
