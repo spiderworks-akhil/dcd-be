@@ -28,7 +28,6 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EventLogController;
-use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\RedirectController;
 use App\Http\Controllers\Admin\WebadminController;
 use App\Http\Controllers\Admin\AdminLinkController;
@@ -82,13 +81,15 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('/validation/roles', [WebadminController::class, 'unique_roles'])->name('admin.validation.roles');
         Route::get('/validation/users', [WebadminController::class, 'unique_users'])->name('admin.validation.users');
 
-        //widgets
-
         Route::get('/media-centre', [WebadminController::class, 'MediaCentre'])->name('admin.media_centre.index');
 
-
+        //widgets
         Route::get('/widgets', [WebadminController::class, 'widgets'])->name('admin.widgets.index');
         Route::post('/widgets/save', [WebadminController::class, 'save_widget'])->name('admin.widgets.save');
+
+
+         //widgets
+        Route::get('/languages', [WebadminController::class, 'languages'])->name('admin.languages.index');
 
         //users
         Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
@@ -262,17 +263,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('header', [StaticPageController::class, 'HeaderView'])->name('admin.header.view');
         Route::get('get-slug', [StaticPageController::class, 'GetSlug'])->name('admin.get-slug');
 
-        //languages 
-        Route::get('languages', [LanguageController::class, 'index'])->name('admin.languages.index');
-        Route::get('languages/create', [LanguageController::class, 'create'])->name('admin.languages.create');
-        Route::get('languages/edit/{id}', [LanguageController::class, 'edit'])->name('admin.languages.edit');
-        Route::get('languages/destroy/{id}', [LanguageController::class, 'destroy'])->name('admin.languages.destroy');
-        Route::get('languages/change-status/{id}', [LanguageController::class, 'changeStatus'])->name('admin.languages.change-status');
-        Route::post('languages/store', [LanguageController::class, 'store'])->name('admin.languages.store');
-        Route::post('languages/update', [LanguageController::class, 'update'])->name('admin.languages.update');
-        Route::get('languages/show/{id}', [LanguageController::class, 'show'])->name('admin.languages.show');
-
-        //languages
+        //pages
         Route::get('/pages/edit/{id}', [PageController::class, 'edit'])->name('admin.pages.edit');
         Route::get('/pages/destroy/{id}', [PageController::class, 'destroy'])->name('admin.pages.destroy');
         Route::get('/pages/create/{parent?}', [PageController::class, 'create'])->name('admin.pages.create');
