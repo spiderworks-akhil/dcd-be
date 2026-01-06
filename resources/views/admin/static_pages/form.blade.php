@@ -225,7 +225,7 @@
                                                     @if (!$obj->id)
                                                         {{ auth()->user()->name }}
                                                     @else
-                                                        {{ $obj->created_user->name }}
+                                                        {{ $obj->created_user->name ?? '' }}
                                                     @endif
                                                 </div>
                                                 <div class="form-group w-100  mb-4 col-12 col-md-6 p-0 time-info">
@@ -233,7 +233,7 @@
                                                     @if (!$obj->id)
                                                         {{ auth()->user()->name }}
                                                     @else
-                                                        {{ $obj->updated_user->name }}
+                                                        {{ $obj->updated_user->name ?? '' }}
                                                     @endif
                                                 </div>
                                             </div>

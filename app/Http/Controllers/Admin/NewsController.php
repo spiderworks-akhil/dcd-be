@@ -20,6 +20,7 @@ use App\Services\MailSettings;
 use Illuminate\Support\Facades\DB;
 use App\Models\ApprovalNotification;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\SendApprovedNotification;
 use App\Mail\SendRejectionNotification;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Admin\NewsRequest;
@@ -53,7 +54,7 @@ class NewsController extends Controller
             return response()->json(['path' => $path]);
 
         } else {
-            return response()->json(['error' => 'No file uploaded.'], 400);
+            return response()->json(['error' => 'No file uploaded.'],400);
         }
 
     }
@@ -66,12 +67,30 @@ class NewsController extends Controller
     //     return $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
     // }
 
+     public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $collection = $this->getCollection();
+            if(request()->get('data'))
+            {
+                $collection = $this->applyFiltering($collection);
+            }
+            else
+                $collection->where('status', 'Open');
+            return $this->setDTData($collection)->make(true);
+        } else {
+            
+            $search_settings = $this->getSearchSettings();
+            return view::make($this->views . '.index', array('search_settings'=>$search_settings));
+        }
+    }
+
 
     protected function getCollection()
     {
         $type = request()->query('type');
 
-        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
+        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
 
         $user = auth()->user(); 
 
@@ -92,10 +111,53 @@ class NewsController extends Controller
         return $query;
     }
 
-    protected function setDTData($collection) {
+    // protected function setDTData($collection) {
+    //     $route = $this->route;
+    //     return $this->initDTData($collection)
+    //         ->rawColumns(['action_edit', 'action_delete', 'status']);
+    // }
+
+    protected function setDTData($collection)
+    {
         $route = $this->route;
+
+         // Language mapping
+        $langMap = [
+            'en' => 'English',
+            'en_draft' => 'English (Draft)',
+            'ar' => 'Arabic',
+            'ar_draft' => 'Arabic (Draft)',
+        ];
+
         return $this->initDTData($collection)
-            ->rawColumns(['action_edit', 'action_delete', 'status']);
+            ->addColumn('type', function ($row) use ($langMap) {
+                return $langMap[$row->type] ?? $row->type;
+            })
+           ->addColumn('publication_status', function ($row) {
+
+            $status = optional($row->approvalNotification)->status ?? null;
+
+            if (is_null($status) && str_contains($row->type, '_draft')) {
+                return '<span class="text-secondary">Pending</span>';
+            }
+
+            switch ($status) {
+                case 'approved':
+                    return '<span class="text-success">Approved</span>';
+
+                case 'rejected':
+                    return '<span class="text-danger">Rejected</span>';
+
+                case 'pending':
+                    return '<span class="text-warning">Waiting for approval</span>';
+
+                default:
+                    return '<span class="text-primary">Published</span>';
+            }
+        })->addColumn('updated_user', function ($row) {
+                return optional($row->updated_user)->name ?? '-';
+            })
+            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user']);
     }
 
     protected function getSearchSettings(){}
@@ -313,7 +375,10 @@ public function sendApprovalMail(Request $request)
             $mail = new MailSettings;
             $mail->to($email_array)->send(new \App\Mail\SendNewsContentNotification($record, $approval));
 
-            $approval->update(['email_sent' => 1]);
+            $approval->update([
+                'email_sent' => 1,
+                'status'     => 'pending'
+            ]);
 
             return response()->json([
                 'status' => 'success',
@@ -381,7 +446,7 @@ public function showApprovalForm(Request $request, $id)
 private function sendRejectionMail($approval, $record, $modelName)
 {
     try {
-        $recipientEmail = $approval->user->email ?? null;
+        $recipientEmail = $approval->creator->email ?? null;
 
         if (empty($recipientEmail)) {
 
@@ -406,11 +471,42 @@ private function sendRejectionMail($approval, $record, $modelName)
     return redirect()->back();
 }
 
+
+private function sendApprovedlMail($approval, $record, $modelName)
+{
+    try {
+
+        $recipientEmail = $approval->creator->email ?? null;
+
+        if (empty($recipientEmail)) {
+
+            $warning = "⚠️ No user email found for Approval ID {$approval->id}\n";
+            file_put_contents(storage_path('logs/approval_mail_errors.txt'), $warning, FILE_APPEND);
+            \Log::warning(trim($warning));
+
+        } else {
+
+            $mail = new MailSettings;
+            $mail->to([$recipientEmail])
+                ->send(new SendApprovedNotification($record, $approval, $modelName));
+        }
+
+    } catch (\Throwable $e) {
+
+        $error = "Failed to send approval mail for Approval ID {$approval->id}: "
+               . $e->getMessage() . "\n"
+               . $e->getTraceAsString() . "\n\n";
+
+        file_put_contents(storage_path('logs/approval_mail_errors.txt'), $error, FILE_APPEND);
+        \Log::error("Failed to send approval mail for Approval ID {$approval->id}: {$e->getMessage()}");
+    }
+}
+
 public function submitApprovalForm(Request $request, $approvalId)
 {
     $approvalId = decrypt($approvalId);
     $approval = ApprovalNotification::findOrFail($approvalId);
-    $email_array = $approval->user->email;
+    $email_array = $approval->creator->email;
 
     $approvalStatus = $request->status;
     $modelName = class_basename($approval->notifiable_type);
@@ -435,6 +531,11 @@ public function submitApprovalForm(Request $request, $approvalId)
     // --- Handle Rejection Email ---
     if ($approvalStatus === 'rejected' && $previousStatus !== 'rejected') {
         return $this->sendRejectionMail($approval, $record, $modelName);
+    }
+    // --- Handle Approval Email ---
+    if ($approvalStatus === 'approved' && $previousStatus !== 'approved') {
+        
+        $this->sendApprovedlMail($approval, $record, $modelName);
     }
 
     //  Only proceed if Approved
@@ -554,6 +655,102 @@ public function submitApprovalForm(Request $request, $approvalId)
     return back()->with('success', "{$modelName} has been {$approvalStatus}.");
 }
 
+protected function applyFiltering($collection)
+{
+    $search = !empty(request()->get('data')) 
+        ? request()->get('data') 
+        : request()->all();
+
+    if ($search)
+    {
+        foreach ($search as $key => $value)
+        {
+            if (!$value) continue;
+
+            $latestStatusSubquery = "
+            (
+                SELECT LOWER(status)
+                FROM approval_notifications
+                WHERE notifiable_id = news.id
+                AND notifiable_type = 'News'
+                ORDER BY id DESC
+                LIMIT 1
+            )
+        ";
+            // CUSTOM: PUBLICATION STATUS FILTER
+           if ($key == 'publication_status') {
+
+    $collection->where(function($q) use ($value, $latestStatusSubquery) {
+
+        switch ($value) {
+
+            case 'Pending':
+                $q->where('type', 'like', '%_draft')
+                  ->whereDoesntHave('approvalNotification');
+                break;
+
+            case 'Waiting for approval':
+                $q->whereRaw("$latestStatusSubquery = 'pending'");
+                break;
+
+            case 'Approved':
+                $q->whereRaw("$latestStatusSubquery = 'approved'");
+                break;
+
+            case 'Rejected':
+                $q->whereRaw("$latestStatusSubquery = 'rejected'");
+                break;
+
+            case 'Published':
+                $q->where('type', 'not like', '%_draft')
+                  ->where(function($x) use ($latestStatusSubquery){
+                      $x->whereDoesntHave('approvalNotification')
+                        ->orWhereRaw("$latestStatusSubquery = 'approved'");
+                  });
+                break;
+        }
+    });
+
+    continue;
+}
+
+
+            if (strpos($key, 'news_') !== false)
+                $key = str_replace('news_', 'news.', $key);
+
+            $condition = null;
+            $keyArr = explode('-', $key);
+
+            if (isset($keyArr[1])) {
+                $condition = $keyArr[0];
+                $key = $keyArr[1];
+            }
+
+            // Date range
+            if ($condition == 'date_between') {
+
+                $date_array = explode('-', $value);
+
+                $from_date = date('Y-m-d 00:00:00', strtotime($this->formatDate($date_array[0])));
+                $to_date   = date('Y-m-d 23:59:59', strtotime($this->formatDate($date_array[1])));
+
+                $collection->whereBetween($key, [$from_date, $to_date]);
+            }
+
+            // LIKE
+            elseif ($condition == 'like') {
+                $collection->where($key, 'like', "%$value%");
+            }
+
+            // Exact match
+            else {
+                $collection->where($key, $value);
+            }
+        }
+    }
+
+    return $collection;
+}
 
 
 }

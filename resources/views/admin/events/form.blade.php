@@ -416,7 +416,7 @@
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','Event')">
                                                                     Send for Approval
                                                                 </button>
-                                                            @elseif($approval_notification->status === null && $approval_notification->email_sent == 1)
+                                                            @elseif($approval_notification->status === "pending" && $approval_notification->email_sent == 1)
                                                                 <!-- Pending: disable button -->
                                                                 <button type="button" class="btn btn-secondary btn-sm"
                                                                     disabled>
@@ -433,13 +433,15 @@
                                                     </div>
 
 
-                                                    <div class="text-left">
+                                                     <div class="text-left">
                                                         @if ($approval_notification && $approval_notification->status != null)
                                                             <div class="p-2 border rounded">
                                                                 @if ($approval_notification->status == 'approved')
                                                                     <span class="badge badge-success">Approved ✅</span>
-                                                                @else
+                                                                @elseif($approval_notification->status == 'rejected')
                                                                     <span class="badge badge-danger">Rejected ❌</span>
+                                                                @elseif ($approval_notification->status == 'pending')
+                                                                    <span class="badge badge-warning">Waiting for approval</span>
                                                                 @endif
                                                                 <p class="mt-1 mb-0"><strong>Remarks:</strong>
                                                                     {{ $approval_notification->remarks ?? 'No remarks provided' }}
@@ -539,7 +541,7 @@
                                             @if (!$obj->id)
                                                 {{ auth()->user()->name }}
                                             @else
-                                                {{ $obj->created_user->name }}
+                                                {{ $obj->created_user->name ?? '' }}
                                             @endif
                                         </div>
                                         <div class="form-group col-md-6 p-0  mb-3">
@@ -547,7 +549,7 @@
                                             @if (!$obj->id)
                                                 {{ auth()->user()->name }}
                                             @else
-                                                {{ $obj->updated_user->name }}
+                                                {{ $obj->updated_user->name ?? '' }}
                                             @endif
                                         </div>
                                     </div>

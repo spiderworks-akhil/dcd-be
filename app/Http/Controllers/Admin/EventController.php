@@ -41,7 +41,7 @@ class EventController extends Controller
 
     protected function getCollection()
     {
-        $query = $this->model->select('id', 'type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at');
+        $query = $this->model->select('id', 'type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
 
         $user = auth()->user();
 
@@ -62,12 +62,66 @@ class EventController extends Controller
         return $query;
     }
 
+ public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $collection = $this->getCollection();
+            if(request()->get('data'))
+            {
+                $collection = $this->applyFiltering($collection);
+            }
+            else
+                $collection->where('status', 'Open');
+            return $this->setDTData($collection)->make(true);
+        } else {
+            
+            $search_settings = $this->getSearchSettings();
+            return view::make($this->views . '.index', array('search_settings'=>$search_settings));
+        }
+    }
+
 
 
     protected function setDTData($collection) {
         $route = $this->route;
+
+         // Language mapping
+        $langMap = [
+            'en' => 'English',
+            'en_draft' => 'English (Draft)',
+            'ar' => 'Arabic',
+            'ar_draft' => 'Arabic (Draft)',
+        ];
+
         return $this->initDTData($collection)
-            ->rawColumns(['action_edit', 'action_delete', 'status']);
+            ->addColumn('type', function ($row) use ($langMap) {
+                return $langMap[$row->type] ?? $row->type;
+            })
+           ->addColumn('publication_status', function ($row) {
+
+            $status = optional($row->approvalNotification)->status ?? null;
+
+            if (is_null($status) && str_contains($row->type, '_draft')) {
+                return '<span class="text-secondary">Pending</span>';
+            }
+
+            switch ($status) {
+                case 'approved':
+                    return '<span class="text-success">Approved</span>';
+
+                case 'rejected':
+                    return '<span class="text-danger">Rejected</span>';
+
+                case 'pending':
+                    return '<span class="text-warning">Waiting for approval</span>';
+
+                default:
+                    return '<span class="text-primary">Published</span>';
+            }
+        }) ->addColumn('updated_user', function ($row) {
+                return optional($row->updated_user)->name ?? '-';
+            })
+            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user']);
     }
 
     protected function getSearchSettings(){}
@@ -305,96 +359,6 @@ class EventController extends Controller
 
  
 
-  
-// public function GetType(Request $request)
-// {
-//     $type = $request->query('type');
-//     $slug = $request->query('slug');
-//     $name = $request->query('name');
-//     $currentType = $request->query('currentType');
-//     $result = $request->query('start_time');
-//     $result_link = $request->query('result_link');
-//     $website_link_text = $request->query('website_link_text');
-//     $website_link = $request->query('website_link');
-//     $logo_image_id = $request->query('logo_image_id');
-//     $start_time = $request->query('start_time');
-//     $end_time = $request->query('end_time');
-//     $location = $request->query('location');
-//     $fees = $request->query('fees');
-//     $video_id = $request->query('video_id');
-
-//     $source = Event::where('slug', $slug)->where('type', $currentType)->first();
-//     $target = Event::where('slug', $slug)->where('type', $type)->first();
-
-//     $allowedSwaps = [
-//         ["en_draft", "en"], ["en", "en_draft"],
-//         ["ar_draft", "ar"], ["ar", "ar_draft"],
-//         ["en", "ar"], ["ar", "en"]
-//     ];
-
-//     if (!in_array([$currentType, $type], $allowedSwaps)) {
-//         return response()->json([
-//             'error' => "You can't change from '{$currentType}' to '{$type}'."
-//         ], 400);
-//     }
-
-//     // If source exists
-//     if ($source) {
-//         if ($target) {
-//             // Copy content and title from source to target
-//             $target->content = $source->content;
-//             $target->title = $source->title;
-//             $target->result = $source->result;
-//             $target->result_link = $source->result_link;
-//             $target->website_link_text = $source->website_link_text;
-//             $target->website_link = $source->website_link;
-//             $target->logo_image_id = $source->logo_image_id;
-//             $target->start_time = $source->start_time;
-//             $target->end_time = $source->end_time;
-//             $target->location = $source->location;
-//             $target->fees = $source->fees;
-//             $target->video_id = $source->video_id;
-//             $target->save();
-
-//             return response()->json([
-//                 'redirect_url' => route('admin.events.edit', ['id' => encrypt($target->id)])
-//             ]);
-//         } else {
-//             // Replicate source page if target doesn't exist
-//             $newPage = $source->replicate();
-//             $newPage->slug = $slug;
-//             $newPage->title = $name;
-//             $newPage->type = $type;
-//             $newPage->result = $result;
-//             $newPage->result_link = $result_link;
-//             $newPage->website_link_text = $website_link_text;
-//             $newPage->website_link = $website_link;
-//             $newPage->logo_image_id = $logo_image_id;
-//             $newPage->start_time = $start_time;
-//             $newPage->end_time = $end_time;
-//             $newPage->location = $location;
-//             $newPage->fees = $fees;
-//             $newPage->video_id = $video_id;
-//             $newPage->save();
-
-//             return response()->json([
-//                 'redirect_url' => route('admin.events.edit', ['id' => encrypt($newPage->id)])
-//             ]);
-//         }
-//     }
-
-//     // fallback: if somehow target exists
-//     if ($target) {
-//         return response()->json([
-//             'redirect_url' => route('admin.events.edit', ['id' => encrypt($target->id)])
-//         ]);
-//     }
-
-//     // fallback error
-//     return response()->json([
-//         'error' => "You can't change from '{$currentType}' to '{$type}'."
-//     ], 400);
-// }
 
 public function GetType(Request $request)
 {
@@ -509,6 +473,102 @@ public function GetType(Request $request)
     ]);
 }
 
+protected function applyFiltering($collection)
+{
+    $search = !empty(request()->get('data')) 
+        ? request()->get('data') 
+        : request()->all();
+
+    if ($search)
+    {
+        foreach ($search as $key => $value)
+        {
+            if (!$value) continue;
+
+            $latestStatusSubquery = "
+            (
+                SELECT LOWER(status)
+                FROM approval_notifications
+                WHERE notifiable_id = events.id
+                AND notifiable_type = 'Event'
+                ORDER BY id DESC
+                LIMIT 1
+            )
+        ";
+            // CUSTOM: PUBLICATION STATUS FILTER
+           if ($key == 'publication_status') {
+
+    $collection->where(function($q) use ($value, $latestStatusSubquery) {
+
+        switch ($value) {
+
+            case 'Pending':
+                $q->where('type', 'like', '%_draft')
+                  ->whereDoesntHave('approvalNotification');
+                break;
+
+            case 'Waiting for approval':
+                $q->whereRaw("$latestStatusSubquery = 'pending'");
+                break;
+
+            case 'Approved':
+                $q->whereRaw("$latestStatusSubquery = 'approved'");
+                break;
+
+            case 'Rejected':
+                $q->whereRaw("$latestStatusSubquery = 'rejected'");
+                break;
+
+            case 'Published':
+                $q->where('type', 'not like', '%_draft')
+                  ->where(function($x) use ($latestStatusSubquery){
+                      $x->whereDoesntHave('approvalNotification')
+                        ->orWhereRaw("$latestStatusSubquery = 'approved'");
+                  });
+                break;
+        }
+    });
+
+    continue;
+}
+
+
+            if (strpos($key, 'news_') !== false)
+                $key = str_replace('news_', 'news.', $key);
+
+            $condition = null;
+            $keyArr = explode('-', $key);
+
+            if (isset($keyArr[1])) {
+                $condition = $keyArr[0];
+                $key = $keyArr[1];
+            }
+
+            // Date range
+            if ($condition == 'date_between') {
+
+                $date_array = explode('-', $value);
+
+                $from_date = date('Y-m-d 00:00:00', strtotime($this->formatDate($date_array[0])));
+                $to_date   = date('Y-m-d 23:59:59', strtotime($this->formatDate($date_array[1])));
+
+                $collection->whereBetween($key, [$from_date, $to_date]);
+            }
+
+            // LIKE
+            elseif ($condition == 'like') {
+                $collection->where($key, 'like', "%$value%");
+            }
+
+            // Exact match
+            else {
+                $collection->where($key, $value);
+            }
+        }
+    }
+
+    return $collection;
+}
 
 
 

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Models\BaseModel as Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Event extends Model
 {
@@ -45,6 +46,26 @@ class Event extends Model
     public function video()
     {
         return $this->belongsTo(Media::class, 'video_id');
+    }
+
+     public function approvalNotification()
+    {
+        return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
+            ->where('notifiable_type', 'Event')->latest('created_at');
+    }
+
+    public function getPublicationStatusAttribute()
+    {
+        return optional($this->approvalNotification)->status ?? '';
+    }
+
+
+    public function updated_user(): ?BelongsTo
+    {
+        if ($this->checkColumn('updated_by'))
+            return $this->belongsTo(Admin::class, 'updated_by');
+
+        return null;
     }
     
 

@@ -35,7 +35,24 @@ class News extends Model
     public function approvalNotification()
     {
         return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
-            ->where('notifiable_type', 'news');
+            ->where('notifiable_type', 'News')->latest('created_at');
     }
+
+    public function getPublicationStatusAttribute()
+    {
+        return optional($this->approvalNotification)->status ?? '';
+    }
+
+    public function updated_user(): ?BelongsTo
+    {
+        if ($this->checkColumn('updated_by'))
+            return $this->belongsTo(Admin::class, 'updated_by');
+
+        return null;
+    }
+
+
+
+
 
 }

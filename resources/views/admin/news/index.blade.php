@@ -44,7 +44,7 @@
                         </div><!--end col-->
                     </div><!--end row-->
                     <!-- end page title end breadcrumb -->
-                    @include('admin._partials.search_settings', ['search_settings'=>$search_settings])
+                    @include('admin.news._partials.search_settings', ['search_settings'=>$search_settings])
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -55,17 +55,17 @@
                                         <tr>
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10">ID</th>
-                                            <th class="table-width-120">Type</th>
+                                            <th class="table-width-120">Language</th>
+                                            <th class="nosort nosearch tabl-width-10">Publication Status</th>
                                             <th class="table-width-120" width="190">Slug</th>
                                             <th class="table-width-120" width="190">Name</th>
                                             <th class="table-width-120">Last Updated On</th>
+                                            <th class="table-width-120">Updated By</th>
                                             <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
                                             <th class="nosort nosearch table-width-10">Status</th>
                                             <th class="nosort nosearch table-width-10">@if(auth()->user()->can($permissions['edit'])) Edit @else View @endif</th>
                                             <th class="nosort nosearch table-width-10">Delete</th>
                                         </tr>
-
-
 
                                         </thead>
 
@@ -90,9 +90,11 @@
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
             {data: 'type', name: 'type'},
+            {data: 'publication_status', name: 'publication_status'},
             {data: 'slug', name: 'slug'},
             {data: 'name', name: 'name'},
             {data: 'date', name: 'updated_at'},
+            {data: 'updated_user', name: 'updated_user'},
             {data: 'priority', name: 'priority', className: 'text-center'},
             {data: 'status', name: 'status'},
             {data: 'action_edit', name: 'action_edit'},
