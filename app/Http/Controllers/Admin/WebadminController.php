@@ -241,6 +241,32 @@ class WebadminController extends Controller {
         return view('admin.widgets', ['data'=>$data]);
     }
 
+   public function languages()
+  {
+        $req = request()->all();
+
+        $type = !empty($req['type']) ? $req['type'] : "en";
+
+        $settings = Setting::where('settings_type', 'Others')->get();
+
+        $data = [];
+
+        foreach ($settings as $setting) {
+
+            $lang = substr($setting->code, -2);
+            
+            if ($lang == $type) {
+
+                $baseCode = substr($setting->code, 0, -3);
+
+                $data[$baseCode] = $setting->value_text ?? $setting->content;
+            }
+        }
+
+    return view('admin.languages.language', compact('data','type'));
+  }
+
+
     public function save_widget(Request $request)
     {
         $data = $request->all();
@@ -254,7 +280,7 @@ class WebadminController extends Controller {
             return Redirect::to(url('sw-admin/widgets'))->withSuccess('Widget successfully updated!');
         }
         return Redirect::back()
-                        ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
+                        ->withErrors("Ooops..Something wrong happend.Please try again.") 
                         ->withInput($data);
     }
 

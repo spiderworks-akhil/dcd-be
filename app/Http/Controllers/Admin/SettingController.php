@@ -31,6 +31,7 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+      
         if($data['settings_type'] == 'Contact' || $data['settings_type'] == 'Social Media' || $data['settings_type'] == 'Common' || $data['settings_type'] == 'Smtp' || $data['settings_type'] == 'Google')
         {
             foreach($data['settings'] as $key=>$value)
@@ -77,21 +78,27 @@ class SettingController extends Controller
             }
         }
         else{
-            foreach ($data['code'] as $key => $value) {
-                if(trim($data['value'][$key]) != '')
-                {
-                    $settings = Setting::where('code', $value)->first();
-                    if(!$settings)
-                    {
-                        $settings = new Setting;
-                        $settings->code = $value;
-                        $settings->input_type = 'Text';
-                        $settings->settings_type = 'Others';
-                    }
-                    $settings->value_text = $data['value'][$key];
-                    $settings->save();
+            $lang = !empty($data['type']) ? $data['type'] : 'en';
+
+            foreach ($data['code'] as $key => $baseCode) {
+
+                if (trim($data['value'][$key]) == '') continue;
+
+                $code = $baseCode . '_' . $lang;
+
+                $settings = Setting::where('code', $code)->first();
+
+                if (!$settings) {
+                    $settings = new Setting;
+                    $settings->code = $code;
+                    $settings->input_type = 'Text';
+                    $settings->settings_type = 'Others';
                 }
+
+                $settings->value_text = $data['value'][$key];
+                $settings->save();
             }
+
         }
         $this->clear_cache();
         return redirect()->back();
