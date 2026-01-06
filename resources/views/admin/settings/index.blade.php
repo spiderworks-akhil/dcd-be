@@ -265,7 +265,7 @@
                 </form> --}}
             </div>
             <div class="col-4">
-                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                {{-- <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
                     @csrf
                     <input type="hidden" name="settings_type" value="Google">
                     <div class="card">
@@ -302,7 +302,7 @@
                             <button type="submit" class="btn btn-sm btn-primary"  id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
-                </form>
+                </form> --}}
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="settings_type" value="Logo">
