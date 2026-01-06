@@ -155,7 +155,7 @@
                         </div>
 
                         <div class="card-footer text-right">
-                            <button class="btn btn-sm btn-primary" id="updateBtn" disabled>Update</button>
+                            <button class="btn btn-sm btn-primary" type="submit" id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
                 </form>
