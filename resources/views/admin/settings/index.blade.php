@@ -306,7 +306,7 @@
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="settings_type" value="Logo">
-                    <div class="card">
+                    <div class="card logo_card">
                         <div class="card-header">
                            Left Logo
                         </div>
@@ -329,7 +329,7 @@
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="settings_type" value="Logo Dark">
-                    <div class="card">
+                    <div class="card logo_dark_card">
                         <div class="card-header">
                            Left Logo Dark
                         </div>

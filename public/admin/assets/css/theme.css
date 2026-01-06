@@ -521,7 +521,8 @@ a.logo.logo-admin img {
     line-height: 30px;
 }
 form label {
-    color: #afafaf;
+    font-weight: 600;
+    color: #666;
     text-align: left !important;
     display: block !important;
 }
@@ -1002,6 +1003,17 @@ form label {
 
 .dashboard_news_arabic .card-header{
     text-align: right;
+}
+.logo_card img{
+    background-color: #00357696;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.logo_dark_card img{
+    background-color: #0035763a;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 @media (max-width: 1440px) {
