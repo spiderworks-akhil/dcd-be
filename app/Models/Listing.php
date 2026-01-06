@@ -17,7 +17,7 @@ class Listing extends Model
 
     public function list(): HasMany
     {
-        return $this->hasMany(ListingContent::class, 'listing_id')->orderBy('priority');
+        return $this->hasMany(ListingContent::class, 'listing_id')->orderBy('priority')->where('status',1);
     }
 
 }
