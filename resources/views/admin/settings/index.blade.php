@@ -142,13 +142,13 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label>English content notification Mailids</label>
+                                <label>English content approver Mailids</label>
                                 <input type="text" name="settings[send_en_content_notification]" class="form-control setting-input"
                                     value="{{$data['send_en_content_notification']}}" readonly>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label>Arabic content notification Mailids</label>
+                                <label>Arabic content approver Mailids</label>
                                 <input type="text" name="settings[send_ar_content_notification]" class="form-control setting-input"
                                     value="{{$data['send_ar_content_notification']}}" readonly>
                             </div>
