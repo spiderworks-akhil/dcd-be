@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-sm btn-primary">Update</button>
+                            <button class="btn btn-sm btn-primary" id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
                 </form>
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-sm btn-primary">Update</button>
+                            <button class="btn btn-sm btn-primary"  id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
                 </form>
@@ -299,7 +299,7 @@
                                 <label class="custom-control-label" for="google-status">Enable</label>
                             </div>
                             <input type="hidden" name="settings[google_login]" @if($data['google_login']=='-1' ) value="1" @else value="{{$data['google_login']}}" @endif  />
-                            <button class="btn btn-sm btn-primary">Update</button>
+                            <button type="submit" class="btn btn-sm btn-primary"  id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
                 </form>
@@ -413,7 +413,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-sm btn-primary">Update</button>
+                            <button type="submit" class="btn btn-sm btn-primary"  id="updateBtn" disabled>Update</button>
                         </div>
                     </div>
                 </form>
@@ -509,41 +509,33 @@
         });
     });
 </script>
-
 <script>
 document.querySelectorAll(".edit-toggle").forEach(btn => {
 
     btn.addEventListener("click", function () {
 
-        // find the form this icon belongs to
         let form = this.closest("form");
 
-        // select all editable fields in that form
         let fields = form.querySelectorAll("input.form-control, textarea.form-control");
 
-        // detect current state
+        let updateBtn = form.querySelector("#updateBtn");
+
         let isReadOnly = fields[0].hasAttribute("readonly");
 
         if (isReadOnly) {
-            // enable editing
+
             fields.forEach(f => f.removeAttribute("readonly"));
 
-            // enable submit button if present
-            let updateBtn = form.querySelector("button[type='submit']");
-            if (updateBtn) updateBtn.removeAttribute("disabled");
+            updateBtn.removeAttribute("disabled");
 
-            // change icon to unlocked
             this.innerHTML = '<i class="fa fa-lock-open" style="font-size:18px;"></i>';
         } 
         else {
-            // disable editing
+
             fields.forEach(f => f.setAttribute("readonly", true));
 
-            // disable submit button if present
-            let updateBtn = form.querySelector("button[type='submit']");
-            if (updateBtn) updateBtn.setAttribute("disabled", true);
+            updateBtn.setAttribute("disabled", true);
 
-            // change icon back to edit
             this.innerHTML = '<i class="fa fa-edit" style="font-size:18px;"></i>';
         }
     });
