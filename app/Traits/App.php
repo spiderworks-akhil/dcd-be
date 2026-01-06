@@ -15,7 +15,7 @@ trait App {
             $settings = Setting::whereNotIn('settings_type', ['Google', 'Smtp'])->get();
             foreach($settings as $setting)
             {
-                if($setting->code == "logo" || $setting->code == "logo_small" || $setting->code == "fav_icon")
+                if($setting->code == "logo" || $setting->code == "logo_small" || $setting->code == "fav_icon" || $setting->code == "logo_dark" ||$setting->code == "logo_small_dark")
                     $data[$setting->code] = asset($setting->value_text);
                 else
                     $data[$setting->code] = $setting->value_text;

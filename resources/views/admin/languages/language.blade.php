@@ -79,6 +79,25 @@
                 Language Settings — {{ strtoupper($type) }}
             </h5>
         </div>
+@php
+    $labels = [
+        'play_video' => 'Play video title in rewind section',
+        'follow_us' => 'Follow us title in footer section',
+        'event_categories_upcoming_title' => 'Upcoming title in event page',
+        'explore_all_events' => 'Explore all events title in event page',
+         'volunteer' => 'Volunteer listing title in event detail page',
+         'schedule' => 'Schedule listing  title in event detail page',
+         'dont_miss' => 'Dont Miss Section title in event detail page',
+         'top_must_attend_events' => 'Top Must attend events title in event detail page',
+        'view_all_events' => 'View all events title in event detail page',
+        'whatshappening' => 'Whats happening title in event detail page',
+        'discover_past_events' => 'Discover Past events title',
+        'all_events' => 'All events title in mega menu',
+         'footer_text' => 'Footer text content',
+         'featured' => 'Featured section title',
+         'capture_event' => 'Capture event title in event detail page',
+    ];
+@endphp
 
 
         <div class="card-body">
@@ -90,33 +109,35 @@
                 <input type="hidden" name="type" value="{{ $type }}">
 
 
-                @foreach($data as $key => $value)
-                 @php
-                    $label = ucwords(str_replace('_', ' ', $key));
-                @endphp
+               @foreach($data as $key => $value)
+
+                    @php
+                        $label = $labels[$key] ?? ucwords(str_replace('_', ' ', $key));
+                    @endphp
 
                     <div class="settings-item row align-items-center mb-3">
 
                         <div class="form-group col-md-5">
-                            <label class="font-weight-bold">{{$label}}</label>
+                            <label class="font-weight-bold">{{ $label }}</label>
                             <input type="text"
-                                   name="code[]"
-                                   class="form-control"
-                                   value="{{ $key }}"
-                                   readonly>
+                                name="code[]"
+                                class="form-control"
+                                value="{{ $key }}"
+                                readonly>
                         </div>
 
                         <div class="form-group col-md-7">
                             <label class="font-weight-bold">Value</label>
                             <input type="text"
-                                   name="value[]"
-                                   class="form-control"
-                                   value="{{ $value }}">
+                                name="value[]"
+                                class="form-control"
+                                value="{{ $value }}">
                         </div>
                     </div>
 
                     <hr>
-                @endforeach
+            @endforeach
+
 
 
 
