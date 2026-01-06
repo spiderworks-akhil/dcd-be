@@ -393,9 +393,9 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-footer text-right">
+            {{-- <div class="card card-footer text-right">
                 <button class="btn btn-sm btn-primary">Update</button>
-            </div>
+            </div> --}}
     </div>
     </form>
 </div>

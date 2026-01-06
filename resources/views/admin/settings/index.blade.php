@@ -46,25 +46,32 @@
                     @csrf
                     <input type="hidden" name="settings_type" value="Common">
                     <div class="card">
-                        <div class="card-header">
-                            Common Settings
+                         <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Common Settings</span>
+
+                            <!-- Edit Button -->
+                            <a href="javascript:void(0)" class="edit-toggle">
+                                <i class="fa fa-edit" style="font-size:18px;"></i>
+                            </a>
+
                         </div>
+
                         <div class="card-body row">
                             <div class="form-group col-md-12">
                                 <label>Site Name</label>
-                                <input type="text" name="settings[site_name]" class="form-control" value="{{$data['site_name']}}">
+                                <input type="text" name="settings[site_name]" class="form-control" value="{{$data['site_name']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Google tag manager head</label>
-                                <textarea name="settings[google_tag_manager_head]" class="form-control">{{$data['google_tag_manager_head']}}</textarea>
+                                <textarea name="settings[google_tag_manager_head]" class="form-control" readonly>{{$data['google_tag_manager_head']}}</textarea>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Google tag manager body</label>
-                                <textarea name="settings[google_tag_manager_body]" class="form-control">{{$data['google_tag_manager_body']}}</textarea>
+                                <textarea name="settings[google_tag_manager_body]" class="form-control" readonly>{{$data['google_tag_manager_body']}}</textarea>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Other common scripts</label>
-                                <textarea name="settings[other_common_scripts]" class="form-control">{{$data['other_common_scripts']}}</textarea>
+                                <textarea name="settings[other_common_scripts]" class="form-control" readonly>{{$data['other_common_scripts']}}</textarea>
                             </div>
                         </div>
                         <div class="card-footer text-right">
@@ -72,7 +79,7 @@
                         </div>
                     </div>
                 </form>
-                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                {{-- <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
                     @csrf
                     <input type="hidden" name="settings_type" value="Contact">
                     <div class="card">
@@ -109,43 +116,94 @@
                             <button class="btn btn-sm btn-primary">Update</button>
                         </div>
                     </div>
+                </form> --}}
+             
+
+                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                    @csrf
+                    <input type="hidden" name="settings_type" value="Contact">
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Contact Notification MailIds</span>
+
+                            <!-- Edit Button -->
+                            <a href="javascript:void(0)" class="edit-toggle">
+                                <i class="fa fa-edit" style="font-size:18px;"></i>
+                            </a>
+
+                        </div>
+
+                        <div class="card-body row">
+                            <div class="form-group col-md-12">
+                                <label>Contact notification emailids</label>
+                                <input type="text" name="settings[contact_notification_email_ids]" class="form-control setting-input"
+                                    value="{{$data['contact_notification_email_ids']}}" readonly>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label>English content notification Mailids</label>
+                                <input type="text" name="settings[send_en_content_notification]" class="form-control setting-input"
+                                    value="{{$data['send_en_content_notification']}}" readonly>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label>Arabic content notification Mailids</label>
+                                <input type="text" name="settings[send_ar_content_notification]" class="form-control setting-input"
+                                    value="{{$data['send_ar_content_notification']}}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button class="btn btn-sm btn-primary" id="updateBtn" disabled>Update</button>
+                        </div>
+                    </div>
                 </form>
+
+                 
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
                     @csrf
                     <input type="hidden" name="settings_type" value="Social Media">
                     <div class="card">
-                        <div class="card-header">
-                            Social Media Links
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Social Media Links</span>
+
+                            <!-- Edit Button -->
+                            <a href="javascript:void(0)" class="edit-toggle">
+                                <i class="fa fa-edit" style="font-size:18px;"></i>
+                            </a>
+
+
                         </div>
                         <div class="card-body row">
                             <div class="form-group col-md-6">
                                 <label>Facebook Link</label>
-                                <input type="text" name="settings[facebook_link]" class="form-control" value="{{$data['facebook_link']}}">
+                                <input type="text" name="settings[facebook_link]" class="form-control" value="{{$data['facebook_link']}}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Twitter Link</label>
-                                <input type="text" name="settings[twitter_link]" class="form-control" value="{{$data['twitter_link']}}">
+                                <input type="text" name="settings[twitter_link]" class="form-control" value="{{$data['twitter_link']}}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Linkedin Link</label>
-                                <input type="text" name="settings[linkedin_link]" class="form-control" value="{{$data['linkedin_link']}}">
+                                <input type="text" name="settings[linkedin_link]" class="form-control" value="{{$data['linkedin_link']}}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Instagram Link</label>
-                                <input type="text" name="settings[intagram_link]" class="form-control" value="{{$data['intagram_link']}}">
+                                <input type="text" name="settings[intagram_link]" class="form-control" value="{{$data['intagram_link']}}" readonly>
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label>Youtube Link</label>
-                                <input type="text" name="settings[youtube_link]" class="form-control" value="{{$data['youtube_link']}}">
+                                <input type="text" name="settings[youtube_link]" class="form-control" value="{{$data['youtube_link']}}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Tiktok Link</label>
-                                <input type="text" name="settings[tiktok_link]" class="form-control" value="{{$data['tiktok_link']}}">
+                                <input type="text" name="settings[tiktok_link]" class="form-control" value="{{$data['tiktok_link']}}" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Snapchat Link</label>
-                                <input type="text" name="settings[snapchat_link]" class="form-control" value="{{$data['snapchat_link']}}">
+                                <input type="text" name="settings[snapchat_link]" class="form-control" value="{{$data['snapchat_link']}}" readonly>
                             </div>
                         </div>
                         <div class="card-footer text-right">
@@ -153,7 +211,7 @@
                         </div>
                     </div>
                 </form>
-                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
+                {{-- <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
                     @csrf
                     <input type="hidden" name="settings_type" value="Others">
                     <div class="card">
@@ -204,36 +262,43 @@
                             <button class="btn btn-sm btn-primary">Save</button>
                         </div> -->
                     </div>
-                </form>
+                </form> --}}
             </div>
             <div class="col-4">
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true>
                     @csrf
                     <input type="hidden" name="settings_type" value="Google">
                     <div class="card">
-                        <div class="card-header">
-                            Google Login
+                      
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Google Login</span>
+
+                            <!-- Edit Button -->
+                            <a href="javascript:void(0)" class="edit-toggle">
+                                <i class="fa fa-edit" style="font-size:18px;"></i>
+                            </a>
+
                         </div>
                         <div class="card-body row">
                             <div class="form-group col-md-12">
                                 <label>Client ID</label>
-                                <input type="text" name="settings[google_auth_client_id]" class="form-control" value="{{$data['google_auth_client_id']}}">
+                                <input type="text" name="settings[google_auth_client_id]" class="form-control" value="{{$data['google_auth_client_id']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Client Secret</label>
-                                <input type="text" name="settings[google_auth_client_secret]" class="form-control" value="{{$data['google_auth_client_secret']}}">
+                                <input type="text" name="settings[google_auth_client_secret]" class="form-control" value="{{$data['google_auth_client_secret']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Redirect Uri</label>
-                                <p class="text-success">{{route('google.login')}}</p>
+                                <p class="text-success" >{{route('google.login')}}</p>
                             </div>
                         </div>
                         <div class="card-footer text-right">
                             <div class="custom-control custom-switch switch-primary float-left">
-                                <input type="checkbox" class="custom-control-input" value="1" id="google-status" @if($data['google_login']==1) checked="" @endif>
+                                <input type="checkbox" class="custom-control-input" value="1" id="google-status" @if($data['google_login']==1) checked="" @endif readonly>
                                 <label class="custom-control-label" for="google-status">Enable</label>
                             </div>
-                            <input type="hidden" name="settings[google_login]" @if($data['google_login']=='-1' ) value="1" @else value="{{$data['google_login']}}" @endif />
+                            <input type="hidden" name="settings[google_login]" @if($data['google_login']=='-1' ) value="1" @else value="{{$data['google_login']}}" @endif  />
                             <button class="btn btn-sm btn-primary">Update</button>
                         </div>
                     </div>
@@ -243,7 +308,7 @@
                     <input type="hidden" name="settings_type" value="Logo">
                     <div class="card">
                         <div class="card-header">
-                            Logo
+                           Left Logo
                         </div>
                         <div class="card-body text-center">
                             @if(file_exists(public_path($data['logo'])))
@@ -265,7 +330,7 @@
                     <input type="hidden" name="settings_type" value="Small Logo">
                     <div class="card">
                         <div class="card-header">
-                            Small Logo
+                            Right Logo
                         </div>
                         <div class="card-body">
                             @if(file_exists(public_path($data['logo_small'])))
@@ -308,37 +373,43 @@
                     @csrf
                     <input type="hidden" name="settings_type" value="Smtp">
                     <div class="card">
-                        <div class="card-header">
-                            SMTP Settings
+                         <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>SMTP Settings</span>
+
+                            <!-- Edit Button -->
+                            <a href="javascript:void(0)" class="edit-toggle">
+                                <i class="fa fa-edit" style="font-size:18px;"></i>
+                            </a>
+
                         </div>
                         <div class="card-body row">
                             <div class="form-group col-md-12">
                                 <label>SMTP Host</label>
-                                <input type="text" name="settings[smtp_host]" class="form-control" value="{{$data['smtp_host']}}">
+                                <input type="text" name="settings[smtp_host]" class="form-control" value="{{$data['smtp_host']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP Port</label>
-                                <input type="text" name="settings[smtp_port]" class="form-control" value="{{$data['smtp_port']}}">
+                                <input type="text" name="settings[smtp_port]" class="form-control" value="{{$data['smtp_port']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP User</label>
-                                <input type="text" name="settings[smtp_user]" class="form-control" value="{{$data['smtp_user']}}">
+                                <input type="text" name="settings[smtp_user]" class="form-control" value="{{$data['smtp_user']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP Password</label>
-                                <input type="text" name="settings[smtp_password]" class="form-control" value="{{$data['smtp_password']}}">
+                                <input type="text" name="settings[smtp_password]" class="form-control" value="{{$data['smtp_password']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP Encryption</label>
-                                <input type="text" name="settings[smtp_encryption]" class="form-control" value="{{$data['smtp_encryption']}}">
+                                <input type="text" name="settings[smtp_encryption]" class="form-control" value="{{$data['smtp_encryption']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP From Mail Address</label>
-                                <input type="text" name="settings[smtp_from_address]" class="form-control" value="{{$data['smtp_from_address']}}">
+                                <input type="text" name="settings[smtp_from_address]" class="form-control" value="{{$data['smtp_from_address']}}" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label>SMTP From Name</label>
-                                <input type="text" name="settings[smtp_from_name]" class="form-control" value="{{$data['smtp_from_name']}}">
+                                <input type="text" name="settings[smtp_from_name]" class="form-control" value="{{$data['smtp_from_name']}}" readonly>
                             </div>
                         </div>
                         <div class="card-footer text-right">
@@ -438,4 +509,47 @@
         });
     });
 </script>
+
+<script>
+document.querySelectorAll(".edit-toggle").forEach(btn => {
+
+    btn.addEventListener("click", function () {
+
+        // find the form this icon belongs to
+        let form = this.closest("form");
+
+        // select all editable fields in that form
+        let fields = form.querySelectorAll("input.form-control, textarea.form-control");
+
+        // detect current state
+        let isReadOnly = fields[0].hasAttribute("readonly");
+
+        if (isReadOnly) {
+            // enable editing
+            fields.forEach(f => f.removeAttribute("readonly"));
+
+            // enable submit button if present
+            let updateBtn = form.querySelector("button[type='submit']");
+            if (updateBtn) updateBtn.removeAttribute("disabled");
+
+            // change icon to unlocked
+            this.innerHTML = '<i class="fa fa-lock-open" style="font-size:18px;"></i>';
+        } 
+        else {
+            // disable editing
+            fields.forEach(f => f.setAttribute("readonly", true));
+
+            // disable submit button if present
+            let updateBtn = form.querySelector("button[type='submit']");
+            if (updateBtn) updateBtn.setAttribute("disabled", true);
+
+            // change icon back to edit
+            this.innerHTML = '<i class="fa fa-edit" style="font-size:18px;"></i>';
+        }
+    });
+
+});
+</script>
+
+
 @endsection
