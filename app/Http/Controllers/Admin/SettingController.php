@@ -41,8 +41,9 @@ class SettingController extends Controller
                 $setting->save();
             }
         }
-        elseif ($data['settings_type'] == 'Logo' || $data['settings_type'] == 'Small Logo' || $data['settings_type'] == 'Fav Icon') {
-            $validator = Validator::make($data, [
+        elseif ($data['settings_type'] == 'Logo' || $data['settings_type'] == 'Small Logo' || $data['settings_type'] == 'Fav Icon' || $data['settings_type'] == 'Logo Dark' || $data['settings_type'] == 'Small Logo Dark' ) {
+          
+           $validator = Validator::make($data, [
                 'file' => 'required|mimes:jpeg,png,webp,x-icon,svg,ico|max:2048',
             ]);
 
@@ -63,8 +64,15 @@ class SettingController extends Controller
                         $setting = Setting::where('code', 'logo')->first();
                         break;
 
+                    case 'Logo Dark':
+                        $setting = Setting::where('code', 'logo_dark')->first();
+                        break;
+
                     case 'Small Logo':
                         $setting = Setting::where('code', 'logo_small')->first();
+                        break;
+                    case 'Small Logo Dark':
+                        $setting = Setting::where('code', 'logo_small_dark')->first();
                         break;
 
                     case 'Fav Icon':

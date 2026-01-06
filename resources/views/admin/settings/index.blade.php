@@ -325,6 +325,29 @@
                         </div>
                     </div>
                 </form>
+
+                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="settings_type" value="Logo Dark">
+                    <div class="card">
+                        <div class="card-header">
+                           Left Logo Dark
+                        </div>
+                        <div class="card-body text-center">
+                            @if(file_exists(public_path($data['logo_dark'])))
+                            <div class="text-center">
+                                <img src="{{asset($data['logo_dark'])}}">
+                            </div>
+                            @endif
+                            <div class="form-group col-md-12 mt-4">
+                                <input type="file" class="form-control" name="file" />
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-sm btn-primary">Update</button>
+                        </div>
+                    </div>
+                </form>
                 <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="settings_type" value="Small Logo">
@@ -336,6 +359,29 @@
                             @if(file_exists(public_path($data['logo_small'])))
                             <div class="text-center">
                                 <img src="{{asset($data['logo_small'])}}">
+                            </div>
+                            @endif
+                            <div class="form-group col-md-12 mt-4">
+                                <input type="file" class="form-control" name="file" />
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-sm btn-primary">Update</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form method="POST" action="{{ route('admin.settings.store') }}" class="p-t-15" id="InputFrm" data-validate=true enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="settings_type" value="Small Logo Dark">
+                    <div class="card">
+                        <div class="card-header">
+                            Right Logo Dark
+                        </div>
+                        <div class="card-body">
+                            @if(file_exists(public_path($data['logo_small_dark'])))
+                            <div class="text-center">
+                                <img src="{{asset($data['logo_small_dark'])}}">
                             </div>
                             @endif
                             <div class="form-group col-md-12 mt-4">
