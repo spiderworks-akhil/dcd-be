@@ -89,72 +89,109 @@ class NewsController extends Controller
 
 
   protected function getCollection()
-    {
-        $type = request()->query('type');
+{
+    $type = request()->query('type');
+    $user = auth()->user();
 
-        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+    $query = $this->model
+        ->select(
+            'id',
+            'type',
+            'slug',
+            'name',
+            'title',
+            'status',
+            'priority',
+            'created_at',
+            'updated_at',
+            'updated_by'
+        )
+        ->with(['approvalNotification', 'updated_user']);
 
-        //  exclude approved
-        $query->where(function($q){
-            $q->whereHas('approvalNotification', function($sub){
+
+    $query->where(function ($q) use ($user) {
+
+        // Normal rule: not approved OR no approval record
+        $q->where(function ($normal) {
+            $normal->whereHas('approvalNotification', function ($sub) {
                 $sub->where('status', '!=', 'approved');
             })
             ->orWhereDoesntHave('approvalNotification');
         });
-                    
-        $user = auth()->user(); 
 
-        if ($user && $user->roles) {
+        // Exception ONLY for NON-admin users
+        if ($user && !$user->hasRole('Admin')) {
 
-            $languageIds = \DB::table('language_roles')
-                ->whereIn('role_id', $user->roles->pluck('id'))
-                ->pluck('language_id');
+            $q->orWhere(function ($exception) {
 
-            if ($languageIds->isNotEmpty()) {
-                
-                $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
-
-                $query->whereIn('type', $languageTypes);
-            }
-        }
-
-        //  Show en_draft / ar_draft only when en/ar status = 0
-
-        if ($user && $user->roles) {
-
-            $allowedDraftTypes = [];
-
-            foreach ($user->roles as $role) {
-
-                if ($role->name === 'English Content Writer') {
-                    $allowedDraftTypes[] = 'en_draft';
-                }
-
-                if ($role->name === 'Arabic Content Writer') {
-                    $allowedDraftTypes[] = 'ar_draft';
-                }
-            }
-
-            if (!empty($allowedDraftTypes)) {
-
-                $query->orWhere(function($q) use ($allowedDraftTypes) {
-
-                    $q->whereIn('type', $allowedDraftTypes)
-
-                    ->whereExists(function($sub){
+                $exception->whereIn('type', ['en_draft', 'ar_draft'])
+                    ->whereExists(function ($sub) {
                         $sub->select(\DB::raw(1))
-                            ->from('news as e2')
-                            ->whereColumn('e2.slug', 'news.slug')
-                            ->whereIn('e2.type', ['en','ar'])
-                            ->where('e2.status', 0);
+                            ->from('news as base')
+                            ->whereColumn('base.slug', 'news.slug')
+                            ->whereIn('base.type', ['en', 'ar'])
+                            ->where('base.status', 0); 
                     });
-                });
-            }
+            });
         }
+    });
 
-        return $query;
+    //  LANGUAGE ACCESS BASED ON USER ROLES
+    if ($user && $user->roles->isNotEmpty()) {
+
+        $languageIds = \DB::table('language_roles')
+            ->whereIn('role_id', $user->roles->pluck('id'))
+            ->pluck('language_id');
+
+        if ($languageIds->isNotEmpty()) {
+
+            $languageTypes = Language::whereIn('id', $languageIds)
+                ->pluck('type');
+
+            $query->whereIn('type', $languageTypes);
+        }
     }
 
+    // DRAFT VISIBILITY RULE (ROLE-BASED)
+    if ($user && $user->roles->isNotEmpty()) {
+
+        $allowedDraftTypes = [];
+
+        foreach ($user->roles as $role) {
+            if ($role->name === 'English Content Writer') {
+                $allowedDraftTypes[] = 'en_draft';
+            }
+            if ($role->name === 'Arabic Content Writer') {
+                $allowedDraftTypes[] = 'ar_draft';
+            }
+        }
+
+        if (!empty($allowedDraftTypes)) {
+
+            $query->where(function ($q) use ($allowedDraftTypes) {
+
+                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
+                  ->orWhere(function ($draft) use ($allowedDraftTypes) {
+
+                      $draft->whereIn('type', $allowedDraftTypes)
+                            ->whereExists(function ($sub) {
+                                $sub->select(\DB::raw(1))
+                                    ->from('news as base')
+                                    ->whereColumn('base.slug', 'news.slug')
+                                    ->whereIn('base.type', ['en', 'ar'])
+                                    ->where('base.status', 0);
+                            });
+                  });
+            });
+        }
+    }
+
+    if (!empty($type)) {
+        $query->where('type', $type);
+    }
+
+    return $query;
+}
 
     protected function setDTData($collection)
     {
