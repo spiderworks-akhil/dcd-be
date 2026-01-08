@@ -113,7 +113,7 @@ protected function getCollection()
         }
     }
 
-    // DRAFT ACCESS — ONLY IF en/ar STATUS = 0
+    // DRAFT ACCESS — ONLY IF corresponding en/ar STATUS = 0
     if ($user && $user->roles) {
 
         $allowedDraftTypes = [];
@@ -129,23 +129,17 @@ protected function getCollection()
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->orWhere(function($d) use ($allowedDraftTypes, $user) {
+            $query->orWhere(function($d) use ($allowedDraftTypes) {
 
                 $d->whereIn('type', $allowedDraftTypes)
                   ->whereExists(function($sub) {
+                        // Only allow the draft if the published version (en/ar) is still 0
                         $sub->selectRaw('1')
-                            ->from('news as e2') 
+                            ->from('news as e2')
                             ->whereColumn('e2.slug','news.slug')
                             ->whereIn('e2.type',['en','ar'])
-                            ->where('e2.status',0);
+                            ->where('e2.status', 0); // check published status is 0
                   });
-
-                // ALLOW writer to see item if published just changed 0 → 1
-                $d->orWhere(function($q) use ($user) {
-                    $q->whereIn('type', ['en_draft','ar_draft'])
-                      ->where('status', 1)
-                      ->where('updated_by', $user->id); // only writer who updated
-                });
             });
         }
     }
