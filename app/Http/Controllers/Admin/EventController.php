@@ -51,12 +51,15 @@ class EventController extends Controller
               
         $user = auth()->user(); 
 
-        // Exclude approved only for non-admins
         if ($user && $user->roles->pluck('name')->contains('Admin')) {
-            $query->whereDoesntHave('approvalNotification', function($q){
-                $q->where('status', 'approved');
+            $query->where(function($q){
+                $q->whereHas('approvalNotification', function($sub){
+                    $sub->where('status', '!=', 'approved');
+                })
+                ->orWhereDoesntHave('approvalNotification');
             });
-        }
+        }     
+
 
         if ($user && $user->roles) {
 
