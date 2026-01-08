@@ -17,7 +17,7 @@
                                     <option value="">All</option>
                                     <option value="Pending">Pending</option>
                                     <option value="Waiting for approval">Waiting for approval</option>
-                                    <option value="Approved">Approved</option>
+                                    {{-- <option value="Approved">Approved</option> --}}
                                     <option value="Rejected">Rejected</option>
                                     <option value="Published">Published</option>
 

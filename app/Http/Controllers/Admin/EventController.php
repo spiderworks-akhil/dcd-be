@@ -6,13 +6,15 @@ use View, Redirect;
 use App\Models\Event;
 use App\Models\Media;
 
+use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\EventMedia;
 use Illuminate\Http\Request;
-use App\Models\EventSchedule;
 
+use App\Models\EventSchedule;
 use App\Traits\ResourceTrait;
+use App\Services\MailSettings;
 use App\Models\ApprovalNotification;
 use App\Http\Requests\Admin\EventRequest;
 use App\Http\Controllers\Admin\BaseController as Controller;
@@ -41,9 +43,19 @@ class EventController extends Controller
 
     protected function getCollection()
     {
-        $query = $this->model->select('id', 'type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+        $type = request()->query('type');
 
-        $user = auth()->user();
+        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+
+        //  exclude approved
+        $query->where(function($q){
+            $q->whereHas('approvalNotification', function($sub){
+                $sub->where('status', '!=', 'approved');
+            })
+            ->orWhereDoesntHave('approvalNotification');
+        });
+                    
+        $user = auth()->user(); 
 
         if ($user && $user->roles) {
 
@@ -56,6 +68,40 @@ class EventController extends Controller
                 $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
 
                 $query->whereIn('type', $languageTypes);
+            }
+        }
+
+        //  Show en_draft / ar_draft only when en/ar status = 0
+
+        if ($user && $user->roles) {
+
+            $allowedDraftTypes = [];
+
+            foreach ($user->roles as $role) {
+
+                if ($role->name === 'English Content Writer') {
+                    $allowedDraftTypes[] = 'en_draft';
+                }
+
+                if ($role->name === 'Arabic Content Writer') {
+                    $allowedDraftTypes[] = 'ar_draft';
+                }
+            }
+
+            if (!empty($allowedDraftTypes)) {
+
+                $query->orWhere(function($q) use ($allowedDraftTypes) {
+
+                    $q->whereIn('type', $allowedDraftTypes)
+
+                    ->whereExists(function($sub){
+                        $sub->select(\DB::raw(1))
+                            ->from('events as e2')
+                            ->whereColumn('e2.slug', 'events.slug')
+                            ->whereIn('e2.type', ['en','ar'])
+                            ->where('e2.status', 0);
+                    });
+                });
             }
         }
 
@@ -570,6 +616,98 @@ protected function applyFiltering($collection)
     return $collection;
 }
 
+public function destroy($id)
+{
+    $id = decrypt($id);
 
+    $obj = $this->model->find($id);
+
+    if (!$obj) {
+        return $this->redirect('notfound');
+    }
+
+    $slug = $obj->slug;
+    $type = $obj->type; 
+
+    $obj->delete();
+
+    if ($type === 'en' || $type === 'ar') {
+
+        $draftType = $type . '_draft'; 
+
+        $this->model
+            ->where('slug', $slug)
+            ->where('type', $draftType)
+            ->delete();
+    }
+
+    return $this->redirect('removed', 'success', 'index');
+}
+
+
+
+public function changeStatus($id)
+{
+    $id = decrypt($id);
+
+    $obj = $this->model->find($id);
+
+    if (!$obj) {
+        return $this->redirect('notfound');
+    }
+
+    $previousStatus = $obj->status;
+
+    $newStatus = ($previousStatus == '1') ? '0' : '1';
+
+    if ($previousStatus == '1' && $newStatus == '0') {
+
+        if (in_array($obj->type, ['en', 'ar'])) {
+
+            $modelName = class_basename($obj);
+
+            $notification_mail = $obj->type === 'en'
+                ? 'send_en_content_notification'
+                : 'send_ar_content_notification';
+
+            $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
+        }
+    }
+
+    $obj->status = $newStatus;
+    $obj->save();
+
+    return $this->redirect('Status updated successfully', 'success', 'index');
+}
+
+private function sendStatusMail($obj, $modelName, $notification_mail, $newStatus)
+{
+    try {
+        $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+
+        if (empty($recipientEmail)) {
+            $warning = "⚠️ No recipient email configured for record ID {$obj->id}\n";
+            \Log::warning(trim($warning));
+            return;
+        }
+
+        $statusText = ($newStatus == '1') ? 'Published' : 'Draft';
+
+        // Send mail
+        $mail = new MailSettings;
+        $mail->to($recipientEmail)->send(new \App\Mail\StatusChangeNotificationMail($obj, $modelName, $statusText));
+
+
+        $success = "✅ Status mail sent for record ID {$obj->id} to {$recipientEmail}\n";
+        \Log::info(trim($success));
+
+    } catch (\Throwable $e) {
+        $error = "❌ Failed to send status mail for record ID {$obj->id}: "
+            . $e->getMessage() . "\n"
+            . $e->getTraceAsString() . "\n\n";
+
+        \Log::error("Failed to send status mail for record ID {$obj->id}: {$e->getMessage()}");
+    }
+}
 
 }

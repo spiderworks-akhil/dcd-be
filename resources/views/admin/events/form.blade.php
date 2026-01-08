@@ -124,25 +124,7 @@
                                 <div class="card-body">
                                     <div>
                                         <div class="row m-0">
-                                            <div class="form-group col-md-6">
-                                                <label>Name</label>
-                                                <input type="text" name="name"
-                                                    class="form-control @if (!$obj->id) copy-name @endif"
-                                                    value="{{ $obj->name }}" required
-                                                    @if ($roleName != 'Admin' && $obj->id) readonly @endif>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label>Slug (for url)</label>
-                                                <input type="text" name="slug" class="form-control"
-                                                    value="{{ $obj->slug }}" id="slug"
-                                                    @if ($roleName != 'Admin' && $obj->id) readonly @endif>
-                                                <small class="text-muted">
-                                                    The “slug” is the URL-friendly version of the name. It is usually all
-                                                    lowercase and contains only letters, numbers, and hyphens.
-                                                </small>
-                                            </div>
-
+                                            
                                             <div class="form-group col-md-12">
                                                 <label>Title</label>
                                                 <input type="text" name="title" class="form-control"
@@ -341,6 +323,26 @@
                                         SEO
                                     </div>
                                     <div class="card-body row">
+
+                                        <div class="form-group col-md-6">
+                                            <label>Name</label>
+                                            <input type="text" name="name"
+                                                class="form-control @if (!$obj->id) copy-name @endif"
+                                                value="{{ $obj->name }}" required
+                                                @if ($roleName != 'Admin' && $obj->id) readonly @endif>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Slug (for url)</label>
+                                            <input type="text" name="slug" class="form-control"
+                                                value="{{ $obj->slug }}" id="slug"
+                                                @if ($roleName != 'Admin' && $obj->id) readonly @endif>
+                                            <small class="text-muted">
+                                                The “slug” is the URL-friendly version of the name. It is usually all
+                                                lowercase and contains only letters, numbers, and hyphens.
+                                            </small>
+                                        </div>
+
                                             <div class="form-group col-md-12">
                                                 <label>Bottom content</label>
                                                 <textarea name="bottom_description" class="form-control editor" id="bottom_description">{{ $obj->bottom_description }}</textarea>
@@ -406,13 +408,13 @@
                                                         @if ($approval_notification)
                                                             @if ($approval_notification->status === 'approved')
                                                                 <!-- Approved: show send again button -->
-                                                                <button type="button" class="btn btn-primary btn-sm"
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','Event')">
                                                                     Send for Approval
                                                                 </button>
                                                             @elseif($approval_notification->status === 'rejected')
                                                                 <!-- Rejected: allow send again -->
-                                                                <button type="button" class="btn btn-primary btn-sm"
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','Event')">
                                                                     Send for Approval
                                                                 </button>
@@ -425,7 +427,7 @@
                                                             @endif
                                                         @else
                                                             <!-- No approval record yet: show send button -->
-                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                            <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                 onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','Event')">
                                                                 Send for Approval
                                                             </button>
@@ -1122,6 +1124,18 @@
 
         <script>
             function sendForApproval(id, slug, type, model) {
+
+                 if (isFormDirty) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Unsaved Changes Detected',
+                        text: 'Please save changes before sending for approval.',
+                        confirmButtonText: 'OK'
+                    });
+
+                    return;
+                }
+
                 Swal.fire({
                     title: 'Send Approval Email?',
                     text: "Do you want to send the approval email?",
