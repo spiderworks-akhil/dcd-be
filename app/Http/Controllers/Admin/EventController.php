@@ -60,27 +60,37 @@ class EventController extends Controller
             'updated_at',
             'updated_by'
         )
-        ->with('approvalNotification', 'updated_user');
+        ->with(['approvalNotification', 'updated_user']);
 
-    /*
-    |--------------------------------------------------------------------------
-    | 1. EXCLUDE APPROVED ITEMS (GLOBAL RULE)
-    |--------------------------------------------------------------------------
-    | approval_notifications.status = enum
-    | events.status = 0/1 (not used here)
-    */
-    $query->where(function ($q) {
-        $q->whereHas('approvalNotification', function ($sub) {
-            $sub->where('status', '!=', 'approved');
-        })
-        ->orWhereDoesntHave('approvalNotification');
+
+    $query->where(function ($q) use ($user) {
+
+        // Normal rule: not approved OR no approval record
+        $q->where(function ($normal) {
+            $normal->whereHas('approvalNotification', function ($sub) {
+                $sub->where('status', '!=', 'approved');
+            })
+            ->orWhereDoesntHave('approvalNotification');
+        });
+
+        // Exception ONLY for NON-admin users
+        if ($user && !$user->hasRole('Admin')) {
+
+            $q->orWhere(function ($exception) {
+
+                $exception->whereIn('type', ['en_draft', 'ar_draft'])
+                    ->whereExists(function ($sub) {
+                        $sub->select(\DB::raw(1))
+                            ->from('events as base')
+                            ->whereColumn('base.slug', 'events.slug')
+                            ->whereIn('base.type', ['en', 'ar'])
+                            ->where('base.status', 0); 
+                    });
+            });
+        }
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | 2. LANGUAGE ACCESS BASED ON USER ROLES
-    |--------------------------------------------------------------------------
-    */
+    //  LANGUAGE ACCESS BASED ON USER ROLES
     if ($user && $user->roles->isNotEmpty()) {
 
         $languageIds = \DB::table('language_roles')
@@ -96,14 +106,7 @@ class EventController extends Controller
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 3. DRAFT VISIBILITY RULE
-    |--------------------------------------------------------------------------
-    | en_draft → visible only if en.status = 0
-    | ar_draft → visible only if ar.status = 0
-    | Only for respective content writers
-    */
+    // DRAFT VISIBILITY RULE (ROLE-BASED)
     if ($user && $user->roles->isNotEmpty()) {
 
         $allowedDraftTypes = [];
@@ -112,7 +115,6 @@ class EventController extends Controller
             if ($role->name === 'English Content Writer') {
                 $allowedDraftTypes[] = 'en_draft';
             }
-
             if ($role->name === 'Arabic Content Writer') {
                 $allowedDraftTypes[] = 'ar_draft';
             }
@@ -122,30 +124,22 @@ class EventController extends Controller
 
             $query->where(function ($q) use ($allowedDraftTypes) {
 
-                // Allow normal (non-draft) content
                 $q->whereNotIn('type', ['en_draft', 'ar_draft'])
+                  ->orWhere(function ($draft) use ($allowedDraftTypes) {
 
-                // OR allow drafts only when base language is unpublished
-                ->orWhere(function ($draft) use ($allowedDraftTypes) {
-
-                    $draft->whereIn('type', $allowedDraftTypes)
-                          ->whereExists(function ($sub) {
-                              $sub->select(\DB::raw(1))
-                                  ->from('events as e2')
-                                  ->whereColumn('e2.slug', 'events.slug')
-                                  ->whereIn('e2.type', ['en', 'ar'])
-                                  ->where('e2.status', 0); // unpublished
-                          });
-                });
+                      $draft->whereIn('type', $allowedDraftTypes)
+                            ->whereExists(function ($sub) {
+                                $sub->select(\DB::raw(1))
+                                    ->from('events as base')
+                                    ->whereColumn('base.slug', 'events.slug')
+                                    ->whereIn('base.type', ['en', 'ar'])
+                                    ->where('base.status', 0);
+                            });
+                  });
             });
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 4. OPTIONAL TYPE FILTER FROM REQUEST
-    |--------------------------------------------------------------------------
-    */
     if (!empty($type)) {
         $query->where('type', $type);
     }
