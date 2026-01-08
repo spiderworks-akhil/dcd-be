@@ -39,8 +39,6 @@ class EventController extends Controller
     // protected function getCollection() {
     //     return $this->model->select('id','type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at');
     // }
-
-
     
    protected function getCollection()
 {

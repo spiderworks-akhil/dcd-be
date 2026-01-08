@@ -51,7 +51,7 @@ class Event extends Model
     public function approvalNotification()
     {
         return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
-            ->where('notifiable_type', 'Event')
+            ->where('notifiable_type','Event')
             ->latestOfMany(); 
     }
 
