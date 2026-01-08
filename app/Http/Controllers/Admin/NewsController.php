@@ -94,59 +94,60 @@ class NewsController extends Controller
     $type = request()->query('type');
 
     $query = $this->model
-        ->select('id','type','slug','name','title','status','priority','created_at','updated_at','updated_by')
-        ->with('approvalNotification','updated_user');
+        ->select('id', 'type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at', 'updated_by')
+        ->with('approvalNotification', 'updated_user');
 
-    // ----- Hide approved items for ALL users -----
-    $query->whereDoesntHave('approvalNotification', function($q){
-        $q->where('status', 'approved');
+    $user = auth()->user();
+
+    // ----- Combine approved & draft logic inside a single group -----
+    $query->where(function($q) use ($user) {
+        // Hide approved items
+        $q->whereDoesntHave('approvalNotification', function($sub){
+            $sub->where('status', 'approved');
+        });
+
+        // ----- Draft logic -----
+        if ($user && $user->roles) {
+            $allowedDraftTypes = [];
+
+            foreach ($user->roles as $role) {
+                if ($role->name === 'English Content Writer') {
+                    $allowedDraftTypes[] = 'en_draft';
+                }
+                if ($role->name === 'Arabic Content Writer') {
+                    $allowedDraftTypes[] = 'ar_draft';
+                }
+            }
+
+            if (!empty($allowedDraftTypes)) {
+                $q->orWhere(function($sub) use ($allowedDraftTypes) {
+                    $sub->whereIn('type', $allowedDraftTypes)
+                        ->whereExists(function($exists) {
+                            $exists->select(\DB::raw(1))
+                                ->from('news as e2')
+                                ->whereColumn('e2.slug', 'news.slug')
+                                ->whereIn('e2.type', ['en','ar'])
+                                ->where('e2.status', 0);
+                        });
+                });
+            }
+        }
     });
 
-    $user = auth()->user(); 
-
+    // ----- Language filtering -----
     if ($user && $user->roles) {
         $languageIds = \DB::table('language_roles')
             ->whereIn('role_id', $user->roles->pluck('id'))
             ->pluck('language_id');
 
         if ($languageIds->isNotEmpty()) {
-            $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
+            $languageTypes = \App\Models\Language::whereIn('id', $languageIds)->pluck('type');
             $query->whereIn('type', $languageTypes);
-        }
-    }
-
-    // ----- Draft logic -----
-    if ($user && $user->roles) {
-        $allowedDraftTypes = [];
-
-        foreach ($user->roles as $role) {
-            if ($role->name === 'English Content Writer') {
-                $allowedDraftTypes[] = 'en_draft';
-            }
-            if ($role->name === 'Arabic Content Writer') {
-                $allowedDraftTypes[] = 'ar_draft';
-            }
-        }
-
-        if (!empty($allowedDraftTypes)) {
-            $query->orWhere(function($q) use ($allowedDraftTypes) {
-                $q->whereIn('type', $allowedDraftTypes)
-                  ->whereExists(function($sub){
-                      $sub->select(\DB::raw(1))
-                          ->from('news as e2')
-                          ->whereColumn('e2.slug', 'news.slug')
-                          ->whereIn('e2.type', ['en','ar'])
-                          ->where('e2.status', 0);
-                  });
-            });
         }
     }
 
     return $query;
 }
-
-
-
 
     protected function setDTData($collection)
     {
