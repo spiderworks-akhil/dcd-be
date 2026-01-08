@@ -86,9 +86,7 @@ class NewsController extends Controller
             return view::make($this->views . '.index', array('search_settings'=>$search_settings));
         }
     }
-
-
-  protected function getCollection()
+protected function getCollection()
 {
     $user = auth()->user();
 
@@ -97,18 +95,14 @@ class NewsController extends Controller
         ->with('approvalNotification','updated_user');
 
     // ALWAYS exclude approved items
-    
     $query->whereDoesntHave('approvalNotification', function($q){
         $q->where('status', 'approved');
     });
 
-
     // LANGUAGE FILTER
-   
     $languageTypes = collect();
 
     if ($user && $user->roles) {
-
         $languageIds = \DB::table('language_roles')
             ->whereIn('role_id', $user->roles->pluck('id'))
             ->pluck('language_id');
@@ -119,19 +113,15 @@ class NewsController extends Controller
         }
     }
 
-
     // DRAFT ACCESS — ONLY IF en/ar STATUS = 0
-    
     if ($user && $user->roles) {
 
         $allowedDraftTypes = [];
 
         foreach ($user->roles as $role) {
-
             if ($role->name === 'English Content Writer') {
                 $allowedDraftTypes[] = 'en_draft';
             }
-
             if ($role->name === 'Arabic Content Writer') {
                 $allowedDraftTypes[] = 'ar_draft';
             }
@@ -139,17 +129,23 @@ class NewsController extends Controller
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->orWhere(function($d) use ($allowedDraftTypes){
+            $query->orWhere(function($d) use ($allowedDraftTypes, $user) {
 
                 $d->whereIn('type', $allowedDraftTypes)
-                  ->whereExists(function($sub){
-
+                  ->whereExists(function($sub) {
                         $sub->selectRaw('1')
                             ->from('news as e2') 
                             ->whereColumn('e2.slug','news.slug')
                             ->whereIn('e2.type',['en','ar'])
                             ->where('e2.status',0);
                   });
+
+                // ALLOW writer to see item if published just changed 0 → 1
+                $d->orWhere(function($q) use ($user) {
+                    $q->whereIn('type', ['en_draft','ar_draft'])
+                      ->where('status', 1)
+                      ->where('updated_by', $user->id); // only writer who updated
+                });
             });
         }
     }
