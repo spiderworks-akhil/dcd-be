@@ -88,22 +88,24 @@ class NewsController extends Controller
     }
 
 
-
-    protected function getCollection()
+  protected function getCollection()
 {
-    $type = request()->query('type');
+    $user = auth()->user();
 
-    $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+    $query = $this->model
+        ->select('id','type','slug','name','title','status','priority','created_at','updated_at','updated_by')
+        ->with('approvalNotification','updated_user');
 
-    //  exclude approved
-    $query->where(function($q){
-        $q->whereHas('approvalNotification', function($sub){
-            $sub->where('status', '!=', 'approved');
-        })
-        ->orWhereDoesntHave('approvalNotification');
+    // ALWAYS exclude approved items
+    
+    $query->whereDoesntHave('approvalNotification', function($q){
+        $q->where('status', 'approved');
     });
-                
-    $user = auth()->user(); 
+
+
+    // LANGUAGE FILTER
+   
+    $languageTypes = collect();
 
     if ($user && $user->roles) {
 
@@ -112,15 +114,14 @@ class NewsController extends Controller
             ->pluck('language_id');
 
         if ($languageIds->isNotEmpty()) {
-            
             $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
-
             $query->whereIn('type', $languageTypes);
         }
     }
 
-    //  Show en_draft / ar_draft only when en/ar status = 0
 
+    // DRAFT ACCESS — ONLY IF en/ar STATUS = 0
+    
     if ($user && $user->roles) {
 
         $allowedDraftTypes = [];
@@ -138,16 +139,16 @@ class NewsController extends Controller
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->orWhere(function($q) use ($allowedDraftTypes) {
+            $query->orWhere(function($d) use ($allowedDraftTypes){
 
-                $q->whereIn('type', $allowedDraftTypes)
-
+                $d->whereIn('type', $allowedDraftTypes)
                   ->whereExists(function($sub){
-                      $sub->select(\DB::raw(1))
-                          ->from('news as n2')
-                          ->whereColumn('n2.slug', 'news.slug')
-                          ->whereIn('n2.type', ['en','ar'])
-                          ->where('n2.status', 0);
+
+                        $sub->selectRaw('1')
+                            ->from('news as e2') 
+                            ->whereColumn('e2.slug','news.slug')
+                            ->whereIn('e2.type',['en','ar'])
+                            ->where('e2.status',0);
                   });
             });
         }
