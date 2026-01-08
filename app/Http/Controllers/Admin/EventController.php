@@ -48,11 +48,8 @@ class EventController extends Controller
         $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
 
         //  exclude approved
-        $query->where(function($q){
-            $q->whereHas('approvalNotification', function($sub){
-                $sub->where('status', '!=', 'approved');
-            })
-            ->orWhereDoesntHave('approvalNotification');
+        $query->whereDoesntHave('approvalNotification', function ($q) {
+                $q->where('status', 'approved');
         });
                     
         $user = auth()->user(); 
