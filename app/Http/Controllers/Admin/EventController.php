@@ -41,73 +41,117 @@ class EventController extends Controller
     // }
 
 
-    protected function getCollection()
-    {
-        $type = request()->query('type');
+    
+   protected function getCollection()
+{
+    $type = request()->query('type');
+    $user = auth()->user();
 
-        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+    $query = $this->model
+        ->select(
+            'id',
+            'type',
+            'slug',
+            'name',
+            'title',
+            'status',
+            'priority',
+            'created_at',
+            'updated_at',
+            'updated_by'
+        )
+        ->with('approvalNotification', 'updated_user');
 
-        //  exclude approved
-              
-        $user = auth()->user(); 
+    /*
+    |--------------------------------------------------------------------------
+    | 1. EXCLUDE APPROVED ITEMS (GLOBAL RULE)
+    |--------------------------------------------------------------------------
+    | approval_notifications.status = enum
+    | events.status = 0/1 (not used here)
+    */
+    $query->where(function ($q) {
+        $q->whereHas('approvalNotification', function ($sub) {
+            $sub->where('status', '!=', 'approved');
+        })
+        ->orWhereDoesntHave('approvalNotification');
+    });
 
-            $query->where(function($q){
-                $q->whereHas('approvalNotification', function($sub){
-                    $sub->where('status', '!=', 'approved');
-                })
-                ->orWhereDoesntHave('approvalNotification');
-            });
+    /*
+    |--------------------------------------------------------------------------
+    | 2. LANGUAGE ACCESS BASED ON USER ROLES
+    |--------------------------------------------------------------------------
+    */
+    if ($user && $user->roles->isNotEmpty()) {
 
-        if ($user && $user->roles) {
+        $languageIds = \DB::table('language_roles')
+            ->whereIn('role_id', $user->roles->pluck('id'))
+            ->pluck('language_id');
 
-            $languageIds = \DB::table('language_roles')
-                ->whereIn('role_id', $user->roles->pluck('id'))
-                ->pluck('language_id');
+        if ($languageIds->isNotEmpty()) {
 
-            if ($languageIds->isNotEmpty()) {
-                
-                $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
+            $languageTypes = Language::whereIn('id', $languageIds)
+                ->pluck('type');
 
-                $query->whereIn('type', $languageTypes);
-            }
+            $query->whereIn('type', $languageTypes);
         }
-
-        //  Show en_draft / ar_draft only when en/ar status = 0
-
-        if ($user && $user->roles) {
-
-            $allowedDraftTypes = [];
-
-            foreach ($user->roles as $role) {
-
-                if ($role->name === 'English Content Writer') {
-                    $allowedDraftTypes[] = 'en_draft';
-                }
-
-                if ($role->name === 'Arabic Content Writer') {
-                    $allowedDraftTypes[] = 'ar_draft';
-                }
-            }
-
-            if (!empty($allowedDraftTypes)) {
-
-                $query->orWhere(function($q) use ($allowedDraftTypes) {
-
-                    $q->whereIn('type', $allowedDraftTypes)
-
-                    ->whereExists(function($sub){
-                        $sub->select(\DB::raw(1))
-                            ->from('events as e2')
-                            ->whereColumn('e2.slug', 'events.slug')
-                            ->whereIn('e2.type', ['en','ar'])
-                            ->where('e2.status', 0);
-                    });
-                });
-            }
-        }
-
-        return $query;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 3. DRAFT VISIBILITY RULE
+    |--------------------------------------------------------------------------
+    | en_draft → visible only if en.status = 0
+    | ar_draft → visible only if ar.status = 0
+    | Only for respective content writers
+    */
+    if ($user && $user->roles->isNotEmpty()) {
+
+        $allowedDraftTypes = [];
+
+        foreach ($user->roles as $role) {
+            if ($role->name === 'English Content Writer') {
+                $allowedDraftTypes[] = 'en_draft';
+            }
+
+            if ($role->name === 'Arabic Content Writer') {
+                $allowedDraftTypes[] = 'ar_draft';
+            }
+        }
+
+        if (!empty($allowedDraftTypes)) {
+
+            $query->where(function ($q) use ($allowedDraftTypes) {
+
+                // Allow normal (non-draft) content
+                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
+
+                // OR allow drafts only when base language is unpublished
+                ->orWhere(function ($draft) use ($allowedDraftTypes) {
+
+                    $draft->whereIn('type', $allowedDraftTypes)
+                          ->whereExists(function ($sub) {
+                              $sub->select(\DB::raw(1))
+                                  ->from('events as e2')
+                                  ->whereColumn('e2.slug', 'events.slug')
+                                  ->whereIn('e2.type', ['en', 'ar'])
+                                  ->where('e2.status', 0); // unpublished
+                          });
+                });
+            });
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 4. OPTIONAL TYPE FILTER FROM REQUEST
+    |--------------------------------------------------------------------------
+    */
+    if (!empty($type)) {
+        $query->where('type', $type);
+    }
+
+    return $query;
+}
 
  public function index(Request $request)
     {
