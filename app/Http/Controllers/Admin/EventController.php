@@ -42,64 +42,72 @@ class EventController extends Controller
 
 
     protected function getCollection()
-{
-    $type = request()->query('type');
+    {
+        $type = request()->query('type');
 
-    $query = $this->model->select(
-        'id','type','slug','name','title','status','priority','created_at','updated_at','updated_by'
-    )->with('approvalNotification','updated_user');
+        $query = $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
 
-    $user = auth()->user();
+        //  exclude approved
+              
+        $user = auth()->user(); 
 
-    // Get allowed draft types
-    $allowedDraftTypes = [];
-    if ($user && $user->roles) {
-        foreach ($user->roles as $role) {
-            if ($role->name === 'English Content Writer') {
-                $allowedDraftTypes[] = 'en_draft';
-            }
-            if ($role->name === 'Arabic Content Writer') {
-                $allowedDraftTypes[] = 'ar_draft';
-            }
-        }
-    }
-
-    // Main filter: exclude approved for non-admins and allow drafts
-    $query->where(function($q) use ($user, $allowedDraftTypes){
-        if ($user->roles->pluck('name')->contains('Admin')) {
-            $q->whereDoesntHave('approvalNotification', function($sub){
-                $sub->where('status', 'approved');
+            $query->where(function($q){
+                $q->whereHas('approvalNotification', function($sub){
+                    $sub->where('status', '!=', 'approved');
+                })
+                ->orWhereDoesntHave('approvalNotification');
             });
+
+        if ($user && $user->roles) {
+
+            $languageIds = \DB::table('language_roles')
+                ->whereIn('role_id', $user->roles->pluck('id'))
+                ->pluck('language_id');
+
+            if ($languageIds->isNotEmpty()) {
+                
+                $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
+
+                $query->whereIn('type', $languageTypes);
+            }
         }
 
-        if (!empty($allowedDraftTypes)) {
-            $q->orWhere(function($sub) use ($allowedDraftTypes){
-                $sub->whereIn('type', $allowedDraftTypes)
-                    ->whereExists(function($s){
-                        $s->select(\DB::raw(1))
-                          ->from('events as e2')
-                          ->whereColumn('e2.slug','events.slug')
-                          ->whereIn('e2.type',['en','ar'])
-                          ->where('e2.status',0);
+        //  Show en_draft / ar_draft only when en/ar status = 0
+
+        if ($user && $user->roles) {
+
+            $allowedDraftTypes = [];
+
+            foreach ($user->roles as $role) {
+
+                if ($role->name === 'English Content Writer') {
+                    $allowedDraftTypes[] = 'en_draft';
+                }
+
+                if ($role->name === 'Arabic Content Writer') {
+                    $allowedDraftTypes[] = 'ar_draft';
+                }
+            }
+
+            if (!empty($allowedDraftTypes)) {
+
+                $query->orWhere(function($q) use ($allowedDraftTypes) {
+
+                    $q->whereIn('type', $allowedDraftTypes)
+
+                    ->whereExists(function($sub){
+                        $sub->select(\DB::raw(1))
+                            ->from('events as e2')
+                            ->whereColumn('e2.slug', 'events.slug')
+                            ->whereIn('e2.type', ['en','ar'])
+                            ->where('e2.status', 0);
                     });
-            });
+                });
+            }
         }
-    });
 
-    // Filter by language roles
-    if ($user && $user->roles) {
-        $languageIds = \DB::table('language_roles')
-            ->whereIn('role_id', $user->roles->pluck('id'))
-            ->pluck('language_id');
-
-        if ($languageIds->isNotEmpty()) {
-            $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
-            $query->whereIn('type', $languageTypes);
-        }
+        return $query;
     }
-
-    return $query;
-}
 
  public function index(Request $request)
     {
