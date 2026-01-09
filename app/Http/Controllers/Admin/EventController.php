@@ -86,7 +86,8 @@ if (!$isWriter) {
                             ->from('events as base')
                             ->whereColumn('base.slug', 'events.slug')
                             ->whereIn('base.type', ['en', 'ar'])
-                            ->where('base.status', 0); 
+                            ->where('base.status', 0)
+                            ->whereNull('base.deleted_at');
                     });
             });
         }
@@ -124,21 +125,24 @@ if (!$isWriter) {
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->where(function ($q) use ($allowedDraftTypes) {
+            $query->where(function ($q) use ($user) {
 
-                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
-                  ->orWhere(function ($draft) use ($allowedDraftTypes) {
+                //  Always allow drafts
+                $q->whereIn('type', ['en_draft', 'ar_draft']);
 
-                      $draft->whereIn('type', $allowedDraftTypes)
-                            ->whereExists(function ($sub) {
-                                $sub->select(\DB::raw(1))
-                                    ->from('events as base')
-                                    ->whereColumn('base.slug', 'events.slug')
-                                    ->whereIn('base.type', ['en', 'ar'])
-                                    ->where('base.status', 0);
-                            });
-                  });
+                // Approval rules apply ONLY to non-drafts
+                $q->orWhere(function ($normal) {
+
+                    $normal->whereNotIn('type', ['en_draft', 'ar_draft'])
+                        ->where(function ($sub) {
+                            $sub->whereHas('approvalNotification', function ($a) {
+                                $a->where('status', '!=', 'approved');
+                            })
+                            ->orWhereDoesntHave('approvalNotification');
+                        });
+                });
             });
+
         }
     }
 
@@ -149,20 +153,10 @@ if (!$isWriter) {
     return $query;
 }
 
-
  public function index(Request $request)
     {
         if ($request->ajax()) {
             $collection = $this->getCollection();
-
-             // en_draft / ar_draft should be visible only when status = 1
-            $collection->where(function ($q) {
-                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
-                ->orWhere(function ($draft) {
-                    $draft->whereIn('type', ['en_draft', 'ar_draft'])
-                            ->where('status', 1);
-                });
-            });
 
             if(request()->get('data'))
             {
@@ -277,6 +271,7 @@ if (!$isWriter) {
     {
         $request->validated();
         $data = request()->all();
+        $data['status'] = 0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
         $data['is_featured_in_banner'] = isset($data['is_featured_in_banner'])?1:0;
@@ -298,9 +293,6 @@ if (!$isWriter) {
         } else {
             $data['type'] = 'en_draft';
         }
-
-        // status logic
-        $data['status'] = in_array($data['type'], ['en_draft', 'ar_draft']) ? 1 : 0;
 
         $this->model->fill($data);
         if($this->model->save())

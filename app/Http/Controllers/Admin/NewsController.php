@@ -108,7 +108,8 @@ if (!$isWriter) {
                             ->from('news as base')
                             ->whereColumn('base.slug', 'news.slug')
                             ->whereIn('base.type', ['en', 'ar'])
-                            ->where('base.status', 0); 
+                            ->where('base.status', 0)
+                             ->whereNull('base.deleted_at');
                     });
             });
         }
@@ -313,8 +314,6 @@ public function index(Request $request)
             $data['type'] = 'en_draft';
         }
 
-         // status logic
-        // $data['status'] = in_array($data['type'], ['en_draft', 'ar_draft']) ? 1 : 0;
 
         $this->model->fill($data);
 
