@@ -496,6 +496,8 @@
                                                 </label>
                                             </div>
                                         @endif
+
+                                        </div>
                                             <div class="form-group col-md-6 p-0  mb-3">
                                                 <div class="custom-control custom-switch switch-primary float-left">
                                                     <input type="checkbox" class="custom-control-input" value="1"
