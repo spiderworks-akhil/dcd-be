@@ -1,23 +1,51 @@
 @extends('admin._layouts.default')
 @section('content')
 <!-- Top Bar Start -->
-            <div class="topbar">
+            <div class="topbar">            
                 <!-- Navbar -->
-                <nav class="navbar-custom">
+                <nav class="navbar-custom">    
                     @include('admin._partials.profile_menu')
-
-                    <ul class="list-unstyled topbar-nav mb-0">
+        
+                    <ul class="list-unstyled topbar-nav mb-0">                        
                         <li>
                             <button class="nav-link button-menu-mobile">
                                 <i data-feather="menu" class="align-self-center topbar-icon"></i>
                             </button>
-                        </li>
-
+                        </li> 
+                                                   
                     </ul>
                 </nav>
                 <!-- end navbar-->
             </div>
             <!-- Top Bar End -->
+
+            <!-- Page Content-->
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- Page-Title -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="page-title-box sdsds">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="page-title">All News</h4>
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
+                                            <li class="breadcrumb-item active">All News</li>
+                                        </ol>
+                                    </div><!--end col-->
+                                    @if(auth()->user()->can($permissions['create']))
+                                     <div class="col-auto align-self-center">
+                                        <a class=" btn btn-sm btn-primary" href="{{route($route.'.create')}}" role="button"><i class="fas fa-plus mr-2"></i>Create New</a>
+                                    </div>
+                                    @endif
+                                </div><!--end row-->                                                              
+                            </div><!--end page-title-box-->
+                        </div><!--end col-->
+                    </div><!--end row-->
+                    <!-- end page title end breadcrumb -->
+
+
 
  @php
     $user = auth()->user();
@@ -32,32 +60,7 @@
     }
 @endphp
 
-            <!-- Page Content-->
-            <div class="page-content">
-                <div class="container-fluid">
-                    <!-- Page-Title -->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="page-title-box">
-                                <div class="row">
-                                    <div class="col">
-                                        <h4 class="page-title">All News</h4>
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
-                                            <li class="breadcrumb-item active">All News</li>
-                                        </ol>
-                                    </div><!--end col-->
-                                    @if(auth()->user()->can($permissions['create']))
-                                     <div class="col-auto align-self-center">
-                                        <a class=" btn btn-sm btn-primary" href="{{route($route.'.create')}}" role="button"><i class="fas fa-plus mr-2"></i>Create New</a>
-                                    </div>
-                                    @endif
-                                </div><!--end row-->
-                            </div><!--end page-title-box-->
-                        </div><!--end col-->
-                    </div><!--end row-->
-                    <!-- end page title end breadcrumb -->
-                    @include('admin.news._partials.search_settings', ['search_settings'=>$search_settings])
+                    @include('admin.events._partials.search_settings', ['search_settings'=>$search_settings])
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -75,10 +78,14 @@
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="table-width-120">Updated By</th>
                                             <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
-                                            <th class="nosort nosearch table-width-10">Status</th>
+                                            @if(!$isWriter)
+                                                <th class="nosort nosearch table-width-10">Status</th>
+                                            @endif
                                             <th class="nosort nosearch table-width-10">@if(auth()->user()->can($permissions['edit'])) Edit @else View @endif</th>
                                             <th class="nosort nosearch table-width-10">Delete</th>
                                         </tr>
+
+
 
                                         </thead>
 
@@ -89,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
 
                 </div><!-- container -->
 
@@ -98,12 +105,12 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-    <script>
+   <script>
     var hideStatus = {{ $isWriter ? 'true' : 'false' }};
-    hideStatus = hideStatus === true || hideStatus === 'true';
+    hideStatus = hideStatus === true || hideStatus === 'true'; // convert string to boolean
 
     var my_columns = [
-    {data: null, name: 'id', orderable: false, searchable: false}, 
+    {data: null, name: 'id', orderable: false, searchable: false}, // for nodisplay column
     {data: 'id', name: 'id'},
     {data: 'type', name: 'type'},
     {data: 'publication_status', name: 'publication_status'},
@@ -112,7 +119,9 @@
     {data: 'date', name: 'updated_at'},
     {data: 'updated_user', name: 'updated_user'},
     {data: 'priority', name: 'priority', className: 'text-center'},
-    {data: 'status', name: 'status', visible: !hideStatus}, 
+    @if(!$isWriter)
+    {data: 'status', name: 'status'},
+    @endif
     {data: 'action_edit', name: 'action_edit', orderable: false, searchable: false},
     {data: 'action_delete', name: 'action_delete', orderable: false, searchable: false}
 ];
@@ -122,5 +131,6 @@
     var slno_i = 0;
     var order = [0, 'desc'];
 </script>
+
     @parent
 @endsection

@@ -61,6 +61,7 @@ class NewsController extends Controller
 
     }
 
+
 protected function getCollection()
 {
     $type = request()->query('type');
@@ -173,21 +174,12 @@ if (!$isWriter) {
     return $query;
 }
 
-   
- public function index(Request $request)
+
+public function index(Request $request)
     {
         if ($request->ajax()) {
             $collection = $this->getCollection();
-
-             // en_draft / ar_draft should be visible only when status = 1
-            $collection->where(function ($q) {
-                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
-                ->orWhere(function ($draft) {
-                    $draft->whereIn('type', ['en_draft', 'ar_draft'])
-                            ->where('status', 1);
-                });
-            });
-
+        
             if(request()->get('data'))
             {
                 $collection = $this->applyFiltering($collection);
@@ -202,8 +194,6 @@ if (!$isWriter) {
             return view::make($this->views . '.index', array('search_settings'=>$search_settings));
         }
     }
-
-
 
     protected function setDTData($collection)
     {
@@ -307,7 +297,8 @@ if (!$isWriter) {
     {
         $request->validated();
         $data = request()->all();
-        
+
+        $data['status'] = 0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
@@ -323,7 +314,7 @@ if (!$isWriter) {
         }
 
          // status logic
-        $data['status'] = in_array($data['type'], ['en_draft', 'ar_draft']) ? 1 : 0;
+        // $data['status'] = in_array($data['type'], ['en_draft', 'ar_draft']) ? 1 : 0;
 
         $this->model->fill($data);
 
