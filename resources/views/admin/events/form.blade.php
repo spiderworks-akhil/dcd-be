@@ -107,10 +107,10 @@
                     @include('admin._partials.notifications')
                     @if ($obj->id)
                         <form method="POST" action="{{ route($route . '.update') }}" class="p-t-15" id="InputFrm"
-                            data-validate=true>
+                            data-validate=true data-copy-mode="name-to-slug-only">
                         @else
                             <form method="POST" action="{{ route($route . '.store') }}" class="p-t-15" id="InputFrm"
-                                data-validate=true>
+                                data-validate=true data-copy-mode="name-to-slug-only">
                     @endif
                     @csrf
                     <input type="hidden" name="id"
@@ -327,7 +327,7 @@
                                         <div class="form-group col-md-6">
                                             <label>Name</label>
                                             <input type="text" name="name"
-                                                class="form-control @if (!$obj->id) copy-name @endif"
+                                                class="form-control"
                                                 value="{{ $obj->name }}" required
                                                 @if ($roleName != 'Admin' && $obj->id) readonly @endif>
                                         </div>
@@ -1201,6 +1201,35 @@
             }
         </script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+            document.querySelectorAll('form[data-copy-mode="name-to-slug-only"]')
+                .forEach(function (form) {
+
+                    const nameInput  = form.querySelector('input[name="name"]');
+                    const slugInput  = form.querySelector('input[name="slug"]');
+
+                    if (!nameInput || !slugInput) return;
+
+                    nameInput.addEventListener('input', function (e) {
+
+                        e.stopImmediatePropagation();
+
+                        const value = this.value;
+
+                        slugInput.value = value
+                            .toLowerCase()
+                            .trim()
+                            .replace(/[^a-z0-9\s-]/g, '')
+                            .replace(/\s+/g, '-')
+                            .replace(/-+/g, '-');
+                    });
+
+                });
+
+            });
+            </script>
 
         @parent
     @endsection
