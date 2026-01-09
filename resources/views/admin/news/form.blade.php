@@ -90,7 +90,7 @@
                                             <div class="form-group col-md-12">
                                                 <label>Title</label>
                                                 <input type="text" name="title" class="form-control"
-                                                    value="{{ $obj->title }}">
+                                                    value="{{ $obj->title }}" required="">
                                             </div>
 
                                             {{-- <div class="form-group col-md-12">
@@ -692,6 +692,7 @@ document.getElementById('submitBtn').addEventListener('click', function() {
         },
         messages: {
             "name": "News name cannot be blank",
+             "title": "Title cannot be blank",
             slug: {
                 required: "Slug cannot be blank",
             },

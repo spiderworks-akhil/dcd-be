@@ -128,7 +128,7 @@
                                             <div class="form-group col-md-12">
                                                 <label>Title</label>
                                                 <input type="text" name="title" class="form-control"
-                                                    value="{{ $obj->title }}">
+                                                    value="{{ $obj->title }}" required="">
                                             </div>
                                             @fieldshow(events - title)
                                                 <div class="form-group col-md-12">
@@ -937,8 +937,8 @@
                     },
                 },
                 messages: {
-                    "name": "Blog name cannot be blank",
-                    "title": "Blog heading cannot be blank",
+                    "name": "Name cannot be blank",
+                    "title": "Title cannot be blank",
                     "start_time": "Start Time  cannot be blank",
                     "end_time": "End Time  cannot be blank",
                     "location": "Location  cannot be blank",
