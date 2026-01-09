@@ -720,16 +720,16 @@ public function changeStatus($id)
             $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
 
              // Update the draft status in the same table
-            $draftType = $obj->type . '_draft'; 
-            $draft = $this->model
-                ->where('type', $draftType)
-                ->where('slug',$obj->slug)
-                ->first();
+            // $draftType = $obj->type . '_draft'; 
+            // $draft = $this->model
+            //     ->where('type', $draftType)
+            //     ->where('slug',$obj->slug)
+            //     ->first();
 
-            if ($draft) {
-                $draft->status = 1;
-                $draft->save();
-            }
+            // if ($draft) {
+            //     $draft->status = 1;
+            //     $draft->save();
+            // }
         }
     }
 
