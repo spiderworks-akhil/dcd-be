@@ -19,6 +19,19 @@
             </div>
             <!-- Top Bar End -->
 
+ @php
+    $user = auth()->user();
+    $isWriter = false;
+    if ($user && $user->roles->isNotEmpty()) {
+        foreach ($user->roles as $role) {
+            if (in_array($role->name, ['English Content Writer', 'Arabic Content Writer'])) {
+                $isWriter = true;
+                break;
+            }
+        }
+    }
+@endphp
+
             <!-- Page Content-->
             <div class="page-content">
                 <div class="container-fluid">
@@ -86,22 +99,28 @@
 @endsection
 @section('footer')
     <script>
-        var my_columns = [
-            {data: 'updated_at', name: 'updated_at'},
-            {data: null, name: 'id'},
-            {data: 'type', name: 'type'},
-            {data: 'publication_status', name: 'publication_status'},
-            {data: 'slug', name: 'slug'},
-            {data: 'name', name: 'name'},
-            {data: 'date', name: 'updated_at'},
-            {data: 'updated_user', name: 'updated_user'},
-            {data: 'priority', name: 'priority', className: 'text-center'},
-            {data: 'status', name: 'status'},
-            {data: 'action_edit', name: 'action_edit'},
-            {data: 'action_delete', name: 'action_delete'}
-        ];
-        var slno_i = 0;
-        var order = [0, 'desc'];
-    </script>
+    var hideStatus = {{ $isWriter ? 'true' : 'false' }};
+    hideStatus = hideStatus === true || hideStatus === 'true';
+
+    var my_columns = [
+    {data: null, name: 'id', orderable: false, searchable: false}, 
+    {data: 'id', name: 'id'},
+    {data: 'type', name: 'type'},
+    {data: 'publication_status', name: 'publication_status'},
+    {data: 'slug', name: 'slug'},
+    {data: 'name', name: 'name'},
+    {data: 'date', name: 'updated_at'},
+    {data: 'updated_user', name: 'updated_user'},
+    {data: 'priority', name: 'priority', className: 'text-center'},
+    {data: 'status', name: 'status', visible: !hideStatus}, 
+    {data: 'action_edit', name: 'action_edit', orderable: false, searchable: false},
+    {data: 'action_delete', name: 'action_delete', orderable: false, searchable: false}
+];
+
+
+
+    var slno_i = 0;
+    var order = [0, 'desc'];
+</script>
     @parent
 @endsection

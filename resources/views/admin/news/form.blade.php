@@ -314,19 +314,41 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-6  mb-4">
-                                            <div class="custom-control custom-switch switch-primary float-left">
-                                                <input type="checkbox" class="custom-control-input" value="1"
-                                                    id="status" name="status"
-                                                    @if (!$obj->id || $obj->status == 1) checked="" @endif>
-                                                <label class="custom-control-label" for="status">
-                                                     @if (!$obj->id || $obj->status == 1)
-                                                        Publish
-                                                    @else
+                                       @php
+                                            $user = auth()->user();
+                                            $isWriter = $user && $user->roles
+                                                ->pluck('name')
+                                                ->intersect(['English Content Writer','Arabic Content Writer'])
+                                                ->isNotEmpty();
+                                        @endphp
+
+                                        <div class="form-group col-6 mb-4">
+
+
+                                         @if($obj->id && $isWriter)
+                                                    <span class="badge badge-secondary">
                                                         Draft
-                                                    @endif
-                                                </label>
-                                            </div>
+                                                    </span>
+
+                                                <input type="hidden" name="status" value="1">
+
+                                            @else
+
+                                                <div class="custom-control custom-switch switch-primary float-left">
+                                                    <input type="checkbox"
+                                                        class="custom-control-input"
+                                                        value="1"
+                                                        id="status"
+                                                        name="status"
+                                                        @if (!$obj->id || $obj->status == 1) checked @endif>
+
+                                                    <label class="custom-control-label" for="status">
+                                                        {{ (!$obj->id || $obj->status == 1) ? 'Publish' : 'Draft' }}
+                                                    </label>
+                                                </div>
+
+                                            @endif
+
                                         </div>
 
                                         <div class="form-group col-6  mb-4">

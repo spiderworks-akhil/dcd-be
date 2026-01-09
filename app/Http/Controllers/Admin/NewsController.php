@@ -61,37 +61,13 @@ class NewsController extends Controller
 
     }
 
-    // protected function getCollection() {
-    //     $type = request()->query('type');
-    //     if ($type) {
-    //         return $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at')->where('type', $type);
-    //     }
-    //     return $this->model->select('id','type', 'slug', 'name', 'title', 'status', 'priority', 'created_at', 'updated_at');
-    // }
-
-     public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $collection = $this->getCollection();
-            if(request()->get('data'))
-            {
-                $collection = $this->applyFiltering($collection);
-            }
-            else
-                $collection->where('status', 'Open');
-            return $this->setDTData($collection)->make(true);
-        } else {
-            
-            $search_settings = $this->getSearchSettings();
-            return view::make($this->views . '.index', array('search_settings'=>$search_settings));
-        }
-    }
-
-
-  protected function getCollection()
+protected function getCollection()
 {
     $type = request()->query('type');
     $user = auth()->user();
+
+    $isWriter = $user && $user->roles->pluck('name')->intersect(['English Content Writer','Arabic Content Writer'])->isNotEmpty();
+
 
     $query = $this->model
         ->select(
@@ -100,7 +76,6 @@ class NewsController extends Controller
             'slug',
             'name',
             'title',
-            'status',
             'priority',
             'created_at',
             'updated_at',
@@ -108,7 +83,9 @@ class NewsController extends Controller
         )
         ->with(['approvalNotification', 'updated_user']);
 
-
+if (!$isWriter) {
+    $query->addSelect('status');
+}
     $query->where(function ($q) use ($user) {
 
         // Normal rule: not approved OR no approval record
@@ -168,21 +145,24 @@ class NewsController extends Controller
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->where(function ($q) use ($allowedDraftTypes) {
+            $query->where(function ($q) use ($user) {
 
-                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
-                  ->orWhere(function ($draft) use ($allowedDraftTypes) {
+                // ✅ Always allow drafts
+                $q->whereIn('type', ['en_draft', 'ar_draft']);
 
-                      $draft->whereIn('type', $allowedDraftTypes)
-                            ->whereExists(function ($sub) {
-                                $sub->select(\DB::raw(1))
-                                    ->from('news as base')
-                                    ->whereColumn('base.slug', 'news.slug')
-                                    ->whereIn('base.type', ['en', 'ar'])
-                                    ->where('base.status', 0);
-                            });
-                  });
+                // ⬇️ Approval rules apply ONLY to non-drafts
+                $q->orWhere(function ($normal) {
+
+                    $normal->whereNotIn('type', ['en_draft', 'ar_draft'])
+                        ->where(function ($sub) {
+                            $sub->whereHas('approvalNotification', function ($a) {
+                                $a->where('status', '!=', 'approved');
+                            })
+                            ->orWhereDoesntHave('approvalNotification');
+                        });
+                });
             });
+
         }
     }
 
@@ -192,6 +172,38 @@ class NewsController extends Controller
 
     return $query;
 }
+
+   
+ public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $collection = $this->getCollection();
+
+             // en_draft / ar_draft should be visible only when status = 1
+            $collection->where(function ($q) {
+                $q->whereNotIn('type', ['en_draft', 'ar_draft'])
+                ->orWhere(function ($draft) {
+                    $draft->whereIn('type', ['en_draft', 'ar_draft'])
+                            ->where('status', 1);
+                });
+            });
+
+            if(request()->get('data'))
+            {
+                $collection = $this->applyFiltering($collection);
+            }
+            else
+                $collection->where('status', 'Open');
+            $collection->orderBy('updated_at', 'desc');
+            return $this->setDTData($collection)->make(true);
+        } else {
+            
+            $search_settings = $this->getSearchSettings();
+            return view::make($this->views . '.index', array('search_settings'=>$search_settings));
+        }
+    }
+
+
 
     protected function setDTData($collection)
     {
@@ -295,7 +307,6 @@ class NewsController extends Controller
     {
         $request->validated();
         $data = request()->all();
-        $data['status'] = 0;
         
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
@@ -311,6 +322,8 @@ class NewsController extends Controller
             $data['type'] = 'en_draft';
         }
 
+         // status logic
+        $data['status'] = in_array($data['type'], ['en_draft', 'ar_draft']) ? 1 : 0;
 
         $this->model->fill($data);
 
@@ -598,6 +611,8 @@ public function submitApprovalForm(Request $request, $approvalId)
         'action_date' => now(),
     ]);
 
+    // Deactivate approval record once approved
+  
     if (!$record) {
         $record = $approval->notifiable_type === 'Event'
             ? Event::find($approval->notifiable_id)
@@ -719,6 +734,13 @@ public function submitApprovalForm(Request $request, $approvalId)
                     }
 
                 }
+
+             //  HIDE DRAFT AFTER APPROVAL
+            if (in_array($model->type, ['en_draft', 'ar_draft'])) {
+                $model->update([
+                    'status' => 0,
+                ]);
+            }
 
             } else {
                 $model->update([
@@ -881,6 +903,19 @@ public function changeStatus($id)
                 : 'send_ar_content_notification';
 
             $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
+
+            //  Update the draft status in the same table
+            $draftType = $obj->type . '_draft'; 
+            $draft = $this->model
+                ->where('type', $draftType)
+                ->where('slug',$obj->slug)
+                ->first();
+
+            if ($draft) {
+                $draft->status = 1;
+                $draft->save();
+            }
+
         }
     }
 

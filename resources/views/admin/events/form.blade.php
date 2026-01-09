@@ -475,10 +475,18 @@
                                 <div class="card-body">
                                     <div class="row m-0">
                                         <div class="form-group col-md-6 p-0  mb-3">
+                                            @php
+                                            $user = auth()->user();
+                                            $isWriter = $user && $user->roles->pluck('name')->intersect(['English Content Writer','Arabic Content Writer'])->isNotEmpty();
+                                        @endphp
+
+                                        @if($obj->id && $isWriter)
+                                            <span class="badge badge-secondary">Draft</span>
+                                        @else
                                             <div class="custom-control custom-switch switch-primary float-left">
                                                 <input type="checkbox" class="custom-control-input" value="1"
                                                     id="status" name="status"
-                                                    @if (!$obj->id || $obj->status == 1) checked="" @endif>
+                                                    @if (!$obj->id || $obj->status == 1) checked @endif>
                                                 <label class="custom-control-label" for="status">
                                                     @if (!$obj->id || $obj->status == 1)
                                                         Publish
@@ -487,7 +495,7 @@
                                                     @endif
                                                 </label>
                                             </div>
-                                        </div>
+                                        @endif
                                             <div class="form-group col-md-6 p-0  mb-3">
                                                 <div class="custom-control custom-switch switch-primary float-left">
                                                     <input type="checkbox" class="custom-control-input" value="1"
