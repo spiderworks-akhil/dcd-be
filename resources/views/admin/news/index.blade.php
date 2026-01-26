@@ -1,18 +1,18 @@
 @extends('admin._layouts.default')
 @section('content')
 <!-- Top Bar Start -->
-            <div class="topbar">
+            <div class="topbar">            
                 <!-- Navbar -->
-                <nav class="navbar-custom">
+                <nav class="navbar-custom">    
                     @include('admin._partials.profile_menu')
-
-                    <ul class="list-unstyled topbar-nav mb-0">
+        
+                    <ul class="list-unstyled topbar-nav mb-0">                        
                         <li>
                             <button class="nav-link button-menu-mobile">
                                 <i data-feather="menu" class="align-self-center topbar-icon"></i>
                             </button>
-                        </li>
-
+                        </li> 
+                                                   
                     </ul>
                 </nav>
                 <!-- end navbar-->
@@ -25,7 +25,7 @@
                     <!-- Page-Title -->
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="page-title-box">
+                            <div class="page-title-box sdsds">
                                 <div class="row">
                                     <div class="col">
                                         <h4 class="page-title">All News</h4>
@@ -39,12 +39,28 @@
                                         <a class=" btn btn-sm btn-primary" href="{{route($route.'.create')}}" role="button"><i class="fas fa-plus mr-2"></i>Create New</a>
                                     </div>
                                     @endif
-                                </div><!--end row-->
+                                </div><!--end row-->                                                              
                             </div><!--end page-title-box-->
                         </div><!--end col-->
                     </div><!--end row-->
                     <!-- end page title end breadcrumb -->
-                    @include('admin.news._partials.search_settings', ['search_settings'=>$search_settings])
+
+
+
+ @php
+    $user = auth()->user();
+    $isWriter = false;
+    if ($user && $user->roles->isNotEmpty()) {
+        foreach ($user->roles as $role) {
+            if (in_array($role->name, ['English Content Writer', 'Arabic Content Writer'])) {
+                $isWriter = true;
+                break;
+            }
+        }
+    }
+@endphp
+
+                    @include('admin.events._partials.search_settings', ['search_settings'=>$search_settings])
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -62,10 +78,14 @@
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="table-width-120">Updated By</th>
                                             <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
-                                            <th class="nosort nosearch table-width-10">Status</th>
+                                            @if(!$isWriter)
+                                                <th class="nosort nosearch table-width-10">Status</th>
+                                            @endif
                                             <th class="nosort nosearch table-width-10">@if(auth()->user()->can($permissions['edit'])) Edit @else View @endif</th>
                                             <th class="nosort nosearch table-width-10">Delete</th>
                                         </tr>
+
+
 
                                         </thead>
 
@@ -76,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
 
                 </div><!-- container -->
 
@@ -85,23 +105,32 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-    <script>
-        var my_columns = [
-            {data: 'updated_at', name: 'updated_at'},
-            {data: null, name: 'id'},
-            {data: 'type', name: 'type'},
-            {data: 'publication_status', name: 'publication_status'},
-            {data: 'slug', name: 'slug'},
-            {data: 'name', name: 'name'},
-            {data: 'date', name: 'updated_at'},
-            {data: 'updated_user', name: 'updated_user'},
-            {data: 'priority', name: 'priority', className: 'text-center'},
-            {data: 'status', name: 'status'},
-            {data: 'action_edit', name: 'action_edit'},
-            {data: 'action_delete', name: 'action_delete'}
-        ];
-        var slno_i = 0;
-        var order = [0, 'desc'];
-    </script>
+   <script>
+    var hideStatus = {{ $isWriter ? 'true' : 'false' }};
+    hideStatus = hideStatus === true || hideStatus === 'true'; // convert string to boolean
+
+    var my_columns = [
+    {data: null, name: 'id', orderable: false, searchable: false}, // for nodisplay column
+    {data: 'id', name: 'id'},
+    {data: 'type', name: 'type'},
+    {data: 'publication_status', name: 'publication_status'},
+    {data: 'slug', name: 'slug'},
+    {data: 'name', name: 'name'},
+    {data: 'date', name: 'updated_at'},
+    {data: 'updated_user', name: 'updated_user'},
+    {data: 'priority', name: 'priority', className: 'text-center'},
+    @if(!$isWriter)
+    {data: 'status', name: 'status'},
+    @endif
+    {data: 'action_edit', name: 'action_edit', orderable: false, searchable: false},
+    {data: 'action_delete', name: 'action_delete', orderable: false, searchable: false}
+];
+
+
+
+    var slno_i = 0;
+    var order = [0, 'desc'];
+</script>
+
     @parent
 @endsection

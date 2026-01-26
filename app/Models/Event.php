@@ -48,11 +48,13 @@ class Event extends Model
         return $this->belongsTo(Media::class, 'video_id');
     }
 
-     public function approvalNotification()
+   public function approvalNotification()
     {
         return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
-            ->where('notifiable_type', 'Event')->latest('created_at');
+            ->where('notifiable_type', 'Event')
+            ->latestOfMany(); 
     }
+
 
     public function getPublicationStatusAttribute()
     {

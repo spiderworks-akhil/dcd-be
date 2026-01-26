@@ -32,10 +32,11 @@ class News extends Model
         return $this->belongsTo(Author::class, 'published_by_author_id');
     }
 
-    public function approvalNotification()
+public function approvalNotification()
     {
         return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
-            ->where('notifiable_type', 'News')->latest('created_at');
+            ->where('notifiable_type', 'News')
+            ->latestOfMany(); 
     }
 
     public function getPublicationStatusAttribute()

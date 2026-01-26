@@ -25,6 +25,7 @@
     </div>
     <!-- Top Bar End -->
 
+    
     <!-- Page Content-->
     <div class="page-content">
         <div class="container-fluid">
@@ -68,10 +69,10 @@
                     @include('admin._partials.notifications')
                     @if ($obj->id)
                         <form method="POST" action="{{ route($route . '.update') }}" class="p-t-15" id="InputFrm"
-                            data-validate=true>
+                            data-validate=true data-copy-mode="name-to-slug-only">
                         @else
                             <form method="POST" action="{{ route($route . '.store') }}" class="p-t-15" id="InputFrm"
-                                data-validate=true>
+                                data-validate=true data-copy-mode="name-to-slug-only">
                     @endif
                     @csrf
                     <input type="hidden" name="id"
@@ -85,28 +86,11 @@
                                 <div class="card-body">
                                     <div>
                                         <div class="row m-0">
-                                            <div class="form-group col-md-6">
-                                                <label>Name</label>
-                                              {{-- <input type="text" name="name" class="form-control @if (!$obj->id) copy-name @endif"  value="{{ $obj->name }}" required  @if($obj->status == 1 && $roleName != 'Admin') readonly @endif> --}}
-                                              <input type="text" name="name" class="form-control @if (!$obj->id) copy-name @endif"  value="{{ $obj->name }}" required  @if (($roleName != 'Admin') && $obj->id )readonly @endif >
-
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label>Slug (for url)</label>
-                                                <input type="text" name="slug" class="form-control"
-                                                    value="{{ $obj->slug }}" id="slug"
-                                                    @if (($roleName != 'Admin') && $obj->id )readonly @endif>
-                                                <small class="text-muted">
-                                                    The “slug” is the URL-friendly version of the name. It is usually all
-                                                    lowercase and contains only letters, numbers, and hyphens.
-                                                </small>
-                                            </div>
-
+                                            
                                             <div class="form-group col-md-12">
                                                 <label>Title</label>
                                                 <input type="text" name="title" class="form-control"
-                                                    value="{{ $obj->title }}">
+                                                    value="{{ $obj->title }}" required="">
                                             </div>
 
                                             {{-- <div class="form-group col-md-12">
@@ -144,6 +128,25 @@
                                     SEO
                                 </div>
                                 <div class="card-body row">
+
+                                    <div class="form-group col-md-6">
+                                        <label>Name</label>
+                                        {{-- <input type="text" name="name" class="form-control @if (!$obj->id) copy-name @endif"  value="{{ $obj->name }}" required  @if($obj->status == 1 && $roleName != 'Admin') readonly @endif> --}}
+                                        <input type="text" name="name" class="form-control" value="{{ $obj->name }}" required  @if (($roleName != 'Admin') && $obj->id )readonly @endif >
+
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label>Slug (for url)</label>
+                                        <input type="text" name="slug" class="form-control"
+                                            value="{{ $obj->slug }}" id="slug"
+                                            @if (($roleName != 'Admin') && $obj->id )readonly @endif>
+                                        <small class="text-muted">
+                                            The “slug” is the URL-friendly version of the name. It is usually all
+                                            lowercase and contains only letters, numbers, and hyphens.
+                                        </small>
+                                    </div>
+
 
                                     <div class="form-group col-md-12">
                                         <label>Bottom content</label>
@@ -221,14 +224,14 @@
                                                         @if ($approval_notification)
                                                             @if ($approval_notification->status === 'approved')
                                                                 <!-- Approved: show send again button -->
-                                                                <button type="button" class="btn btn-primary btn-sm"
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
                                                                     Send for Approval
                                                                 </button>
 
                                                             @elseif($approval_notification->status === 'rejected')
                                                                 <!-- Rejected: allow send again -->
-                                                                <button type="button" class="btn btn-primary btn-sm"
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
                                                                     Send for Approval
                                                                 </button>
@@ -241,7 +244,7 @@
                                                             @endif
                                                         @else
                                                             <!-- No approval record yet: show send button -->
-                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                            <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                 onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
                                                                 Send for Approval
                                                             </button>
@@ -311,19 +314,41 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-6  mb-4">
-                                            <div class="custom-control custom-switch switch-primary float-left">
-                                                <input type="checkbox" class="custom-control-input" value="1"
-                                                    id="status" name="status"
-                                                    @if (!$obj->id || $obj->status == 1) checked="" @endif>
-                                                <label class="custom-control-label" for="status">
-                                                     @if (!$obj->id || $obj->status == 1)
-                                                        Publish
-                                                    @else
+                                       @php
+                                            $user = auth()->user();
+                                            $isWriter = $user && $user->roles
+                                                ->pluck('name')
+                                                ->intersect(['English Content Writer','Arabic Content Writer'])
+                                                ->isNotEmpty();
+                                        @endphp
+
+                                        <div class="form-group col-6 mb-4">
+
+
+                                         @if($obj->id && $isWriter)
+                                                    <span class="badge badge-secondary">
                                                         Draft
-                                                    @endif
-                                                </label>
-                                            </div>
+                                                    </span>
+
+                                                <input type="hidden" name="status" value="1">
+
+                                            @else
+
+                                                <div class="custom-control custom-switch switch-primary float-left">
+                                                    <input type="checkbox"
+                                                        class="custom-control-input"
+                                                        value="1"
+                                                        id="status"
+                                                        name="status"
+                                                        @if (!$obj->id || $obj->status == 1) checked @endif>
+
+                                                    <label class="custom-control-label" for="status">
+                                                        {{ (!$obj->id || $obj->status == 1) ? 'Publish' : 'Draft' }}
+                                                    </label>
+                                                </div>
+
+                                            @endif
+
                                         </div>
 
                                         <div class="form-group col-6  mb-4">
@@ -667,6 +692,7 @@ document.getElementById('submitBtn').addEventListener('click', function() {
         },
         messages: {
             "name": "News name cannot be blank",
+             "title": "Title cannot be blank",
             slug: {
                 required: "Slug cannot be blank",
             },
@@ -703,6 +729,18 @@ document.getElementById('submitBtn').addEventListener('click', function() {
 
     <script>
         function sendForApproval(id, slug, type, model) {
+
+            if (isFormDirty) {
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unsaved Changes Detected',
+                    text: 'Please save changes before sending for approval.',
+                    confirmButtonText: 'OK'
+                });
+
+                return;
+            }
             Swal.fire({
                 title: 'Send Approval Email?',
                 text: "Do you want to send the approval email?",
@@ -758,7 +796,35 @@ document.getElementById('submitBtn').addEventListener('click', function() {
         }
     </script>
 
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
+    document.querySelectorAll('form[data-copy-mode="name-to-slug-only"]')
+        .forEach(function (form) {
+
+            const nameInput  = form.querySelector('input[name="name"]');
+            const slugInput  = form.querySelector('input[name="slug"]');
+
+            if (!nameInput || !slugInput) return;
+
+            nameInput.addEventListener('input', function (e) {
+
+                e.stopImmediatePropagation();
+
+                const value = this.value;
+
+                slugInput.value = value
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-');
+            });
+
+        });
+
+    });
+</script>
 
 
     @parent

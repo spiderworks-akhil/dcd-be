@@ -6,13 +6,15 @@ use View, Redirect;
 use App\Models\Event;
 use App\Models\Media;
 
+use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\EventMedia;
 use Illuminate\Http\Request;
-use App\Models\EventSchedule;
 
+use App\Models\EventSchedule;
 use App\Traits\ResourceTrait;
+use App\Services\MailSettings;
 use App\Models\ApprovalNotification;
 use App\Http\Requests\Admin\EventRequest;
 use App\Http\Controllers\Admin\BaseController as Controller;
@@ -38,40 +40,131 @@ class EventController extends Controller
     //     return $this->model->select('id','type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at');
     // }
 
+protected function getCollection()
+{
+    $type = request()->query('type');
+    $user = auth()->user();
 
-    protected function getCollection()
-    {
-        $query = $this->model->select('id', 'type', 'slug', 'name', 'priority', 'status', 'created_at', 'updated_at','updated_by')->with('approvalNotification','updated_user');
+    $isWriter = $user && $user->roles->pluck('name')->intersect(['English Content Writer','Arabic Content Writer'])->isNotEmpty();
 
-        $user = auth()->user();
 
-        if ($user && $user->roles) {
+    $query = $this->model
+        ->select(
+            'id',
+            'type',
+            'slug',
+            'name',
+            'title',
+            'priority',
+            'created_at',
+            'updated_at',
+            'updated_by'
+        )
+        ->with(['approvalNotification', 'updated_user']);
 
-            $languageIds = \DB::table('language_roles')
-                ->whereIn('role_id', $user->roles->pluck('id'))
-                ->pluck('language_id');
+if (!$isWriter) {
+    $query->addSelect('status');
+}
+    $query->where(function ($q) use ($user) {
 
-            if ($languageIds->isNotEmpty()) {
-                
-                $languageTypes = Language::whereIn('id', $languageIds)->pluck('type');
+        // Normal rule: not approved OR no approval record
+        $q->where(function ($normal) {
+            $normal->whereHas('approvalNotification', function ($sub) {
+                $sub->where('status', '!=', 'approved');
+            })
+            ->orWhereDoesntHave('approvalNotification');
+        });
 
-                $query->whereIn('type', $languageTypes);
+        // Exception ONLY for NON-admin users
+        if ($user && !$user->hasRole('Admin')) {
+
+            $q->orWhere(function ($exception) {
+
+                $exception->whereIn('type', ['en_draft', 'ar_draft'])
+                    ->whereExists(function ($sub) {
+                        $sub->select(\DB::raw(1))
+                            ->from('events as base')
+                            ->whereColumn('base.slug', 'events.slug')
+                            ->whereIn('base.type', ['en', 'ar'])
+                            ->where('base.status', 0)
+                            ->whereNull('base.deleted_at');
+                    });
+            });
+        }
+    });
+
+    //  LANGUAGE ACCESS BASED ON USER ROLES
+    if ($user && $user->roles->isNotEmpty()) {
+
+        $languageIds = \DB::table('language_roles')
+            ->whereIn('role_id', $user->roles->pluck('id'))
+            ->pluck('language_id');
+
+        if ($languageIds->isNotEmpty()) {
+
+            $languageTypes = Language::whereIn('id', $languageIds)
+                ->pluck('type');
+
+            $query->whereIn('type', $languageTypes);
+        }
+    }
+
+    // DRAFT VISIBILITY RULE (ROLE-BASED)
+    if ($user && $user->roles->isNotEmpty()) {
+
+        $allowedDraftTypes = [];
+
+        foreach ($user->roles as $role) {
+            if ($role->name === 'English Content Writer') {
+                $allowedDraftTypes[] = 'en_draft';
+            }
+            if ($role->name === 'Arabic Content Writer') {
+                $allowedDraftTypes[] = 'ar_draft';
             }
         }
 
-        return $query;
+        if (!empty($allowedDraftTypes)) {
+
+            $query->where(function ($q) use ($user) {
+
+                //  Always allow drafts
+                $q->whereIn('type', ['en_draft', 'ar_draft']);
+
+                // Approval rules apply ONLY to non-drafts
+                $q->orWhere(function ($normal) {
+
+                    $normal->whereNotIn('type', ['en_draft', 'ar_draft'])
+                        ->where(function ($sub) {
+                            $sub->whereHas('approvalNotification', function ($a) {
+                                $a->where('status', '!=', 'approved');
+                            })
+                            ->orWhereDoesntHave('approvalNotification');
+                        });
+                });
+            });
+
+        }
     }
+
+    if (!empty($type)) {
+        $query->where('type', $type);
+    }
+
+    return $query;
+}
 
  public function index(Request $request)
     {
         if ($request->ajax()) {
             $collection = $this->getCollection();
+
             if(request()->get('data'))
             {
                 $collection = $this->applyFiltering($collection);
             }
             else
                 $collection->where('status', 'Open');
+            $collection->orderBy('updated_at', 'desc');
             return $this->setDTData($collection)->make(true);
         } else {
             
@@ -570,6 +663,110 @@ protected function applyFiltering($collection)
     return $collection;
 }
 
+public function destroy($id)
+{
+    $id = decrypt($id);
 
+    $obj = $this->model->find($id);
+
+    if (!$obj) {
+        return $this->redirect('notfound');
+    }
+
+    $slug = $obj->slug;
+    $type = $obj->type; 
+
+    $obj->delete();
+
+    if ($type === 'en' || $type === 'ar') {
+
+        $draftType = $type . '_draft'; 
+
+        $this->model
+            ->where('slug', $slug)
+            ->where('type', $draftType)
+            ->delete();
+    }
+
+    return $this->redirect('removed', 'success', 'index');
+}
+
+
+
+public function changeStatus($id)
+{
+    $id = decrypt($id);
+
+    $obj = $this->model->find($id);
+
+    if (!$obj) {
+        return $this->redirect('notfound');
+    }
+
+    $previousStatus = $obj->status;
+
+    $newStatus = ($previousStatus == '1') ? '0' : '1';
+
+    if ($previousStatus == '1' && $newStatus == '0') {
+
+        if (in_array($obj->type, ['en', 'ar'])) {
+
+            $modelName = class_basename($obj);
+
+            $notification_mail = $obj->type === 'en'
+                ? 'send_en_content_notification'
+                : 'send_ar_content_notification';
+
+            $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
+
+             // Update the draft status in the same table
+            // $draftType = $obj->type . '_draft'; 
+            // $draft = $this->model
+            //     ->where('type', $draftType)
+            //     ->where('slug',$obj->slug)
+            //     ->first();
+
+            // if ($draft) {
+            //     $draft->status = 1;
+            //     $draft->save();
+            // }
+        }
+    }
+
+    $obj->status = $newStatus;
+    $obj->save();
+
+    return $this->redirect('Status updated successfully', 'success', 'index');
+}
+
+private function sendStatusMail($obj, $modelName, $notification_mail, $newStatus)
+{
+    try {
+        $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+
+        if (empty($recipientEmail)) {
+            $warning = "⚠️ No recipient email configured for record ID {$obj->id}\n";
+            \Log::warning(trim($warning));
+            return;
+        }
+
+        $statusText = ($newStatus == '1') ? 'Published' : 'Draft';
+
+        // Send mail
+        $mail = new MailSettings;
+        $mail->to($recipientEmail)->send(new \App\Mail\StatusChangeNotificationMail($obj, $modelName, $statusText));
+
+
+        $success = "✅ Status mail sent for record ID {$obj->id} to {$recipientEmail}\n";
+        \Log::info(trim($success));
+
+    } catch (\Throwable $e) {
+        $error = "❌ Failed to send status mail for record ID {$obj->id}: "
+            . $e->getMessage() . "\n"
+            . $e->getTraceAsString() . "\n\n";
+
+        \Log::error("Failed to send status mail for record ID {$obj->id}: {$e->getMessage()}");
+    }
+}
 
 }

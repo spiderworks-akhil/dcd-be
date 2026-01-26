@@ -53,48 +53,9 @@
     <script src="{{ asset('admin/plugins/ckeditor/build/ckeditor.js') }}"></script>
     <script src="{{ asset('admin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
-    {{-- <script>
-        let isFormDirty = false;
+   
 
-        const form = document.getElementById('InputFrm');
-        form.addEventListener('input', () => {
-            isFormDirty = true;
-        });
-        form.addEventListener('submit', () => {
-            isFormDirty = false;
-        });
-
-
-        // Warn on clicking internal links
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (isFormDirty) {
-                    e.preventDefault(); // stop default navigation
-
-                    $.confirm({
-                        title: 'Unsaved Changes',
-                        content: 'You have unsaved changes. Do you want to leave without saving?',
-                        buttons: {
-                            leave: {
-                                text: 'Leave',
-                                btnClass: 'btn-red',
-                                action: function() {
-                                    window.location.href = link.href;
-                                }
-                            },
-                            stay: {
-                                text: 'Stay',
-                                btnClass: 'btn-blue',
-                                action: function() {
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        });
-    </script> --}}
-
+    
     <script>
     let isFormDirty = false;
 
@@ -136,49 +97,43 @@
 
     // Warn on clicking internal links
     document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = link.getAttribute('href') || '';
+    link.addEventListener('click', function(e) {
 
-            // Skip empty, hash, or JavaScript links
-            if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
-                return;
-            }
+        // Skip approval buttons
+        if (this.classList.contains('skip-dirty-check')) {
+            return;
+        }
 
-            // Skip excluded routes
-            if (excludedRoutes.some(route => href.includes(route))) {
-                return;
-            }
+        const href = this.getAttribute('href') || '';
 
-            // Check if base URL is changing
-            const targetUrl = new URL(href, window.location.href);
-            const targetBaseUrl = targetUrl.origin + targetUrl.pathname;
-            const isMainUrlChanging = targetBaseUrl !== currentBaseUrl;
+        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+        if (excludedRoutes.some(route => href.includes(route))) return;
 
-            if (isFormDirty && isMainUrlChanging) {
-                e.preventDefault(); // stop default navigation
+        const targetUrl = new URL(href, window.location.href);
+        const targetBaseUrl = targetUrl.origin + targetUrl.pathname;
 
-                $.confirm({
-                    title: 'Unsaved Changes',
-                    content: 'You have unsaved changes. Do you want to leave without saving?',
-                    buttons: {
-                        leave: {
-                            text: 'Leave',
-                            btnClass: 'btn-red',
-                            action: function() {
-                                window.location.href = link.href;
-                            }
-                        },
-                        stay: {
-                            text: 'Stay',
-                            btnClass: 'btn-blue',
-                            action: function() {}
-                        }
-                    }
-                });
-            }
-        });
+        if (isFormDirty && targetBaseUrl !== currentBaseUrl) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Unsaved Changes',
+                text: 'You have unsaved changes. Do you want to leave without saving?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Leave',
+                cancelButtonText: 'Stay',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+            });
+        }
     });
+});
+
 </script>
+
 
 
     @endsection
