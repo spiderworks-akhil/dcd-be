@@ -231,7 +231,10 @@ class CommonController extends Controller
 
         if($search = $request->search){
             $faqs->where(function($query) use($search){
-                $query->whereRaw("MATCH (question) AGAINST ('{$search}')")->orWhereRaw("MATCH (answer) AGAINST ('{$search}')")->orWhere('question', 'LIKE', '%'.$search.'%')->orWhere('answer', 'LIKE', '%'.$search.'%');
+                $query->whereRaw("MATCH (question) AGAINST (? IN BOOLEAN MODE)", [$search])
+                      ->orWhereRaw("MATCH (answer) AGAINST (? IN BOOLEAN MODE)", [$search])
+                      ->orWhere('question', 'LIKE', '%'.$search.'%')
+                      ->orWhere('answer', 'LIKE', '%'.$search.'%');
             });
         }
         $faqs = $faqs->paginate($limit);
@@ -246,7 +249,10 @@ class CommonController extends Controller
 
         if($search = $request->search){
             $leads->where(function($query) use($search){
-                $query->whereRaw("MATCH (name) AGAINST ('{$search}')")->orWhereRaw("MATCH (email) AGAINST ('{$search}')")->orWhere('phone_number', 'LIKE', '%'.$search.'%')->orWhere('created_at', 'LIKE', '%'.$search.'%');
+                $query->whereRaw("MATCH (name) AGAINST (? IN BOOLEAN MODE)", [$search])
+                      ->orWhereRaw("MATCH (email) AGAINST (? IN BOOLEAN MODE)", [$search])
+                      ->orWhere('phone_number', 'LIKE', '%'.$search.'%')
+                      ->orWhere('created_at', 'LIKE', '%'.$search.'%');
             });
         }
         $leads = $leads->paginate($limit);

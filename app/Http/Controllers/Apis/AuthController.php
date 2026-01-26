@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Services\MailSettings;
 use App\Mail\Admin\RequestOtp;
@@ -45,13 +46,13 @@ class AuthController extends Controller
                     }
                 }
 
-                $otp = rand(111111,999999);
-                $admin->otp = $otp;
-                $admin->otp_sent_on = date('Y-m-d H:i:s');
+                $otp = random_int(100000, 999999);
+                $admin->otp = Hash::make($otp);
+                $admin->otp_sent_on = now();
                 $admin->save();
 
                 $mail = new MailSettings;
-        		$mail->to($admin->email)->send(new RequestOtp($admin->name, $admin->otp));
+        		$mail->to($admin->email)->send(new RequestOtp($admin->name, $otp));
 
                 $data = ['id'=>$admin->id];
 
@@ -86,7 +87,7 @@ class AuthController extends Controller
             return response()->json(['success'=>false, 'error' => 'This account is temporarily suspended due to suspicious activity.'], 475);
         }
 
-        if($admin->otp != $data['otp']){
+        if(!Hash::check($data['otp'], $admin->otp)){
             $admin->opt_try_count = $admin->opt_try_count+1;
             $admin->save();
             return response()->json(['success'=>false, 'error' => 'Invalid Otp.'], 400);

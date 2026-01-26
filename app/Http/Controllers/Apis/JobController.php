@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Http\Requests\Job as JobRequest;
@@ -28,7 +29,12 @@ class JobController extends Controller
             return new JobCollection($jobs);
         }
         catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Job listing failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => request()->ip()
+            ]);
+            return response()->json(['error' => 'Unable to fetch jobs. Please try again later.'], 500);
         }
     }
 
@@ -47,7 +53,13 @@ class JobController extends Controller
             return new JobResource($job);
         }
         catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Job view failed', [
+                'error' => $e->getMessage(),
+                'slug' => $slug ?? null,
+                'trace' => $e->getTraceAsString(),
+                'ip' => request()->ip()
+            ]);
+            return response()->json(['error' => 'Unable to fetch job details. Please try again later.'], 500);
         }
     }
 
@@ -90,7 +102,12 @@ class JobController extends Controller
             return response()->json(['success' => true]);
         }
         catch(\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Job application failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => request()->ip()
+            ]);
+            return response()->json(['error' => 'Unable to submit application. Please try again later.'], 500);
         }
     }
 

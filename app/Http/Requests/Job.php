@@ -22,7 +22,29 @@ class Job extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'message' => 'nullable|string|max:5000',
+            'resume' => 'required|file|mimes:pdf,doc,docx|max:5120', // 5MB max
+            'careers_id' => 'nullable|integer|exists:jobs,id',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Please enter your name.',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'resume.required' => 'Please upload your resume.',
+            'resume.mimes' => 'Resume must be a PDF, DOC, or DOCX file.',
+            'resume.max' => 'Resume file size must not exceed 5MB.',
         ];
     }
 }
