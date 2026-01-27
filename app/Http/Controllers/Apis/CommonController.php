@@ -6,13 +6,17 @@ use DB;
 use App\Models\Faq;
 use App\Traits\App;
 use App\Models\Lead;
+use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Widget;
 use App\Models\Setting;
+use App\Models\MenuItem;
 use App\Models\FrontendPage;
 use Illuminate\Http\Request;
 use App\Services\MailSettings;
+use App\Traits\ClientInfoTrait;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\FaqCollection;
 use App\Http\Resources\LeadCollection;
@@ -20,14 +24,11 @@ use App\Http\Resources\WidgetResource;
 use App\Http\Resources\CommonPageResource;
 use App\Http\Resources\Lead as LeadResource;
 use App\Http\Resources\FrontendPage as ResourcesFrontendPage;
-use App\Models\Menu;
-use App\Models\MenuItem;
-use Illuminate\Support\Facades\Http;
 
 
 class CommonController extends Controller
 {
-    use App;
+    use App,ClientInfoTrait;
 
     public function GeneralSettings()
     {
