@@ -103,7 +103,7 @@ class CommonController extends Controller
     {
         try {
             $response = Http::withOptions(['verify' => true])->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => "6Lcs4KorAAAAAN8N_kr84faq1EQA9w6LSKBMRlN1",
+                'secret' => "6Ld0pVcsAAAAAB5iOQyYyUmcD2hUDvrfvCaBr9j0",
                 'response' => $request->recaptcha_token,
             ]);
 
