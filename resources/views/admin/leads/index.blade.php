@@ -75,7 +75,7 @@
                                     <th class="nodisplay"></th>
                                     <th class="table-width-10 text-center">ID</th>
                                     <th class="table-width-120">Name</th>
-                                    <th class="table-width-120">Phone</th>
+                                    {{-- <th class="table-width-120">Phone</th> --}}
                                     <th class="table-width-120">Type</th>
                                     <th class="table-width-120">Received On</th>
                                     <th class="nosort nosearch table-width-10 text-center">Status</th>
@@ -107,7 +107,6 @@
             {data: 'created_at', name: 'created_at'},
             {data: null, name: 'id'},
             {data: 'name', name: 'name'},
-            {data: 'phone_number', name: 'phone_number'},
             {data: 'lead_type', name: 'lead_type'},
             {data: 'date', name: 'date'},
             {data: 'status', name: 'status'},
