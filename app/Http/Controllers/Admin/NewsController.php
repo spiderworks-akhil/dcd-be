@@ -7,6 +7,7 @@ use App\Models\Tag;
 use view, Redirect;
 
 use App\Models\News;
+use App\Models\Admin;
 use App\Models\Event;
 use App\Models\Setting;
 use App\Models\Category;
@@ -67,8 +68,9 @@ protected function getCollection()
     $type = request()->query('type');
     $user = auth()->user();
 
-    $isWriter = $user && $user->roles->pluck('name')->intersect(['English Content Writer','Arabic Content Writer'])->isNotEmpty();
-
+    $isWriter = $user && $user->roles->pluck('name')
+        ->intersect(['English Content Writer','Arabic Content Writer'])
+        ->isNotEmpty();
 
     $query = $this->model
         ->select(
@@ -80,28 +82,36 @@ protected function getCollection()
             'priority',
             'created_at',
             'updated_at',
-            'updated_by'
+            'updated_by',
+            'created_by'
         )
         ->with(['approvalNotification', 'updated_user']);
 
-if (!$isWriter) {
-    $query->addSelect('status');
-}
-    $query->where(function ($q) use ($user) {
+    if (!$isWriter) {
+        $query->addSelect('status');
+    }
 
-        // Normal rule: not approved OR no approval record
+    /* ================= APPROVAL VISIBILITY ================= */
+    $query->where(function ($q) use ($user, $isWriter) {
+
+        // pending / rejected / no approval → everyone
         $q->where(function ($normal) {
             $normal->whereHas('approvalNotification', function ($sub) {
-                $sub->where('status', '!=', 'approved');
+                $sub->whereIn('status', ['pending', 'rejected']);
             })
             ->orWhereDoesntHave('approvalNotification');
         });
 
+        // approved → writers only
+        if ($isWriter) {
+            $q->orWhereHas('approvalNotification', function ($sub) {
+                $sub->where('status', 'approved');
+            });
+        }
+
         // Exception ONLY for NON-admin users
         if ($user && !$user->hasRole('Admin')) {
-
             $q->orWhere(function ($exception) {
-
                 $exception->whereIn('type', ['en_draft', 'ar_draft'])
                     ->whereExists(function ($sub) {
                         $sub->select(\DB::raw(1))
@@ -109,13 +119,13 @@ if (!$isWriter) {
                             ->whereColumn('base.slug', 'news.slug')
                             ->whereIn('base.type', ['en', 'ar'])
                             ->where('base.status', 0)
-                             ->whereNull('base.deleted_at');
+                            ->whereNull('base.deleted_at');
                     });
             });
         }
     });
 
-    //  LANGUAGE ACCESS BASED ON USER ROLES
+    /* ================= LANGUAGE ACCESS ================= */
     if ($user && $user->roles->isNotEmpty()) {
 
         $languageIds = \DB::table('language_roles')
@@ -131,7 +141,7 @@ if (!$isWriter) {
         }
     }
 
-    // DRAFT VISIBILITY RULE (ROLE-BASED)
+    /* ================= DRAFT VISIBILITY ================= */
     if ($user && $user->roles->isNotEmpty()) {
 
         $allowedDraftTypes = [];
@@ -147,24 +157,22 @@ if (!$isWriter) {
 
         if (!empty($allowedDraftTypes)) {
 
-            $query->where(function ($q) use ($user) {
+            $query->where(function ($q) {
 
-                // ✅ Always allow drafts
-                $q->whereIn('type', ['en_draft', 'ar_draft']);
+                // always allow drafts
+                $q->whereIn('type', ['en_draft', 'ar_draft'])
 
-                // ⬇️ Approval rules apply ONLY to non-drafts
-                $q->orWhere(function ($normal) {
-
+                // non-drafts must NOT be approved
+                ->orWhere(function ($normal) {
                     $normal->whereNotIn('type', ['en_draft', 'ar_draft'])
                         ->where(function ($sub) {
                             $sub->whereHas('approvalNotification', function ($a) {
-                                $a->where('status', '!=', 'approved');
+                                $a->whereIn('status', ['pending', 'rejected']);
                             })
                             ->orWhereDoesntHave('approvalNotification');
                         });
                 });
             });
-
         }
     }
 
@@ -174,6 +182,7 @@ if (!$isWriter) {
 
     return $query;
 }
+
 
 
 public function index(Request $request)
@@ -214,14 +223,29 @@ public function index(Request $request)
             })
            ->addColumn('publication_status', function ($row) {
 
-            $status = optional($row->approvalNotification)->status ?? null;
-
+            // $status = optional($row->approvalNotification)->status ?? null;
+            $status = optional($row->approvalNotification)->status;
             if (is_null($status) && str_contains($row->type, '_draft')) {
                 return '<span class="text-secondary">Pending</span>';
             }
+          if ($row->status == 0 && !str_contains($row->type, '_draft')) {
+            return '<span class="text-secondary">Non published</span>';
+          }
+
 
             switch ($status) {
                 case 'approved':
+
+                     $enStatus = $this->model
+                        ->where('slug', $row->slug)
+                        ->where('type', 'en')
+                        ->whereNull('deleted_at')
+                        ->value('status');
+
+                    //  If base EN is not published, show Non published for draft
+                    if ($enStatus === 0 && str_contains($row->type, '_draft')) {
+                        return '<span class="text-secondary">Non published</span>';
+                    }
                     return '<span class="text-success">Approved</span>';
 
                 case 'rejected':
@@ -236,8 +260,12 @@ public function index(Request $request)
         })->addColumn('updated_user', function ($row) {
                 return optional($row->updated_user)->name ?? '-';
             })
-            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user']);
+        ->addColumn('created_user', function ($row) {
+            return optional($row->created_user)->name ?? '-';
+        })
+            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user','created_user']);
     }
+
 
     protected function getSearchSettings(){}
 
@@ -332,6 +360,7 @@ public function index(Request $request)
 
         $id = decrypt($data['id']);
          if($obj = $this->model->find($id)){
+            $oldStatus = $obj->status;
             $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
@@ -341,6 +370,16 @@ public function index(Request $request)
             {
                 if(!empty($data['tags']))
                     $obj->tags()->sync($data['tags']);
+
+            // ✅ Check if status changed from 1 → 0 AND type is en/ar
+            if ($oldStatus == 1 && $data['status'] == 0 && in_array($obj->type, ['en', 'ar'])) {
+                $this->sendStatusMail(
+                    $obj,
+                    'News',                  
+                    $data['status'],        
+                    $obj->type               
+                );
+            }
             }
 
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('News successfully updated!');
@@ -350,6 +389,7 @@ public function index(Request $request)
                     ->withInput(request()->all());
         }
     }
+
 
 
 public function GetType(Request $request)
@@ -888,11 +928,7 @@ public function changeStatus($id)
 
             $modelName = class_basename($obj);
 
-            $notification_mail = $obj->type === 'en'
-                ? 'send_en_content_notification'
-                : 'send_ar_content_notification';
-
-            $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
+            $this->sendStatusMail($obj, $modelName, $newStatus, $obj->type);
 
             //  Update the draft status in the same table
             // $draftType = $obj->type . '_draft'; 
@@ -917,10 +953,18 @@ public function changeStatus($id)
 
 
 
-private function sendStatusMail($obj, $modelName, $notification_mail, $newStatus)
+private function sendStatusMail($obj, $modelName, $newStatus, $type)
 {
     try {
-        $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+        if (in_array($type, ['ar', 'en'])) {
+            $draftKey = $type . '_draft';
+
+           $slug = $obj->slug;
+        }
+        $created_by = News::where('slug',$slug)->where('type',$draftKey)->pluck('created_by')->first();
+        $admin = Admin::find($created_by);
+
+        $recipientEmail = $admin?->email;
 
         if (empty($recipientEmail)) {
             $warning = "⚠️ No recipient email configured for record ID {$obj->id}\n";

@@ -395,8 +395,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer text-muted">
-                                    <button class="btn btn-sm btn-primary float-right">Save</button>
+                               <div class="card-footer text-muted">
+                                    <button
+                                        class="btn btn-sm btn-primary float-right"
+                                        @if(isset($approval_notification) && $approval_notification->status === 'approved') disabled @endif
+                                    >
+                                        Save
+                                    </button>
                                 </div>
                             </div>
 
@@ -450,7 +455,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            @if ($obj->id && isset($allowedTypes) && count($allowedTypes) > 1)
+                                             @if ($obj->id && isset($allowedTypes) && count($allowedTypes) > 1 && $roleName == 'Admin')
                                                 <div class="card-footer text-muted">
                                                     <button class="btn btn-sm btn-primary float-right" type="button"
                                                         id="submitBtn">Go</button>
