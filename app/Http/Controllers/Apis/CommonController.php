@@ -102,11 +102,11 @@ class CommonController extends Controller
       public function contact_save(ContactRequest $request)
     {
         try {
+            $recaptchaSecret = env('RECAPTCHA_SECRET');
             $response = Http::withOptions(['verify' => true])->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => "6Ld0pVcsAAAAAB5iOQyYyUmcD2hUDvrfvCaBr9j0",
+                'secret'   => $recaptchaSecret,
                 'response' => $request->recaptcha_token,
             ]);
-
             $recaptchaResult = $response->json();
 
             if (!($recaptchaResult['success'] ?? false)) {
