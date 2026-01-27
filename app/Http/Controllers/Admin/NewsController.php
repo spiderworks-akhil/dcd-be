@@ -920,7 +920,9 @@ public function changeStatus($id)
 private function sendStatusMail($obj, $modelName, $notification_mail, $newStatus)
 {
     try {
-        $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+        // $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+        $recipientEmail = $approval->creator->email ?? null;
+
 
         if (empty($recipientEmail)) {
             $warning = "⚠️ No recipient email configured for record ID {$obj->id}\n";
