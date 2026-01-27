@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use View, Redirect;
+use App\Models\Admin;
 use App\Models\Event;
-use App\Models\Media;
 
+use App\Models\Media;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\EventMedia;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use App\Models\EventSchedule;
 use App\Traits\ResourceTrait;
 use App\Services\MailSettings;
@@ -58,22 +59,30 @@ protected function getCollection()
             'priority',
             'created_at',
             'updated_at',
-            'updated_by'
+            'updated_by',
+            'created_by'
         )
         ->with(['approvalNotification', 'updated_user']);
 
 if (!$isWriter) {
     $query->addSelect('status');
 }
-    $query->where(function ($q) use ($user) {
+    $query->where(function ($q) use ($user, $isWriter) {
 
-        // Normal rule: not approved OR no approval record
+       // pending / rejected / no approval → everyone
         $q->where(function ($normal) {
             $normal->whereHas('approvalNotification', function ($sub) {
-                $sub->where('status', '!=', 'approved');
+                $sub->whereIn('status', ['pending', 'rejected']);
             })
             ->orWhereDoesntHave('approvalNotification');
         });
+
+        // approved → writers only
+        if ($isWriter) {
+            $q->orWhereHas('approvalNotification', function ($sub) {
+                $sub->where('status', 'approved');
+            });
+        }
 
         // Exception ONLY for NON-admin users
         if ($user && !$user->hasRole('Admin')) {
@@ -175,7 +184,8 @@ if (!$isWriter) {
 
 
 
-    protected function setDTData($collection) {
+    protected function setDTData($collection)
+    {
         $route = $this->route;
 
          // Language mapping
@@ -192,14 +202,29 @@ if (!$isWriter) {
             })
            ->addColumn('publication_status', function ($row) {
 
-            $status = optional($row->approvalNotification)->status ?? null;
-
+            // $status = optional($row->approvalNotification)->status ?? null;
+            $status = optional($row->approvalNotification)->status;
             if (is_null($status) && str_contains($row->type, '_draft')) {
                 return '<span class="text-secondary">Pending</span>';
             }
+          if ($row->status == 0 && !str_contains($row->type, '_draft')) {
+            return '<span class="text-secondary">Non published</span>';
+          }
+
 
             switch ($status) {
                 case 'approved':
+
+                     $enStatus = $this->model
+                        ->where('slug', $row->slug)
+                        ->where('type', 'en')
+                        ->whereNull('deleted_at')
+                        ->value('status');
+
+                    //  If base EN is not published, show Non published for draft
+                    if ($enStatus === 0 && str_contains($row->type, '_draft')) {
+                        return '<span class="text-secondary">Non published</span>';
+                    }
                     return '<span class="text-success">Approved</span>';
 
                 case 'rejected':
@@ -211,10 +236,13 @@ if (!$isWriter) {
                 default:
                     return '<span class="text-primary">Published</span>';
             }
-        }) ->addColumn('updated_user', function ($row) {
+        })->addColumn('updated_user', function ($row) {
                 return optional($row->updated_user)->name ?? '-';
             })
-            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user']);
+        ->addColumn('created_user', function ($row) {
+            return optional($row->created_user)->name ?? '-';
+        })
+            ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user','created_user']);
     }
 
     protected function getSearchSettings(){}
@@ -354,6 +382,7 @@ if (!$isWriter) {
         $data = request()->all();
         $id = decrypt($data['id']);
          if($obj = $this->model->find($id)){
+             $oldStatus = $obj->status;
             $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
@@ -388,6 +417,15 @@ if (!$isWriter) {
                 }
                 $this->saveGalleryMedia($obj, $data);
                 $this->saveYoutube($obj, $data);
+
+                 if ($oldStatus == 1 && $data['status'] == 0 && in_array($obj->type, ['en', 'ar'])) {
+                    $this->sendStatusMail(
+                        $obj,
+                        'News',                  
+                        $data['status'],        
+                        $obj->type               
+                    );
+                }
             }
 
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Event successfully updated!');
@@ -712,12 +750,8 @@ public function changeStatus($id)
         if (in_array($obj->type, ['en', 'ar'])) {
 
             $modelName = class_basename($obj);
-
-            $notification_mail = $obj->type === 'en'
-                ? 'send_en_content_notification'
-                : 'send_ar_content_notification';
-
-            $this->sendStatusMail($obj, $modelName, $notification_mail, $newStatus);
+           
+             $this->sendStatusMail($obj, $modelName, $newStatus, $obj->type);
 
              // Update the draft status in the same table
             // $draftType = $obj->type . '_draft'; 
@@ -739,11 +773,19 @@ public function changeStatus($id)
     return $this->redirect('Status updated successfully', 'success', 'index');
 }
 
-private function sendStatusMail($obj, $modelName, $notification_mail, $newStatus)
+private function sendStatusMail($obj, $modelName, $newStatus, $type)
 {
     try {
-        $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
-        
+        // $recipientEmail = Setting::where('code', $notification_mail)->value('value_text');
+         if (in_array($type, ['ar', 'en'])) {
+            $draftKey = $type . '_draft';
+
+           $slug = $obj->slug;
+        }
+        $created_by = Event::where('slug',$slug)->where('type',$draftKey)->pluck('created_by')->first();
+        $admin = Admin::find($created_by);
+
+        $recipientEmail = $admin?->email;
 
         if (empty($recipientEmail)) {
             $warning = "⚠️ No recipient email configured for record ID {$obj->id}\n";

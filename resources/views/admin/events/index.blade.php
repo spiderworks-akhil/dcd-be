@@ -76,6 +76,7 @@
                                             <th class="table-width-120" width="190">Slug</th>
                                             <th class="table-width-120" width="190">Name</th>
                                             <th class="table-width-120">Last Updated On</th>
+                                            <th class="table-width-120">Created By</th>
                                             <th class="table-width-120">Updated By</th>
                                             <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
                                             <th class="nosort nosearch table-width-10">Status</th>
@@ -115,6 +116,7 @@
     {data: 'slug', name: 'slug'},
     {data: 'name', name: 'name'},
     {data: 'date', name: 'updated_at'},
+    {data: 'created_user', name: 'created_user'},
     {data: 'updated_user', name: 'updated_user'},
     {data: 'priority', name: 'priority', className: 'text-center'},
     {data: 'status', name: 'status', visible: !hideStatus}, 

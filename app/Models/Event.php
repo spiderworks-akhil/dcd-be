@@ -70,5 +70,12 @@ class Event extends Model
         return null;
     }
     
+   public function created_user(): ?BelongsTo
+    {
+        if ($this->checkColumn('created_by'))
+            return $this->belongsTo(Admin::class, 'created_by');
+
+        return null;
+    }
 
 }

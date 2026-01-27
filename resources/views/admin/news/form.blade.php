@@ -395,13 +395,8 @@
                                         </div>
                                     </div>
                                 </div>
-                               <div class="card-footer text-muted">
-                                    <button
-                                        class="btn btn-sm btn-primary float-right"
-                                        @if(isset($approval_notification) && $approval_notification->status === 'approved') disabled @endif
-                                    >
-                                        Save
-                                    </button>
+                                <div class="card-footer text-muted">
+                                    <button class="btn btn-sm btn-primary float-right">Save</button>
                                 </div>
                             </div>
 
