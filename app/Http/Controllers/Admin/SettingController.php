@@ -108,8 +108,8 @@ class SettingController extends Controller
             }
 
         }
-        $this->clear_cache();
-        return redirect()->back();
+        // $this->clear_cache();
+        return redirect()->back()->withSuccess('Settings successfully saved!');
         // return Redirect::to(route('admin.settings.index'))->withSuccess('Settings successfully saved!');
     }
 
