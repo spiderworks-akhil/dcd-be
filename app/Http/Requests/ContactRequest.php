@@ -23,9 +23,9 @@ class ContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|max:255',
+            'name' => 'required|max:255',
             'phone_number' => 'nullable|max:20',
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
             'message' => ['nullable', new Spam()]
         ];
     }
@@ -33,10 +33,8 @@ class ContactRequest extends FormRequest
     public function messages()
     {
         return[
-            'name.required' => 'Please enter your first name',
-            'phone_number.required' => 'Please enter your phone number',
+            'name.required' => 'Please enter your name',
             'email.email' => 'Please enter a valid email address',
-            'phone_number.required' => 'Please enter your phone number',
         ];
     }
 }

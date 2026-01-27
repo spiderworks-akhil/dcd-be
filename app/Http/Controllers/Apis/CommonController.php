@@ -22,6 +22,8 @@ use App\Http\Resources\Lead as LeadResource;
 use App\Http\Resources\FrontendPage as ResourcesFrontendPage;
 use App\Models\Menu;
 use App\Models\MenuItem;
+use Illuminate\Support\Facades\Http;
+
 
 class CommonController extends Controller
 {
@@ -97,30 +99,55 @@ class CommonController extends Controller
         return $pages;
     }
 
-    public function contact_save(ContactRequest $request){
+      public function contact_save(ContactRequest $request)
+    {
+        try {
+            $response = Http::withOptions(['verify' => true])->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => "6Lcs4KorAAAAAN8N_kr84faq1EQA9w6LSKBMRlN1",
+                'response' => $request->recaptcha_token,
+            ]);
 
-        $request->validated();
-        $contact = new Lead;
-        $contact->fill($request->all());
-        $contact->save();
+            $recaptchaResult = $response->json();
 
-        $notif_emails = Setting::where('code', 'contact_notification_email_ids')->first();
+            if (!($recaptchaResult['success'] ?? false)) {
+                return response()->json(['success' => false, 'message' => 'reCAPTCHA verification failed', 'res' => $recaptchaResult, 'token' => $request->recaptcha_token, "secret" => "6Lcg5S4rAAAAAAW2aeRoynmtFyjrhxKSzUZb4jkA"], 422);
+            }
 
-        if($notif_emails && trim($notif_emails->value_text) != '')
-        {
-            $mail = new MailSettings;
-            $email_array = explode(',', $notif_emails->value_text);
-            array_filter($email_array, function($value){
-                return !is_null($value) && $value !== '';
-            });
-            $email_array = array_map('trim', $email_array);
-            $mail->to($email_array)->send(new \App\Mail\Contact($contact));
+            $data = $request->all();
+            $data['ip_address'] = $this->get_ip();
+            $notif_emails = Setting::where('code', 'contact_notification_email_ids')->first();
+
+            $request->validated();
+            $contact = new Lead;
+            $contact->fill($data);
+            $contact->save();
+
+            if($notif_emails && trim($notif_emails->value_text) != '')
+            {
+                $mail = new MailSettings;
+                $email_array = explode(',', $notif_emails->value_text);
+                array_filter($email_array, function($value){
+                    return !is_null($value) && $value !== '';
+                });
+                $email_array = array_map('trim', $email_array);
+                $mail->to($email_array)->send(new \App\Mail\Contact($contact));
+            }
+            if($contact->email){
+                    $thank_mail = new MailSettings;
+                    $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
+            }
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+
+            \Log::error('Error in contact_save method: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while saving the contact.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-        if($contact->email){
-                $thank_mail = new MailSettings;
-                $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
-        }
-        return response()->json(['success' => true]);
     }
 
   public function list_urls($page)
