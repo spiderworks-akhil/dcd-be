@@ -127,7 +127,7 @@
                                             
                                             <div class="form-group col-md-12">
                                                 <label>Title</label>
-                                                <input type="text" name="title" class="form-control"
+                                                <input type="text" name="title" class="form-control copy-title"
                                                     value="{{ $obj->title }}" required="">
                                             </div>
                                             @fieldshow(events - title)
@@ -860,6 +860,15 @@
         <!-- end page content -->
     @endsection
     @section('footer')
+
+    <script>
+        $(".copy-title").keyup(function () {
+        var name = $(this).val();
+        $("input[name='slug']").val(slugify(name));
+        $("input[name='name']").val(name);
+        $("input[name='browser_title']").val(name);
+    });
+</script>
         <script src="{{ asset('admin/plugins/jquery-datetimepicker/js/jquery.datetimepicker.full.min.js') }}"
             type="text/javascript"></script>
         <script type="text/javascript">
