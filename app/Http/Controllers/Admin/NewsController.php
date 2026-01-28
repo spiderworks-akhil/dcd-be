@@ -718,6 +718,12 @@ public function submitApprovalForm(Request $request, $approvalId)
                     $target->approved_date = now();
                     $target->status = 1;
                     $target->save();
+
+                      DB::table($target->getTable())
+                        ->where('id', $target->id)
+                        ->update([
+                            'created_by' => $source->created_by,
+                        ]);
                 } else {
                     foreach ($copyFields as $field) {
                         if (isset($source->$field)) {
