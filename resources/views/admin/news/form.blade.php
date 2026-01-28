@@ -222,14 +222,14 @@
 
                                                    <div class="col-md-6">
                                                         @if ($approval_notification)
-                                                            @if ($approval_notification->status === 'approved')
+                                                            {{-- @if ($approval_notification->status === 'approved') --}}
                                                                 <!-- Approved: show send again button -->
-                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
+                                                                {{-- <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
                                                                     Send for Approval
-                                                                </button>
+                                                                </button> --}}
 
-                                                            @elseif($approval_notification->status === 'rejected')
+                                                            @if($approval_notification->status === 'rejected')
                                                                 <!-- Rejected: allow send again -->
                                                                 <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
                                                                     onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
@@ -250,18 +250,52 @@
                                                             </button>
                                                         @endif
                                                     </div>
+                                                    @php
+                                                        $type = $obj->type;
 
+                                                        // Check if the draft has a published version with status 0 (unpublished)
+                                                         $news_published = false;
+
+                                                        // Determine base type for checking published content
+                                                        $base_type = $type;
+                                                        if ($type == 'en_draft' || $type == 'ar_draft') {
+                                                            $base_type = str_replace('_draft', '', $type); // remove _draft
+                                                        }
+
+                                                        // Check if published news exists
+                                                        $news_published = App\Models\News::where('slug', $obj->slug)
+                                                            ->where('type', $base_type) 
+                                                            ->where('status', 0)       
+                                                            ->whereNull('deleted_at')
+                                                            ->exists();
+                                                        // Determine final publication label
+                                                        $publication_label = '';
+                                                        if(isset($approval_notification->status)){
+                                                            if($approval_notification->status == 'approved' && $news_published){
+                                                                $publication_label = 'Unpublished ⚠️';
+                                                            } elseif($approval_notification->status == 'approved') {
+                                                                $publication_label = 'Approved ✅';
+                                                            } elseif($approval_notification->status == 'rejected') {
+                                                                $publication_label = 'Rejected ❌';
+                                                            } elseif($approval_notification->status == 'pending') {
+                                                                $publication_label = 'Waiting for approval ⏳';
+                                                            }
+                                                        }
+                                                    @endphp
                                                     
                                                     <div class="text-left">
-                                                        @if ($approval_notification && $approval_notification->status != null)
+                                                        @if($approval_notification && $approval_notification->status != null)
                                                             <div class="p-2 border rounded">
-                                                                @if ($approval_notification->status == 'approved')
-                                                                    <span class="badge badge-success">Approved ✅</span>
-                                                                @elseif($approval_notification->status == 'rejected')
-                                                                    <span class="badge badge-danger">Rejected ❌</span>
-                                                                @elseif ($approval_notification->status == 'pending')
-                                                                    <span class="badge badge-warning">Waiting for approval</span>
-                                                                @endif
+                                                                <span class="badge 
+                                                                    @if($publication_label == 'Approved ✅') badge-success
+                                                                    @elseif($publication_label == 'Rejected ❌') badge-danger
+                                                                    @elseif($publication_label == 'Waiting for approval ⏳') badge-warning
+                                                                    @elseif($publication_label == 'Unpublished ⚠️') badge-secondary
+                                                                    @endif
+                                                                ">
+                                                                    {{ $publication_label }}
+                                                                </span>
+
                                                                 <p class="mt-1 mb-0"><strong>Remarks:</strong>
                                                                     {{ $approval_notification->remarks ?? 'No remarks provided' }}
                                                                 </p>
@@ -269,8 +303,6 @@
                                                         @endif
                                                     </div>
                                                 @endif
-
-
 
                                             </div>
                                         @endif
@@ -395,9 +427,42 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer text-muted">
-                                    <button class="btn btn-sm btn-primary float-right">Save</button>
-                                </div>
+                                @php
+                                $news_published = false;
+                                $type = $obj->type;
+                                // Determine base type for checking published content
+                                $base_type = $type;
+                                if ($type == 'en_draft' || $type == 'ar_draft') {
+                                    $base_type = str_replace('_draft', '', $type); 
+                                }
+
+                                // Check if published news exists
+                                $news_published = App\Models\News::where('slug', $obj->slug)
+                                    ->where('type', $base_type) 
+                                    ->where('status', 1)        
+                                    ->whereNull('deleted_at')
+                                    ->exists();
+                            @endphp
+
+                              
+                              <div class="card-footer text-muted">
+                                @if($news_published && $isWriter && $approval_notification->status == 'approved')
+                                    <div class="text-center mt-2">
+                                        <button 
+                                            class="btn btn-sm btn-warning rounded-pill" 
+                                            disabled
+                                            style="font-size: 0.75rem; cursor: not-allowed;"
+                                        >
+                                            ⚠️ Published content cannot be edited
+                                        </button>
+                                    </div>
+
+                                @else
+                                    <button class="btn btn-sm btn-primary float-right">
+                                        Save
+                                    </button>
+                                @endif
+                            </div>
                             </div>
 
 

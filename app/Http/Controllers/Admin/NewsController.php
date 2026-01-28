@@ -229,7 +229,7 @@ public function index(Request $request)
                 return '<span class="text-secondary">Pending</span>';
             }
           if ($row->status == 0 && !str_contains($row->type, '_draft')) {
-            return '<span class="text-secondary">Non published</span>';
+            return '<span class="text-secondary">Unpublished</span>';
           }
 
 
@@ -242,9 +242,9 @@ public function index(Request $request)
                         ->whereNull('deleted_at')
                         ->value('status');
 
-                    //  If base EN is not published, show Non published for draft
+                    //  If base EN is not published, show Unpublished for draft
                     if ($enStatus === 0 && str_contains($row->type, '_draft')) {
-                        return '<span class="text-secondary">Non published</span>';
+                        return '<span class="text-secondary">Unpublished</span>';
                     }
                     return '<span class="text-success">Approved</span>';
 
