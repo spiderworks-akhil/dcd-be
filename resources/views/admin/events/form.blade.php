@@ -616,7 +616,12 @@
                                     ->exists();
                             @endphp
                                <div class="card-footer text-muted">
-                                @if($events_published && $isWriter && $approval_notification->status == 'approved')
+                                @if(
+                                    !empty($events_published)
+                                    && !empty($approval_notification)
+                                    && $isWriter
+                                    && $approval_notification->status === 'approved'
+                                )
                                     <div class="text-center mt-2">
                                         <button 
                                             class="btn btn-sm btn-warning rounded-pill" 

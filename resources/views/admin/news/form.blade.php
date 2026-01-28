@@ -446,7 +446,12 @@
 
                               
                               <div class="card-footer text-muted">
-                                @if($news_published && $isWriter && $approval_notification->status == 'approved')
+                               @if(
+                                    !empty($news_published)
+                                    && !empty($approval_notification)
+                                    && $isWriter
+                                    && $approval_notification->status === 'approved'
+                                )
                                     <div class="text-center mt-2">
                                         <button 
                                             class="btn btn-sm btn-warning rounded-pill" 
