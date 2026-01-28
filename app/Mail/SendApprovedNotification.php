@@ -35,6 +35,8 @@ class SendApprovedNotification extends Mailable
     public function build()
 {
     $common_settings = $this->getSettings();
+    $type = $this->record->type ?? '';
+    $cleanType = str_replace('_draft', '', $type);
 
     $subject = "{$this->approval->notifiable_type} Submission Approved: {$this->record->name}";
 
@@ -45,7 +47,7 @@ class SendApprovedNotification extends Mailable
             'title'             => $this->record->title ?? '',
             'short_description' => $this->record->short_description ?? '',
             'slug'              => $this->record->slug ?? '',
-            'type'              => $this->record->type ?? '',
+            'type'              => $cleanType ?? '',
             'id'                => $this->record->id ?? '',
             'remarks'           => $this->approval->remarks ?? '',
             'modelName'         => $this->approval->notifiable_type,

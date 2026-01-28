@@ -217,39 +217,6 @@
                                                     </a>
                                                 </div>
 
-
-                                                @if ($roleName != 'Admin' && $obj->type == "en_draft" || $obj->type == "ar_draft" )
-
-                                                   <div class="col-md-6">
-                                                        @if ($approval_notification)
-                                                            {{-- @if ($approval_notification->status === 'approved') --}}
-                                                                <!-- Approved: show send again button -->
-                                                                {{-- <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
-                                                                    onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
-                                                                    Send for Approval
-                                                                </button> --}}
-
-                                                            @if($approval_notification->status === 'rejected')
-                                                                <!-- Rejected: allow send again -->
-                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
-                                                                    onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
-                                                                    Send for Approval
-                                                                </button>
-
-                                                            @elseif($approval_notification->status === "pending" && $approval_notification->email_sent == 1)
-                                                                <!-- Pending: disable button -->
-                                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                                                    Email Sent
-                                                                </button>
-                                                            @endif
-                                                        @else
-                                                            <!-- No approval record yet: show send button -->
-                                                            <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
-                                                                onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
-                                                                Send for Approval
-                                                            </button>
-                                                        @endif
-                                                    </div>
                                                     @php
                                                         $type = $obj->type;
 
@@ -282,6 +249,39 @@
                                                             }
                                                         }
                                                     @endphp
+                                                    
+                                                @if ($roleName != 'Admin' && $obj->type == "en_draft" || $obj->type == "ar_draft" )
+
+                                                   <div class="col-md-6">
+                                                        @if ($approval_notification)
+                                                            @if ($approval_notification->status === 'approved' && $news_published)
+                                                                <!-- Approved: show send again button -->
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
+                                                                    onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
+                                                                    Send for Approval
+                                                                </button>
+
+                                                            @elseif($approval_notification->status === 'rejected')
+                                                                <!-- Rejected: allow send again -->
+                                                                <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
+                                                                    onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
+                                                                    Send for Approval
+                                                                </button>
+
+                                                            @elseif($approval_notification->status === "pending" && $approval_notification->email_sent == 1)
+                                                                <!-- Pending: disable button -->
+                                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                                    Email Sent
+                                                                </button>
+                                                            @endif
+                                                        @else
+                                                            <!-- No approval record yet: show send button -->
+                                                            <button type="button" class="btn btn-primary btn-sm skip-dirty-check"
+                                                                onclick="sendForApproval({{ $obj->id }}, '{{ $obj->slug }}', '{{ $obj->type }}','News')">
+                                                                Send for Approval
+                                                            </button>
+                                                        @endif
+                                                    </div>
                                                     
                                                     <div class="text-left">
                                                         @if($approval_notification && $approval_notification->status != null)

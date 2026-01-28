@@ -929,26 +929,16 @@ public function changeStatus($id)
             $modelName = class_basename($obj);
 
             $this->sendStatusMail($obj, $modelName, $newStatus, $obj->type);
-
-            //  Update the draft status in the same table
-            // $draftType = $obj->type . '_draft'; 
-            // $draft = $this->model
-            //     ->where('type', $draftType)
-            //     ->where('slug',$obj->slug)
-            //     ->first();
-
-            // if ($draft) {
-            //     $draft->status = 1;
-            //     $draft->save();
-            // }
-
+            
         }
     }
 
     $obj->status = $newStatus;
     $obj->save();
 
-    return $this->redirect('Status updated successfully', 'success', 'index');
+     $message = ($newStatus == 0)?"disabled":"enabled";
+     return $this->redirect($message,'success', 'index');
+
 }
 
 

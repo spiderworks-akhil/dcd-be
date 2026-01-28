@@ -34,10 +34,10 @@
                     <div class="page-title-box">
                         <div class="row">
                             <div class="col">
-                                <h4 class="page-title">All Languages</h4>
+                                <h4 class="page-title">All Language Settings</h4>
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('admin') }}">Admin</a></li>
-                                    <li class="breadcrumb-item active">All Languages</li>
+                                    <li class="breadcrumb-item active">All Language Settings</li>
                                 </ol>
                             </div>
                             <!--end col-->

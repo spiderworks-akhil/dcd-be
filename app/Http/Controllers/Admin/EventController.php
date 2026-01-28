@@ -208,7 +208,7 @@ if (!$isWriter) {
                 return '<span class="text-secondary">Pending</span>';
             }
           if ($row->status == 0 && !str_contains($row->type, '_draft')) {
-            return '<span class="text-secondary">Non published</span>';
+            return '<span class="text-secondary">Unpublished</span>';
           }
 
 
@@ -221,9 +221,9 @@ if (!$isWriter) {
                         ->whereNull('deleted_at')
                         ->value('status');
 
-                    //  If base EN is not published, show Non published for draft
+                    //  If base EN is not published, show Unpublished for draft
                     if ($enStatus === 0 && str_contains($row->type, '_draft')) {
-                        return '<span class="text-secondary">Non published</span>';
+                        return '<span class="text-secondary">Unpublished</span>';
                     }
                     return '<span class="text-success">Approved</span>';
 
@@ -730,7 +730,6 @@ public function destroy($id)
 }
 
 
-
 public function changeStatus($id)
 {
     $id = decrypt($id);
@@ -753,24 +752,14 @@ public function changeStatus($id)
            
              $this->sendStatusMail($obj, $modelName, $newStatus, $obj->type);
 
-             // Update the draft status in the same table
-            // $draftType = $obj->type . '_draft'; 
-            // $draft = $this->model
-            //     ->where('type', $draftType)
-            //     ->where('slug',$obj->slug)
-            //     ->first();
-
-            // if ($draft) {
-            //     $draft->status = 1;
-            //     $draft->save();
-            // }
         }
     }
 
     $obj->status = $newStatus;
     $obj->save();
 
-    return $this->redirect('Status updated successfully', 'success', 'index');
+    $message = ($newStatus == 0)?"disabled":"enabled";
+     return $this->redirect($message,'success', 'index');
 }
 
 private function sendStatusMail($obj, $modelName, $newStatus, $type)
