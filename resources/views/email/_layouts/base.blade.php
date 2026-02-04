@@ -349,7 +349,7 @@
 							<tr>
 								<td class="logo" style="text-align: center;">
 									<h1>
-									    <img src="{{asset($common_settings['logo_dark'])}}" style="height:50px;" />
+									    <img src="https://dashboard.dcd.org.ae/uploads/settings/logo-black%20(2)695cd66153b5b.png" style="height:50px;" />
 									</h1>
 								</td>
 							</tr>
