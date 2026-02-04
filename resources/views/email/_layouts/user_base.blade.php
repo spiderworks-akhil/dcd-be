@@ -12,7 +12,7 @@
       <div style="max-width:700px; margin:0px auto; position: relative; font-family: 'Roboto', sans-serif;  background-color: #f5f5f5;">
          <div>
             <div style="width:100%; text-align:center;">
-				<img src="{{asset('client/img/logo.png')}}" style="height:50px;" />
+				<img src="{{asset($common_settings['logo_dark'])}}" style="height:50px;" />
             </div>
             @section('content')
             @show
