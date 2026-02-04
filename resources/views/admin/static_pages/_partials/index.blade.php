@@ -121,6 +121,15 @@
             <a href="{{route('admin.services.index',['type'=>$obj->type])}}" class="btn btn-sm btn-danger" target="_blank"> Add Divisions </a>
     </div>
 </fieldset>
+
+
+<h3>Gallery</h3>
+<fieldset>
+     <div class="form-group col-md-12">
+            <a href="{{route('admin.galleries.edit',[encrypt(1)])}}" class="btn btn-sm btn-danger" target="_blank"> Rewind Gallery </a>
+    </div>
+</fieldset>
+
 <h3>Social Section</h3>
 <fieldset>
     <div class="form-group col-md-12">
