@@ -167,16 +167,18 @@
                                                 <input type="text" name="result_link" class="form-control"
                                                     value="{{ $obj->result_link }}">
                                             </div>
+
+                                             <div class="form-group col-md-6">
+                                                <label>Website Link Text</label>
+                                                <input type="text" name="website_link_text" class="form-control"
+                                                    value="{{ $obj->website_link_text }}">
+                                            </div>
                                             <div class="form-group col-md-6">
                                                 <label>Website Link</label>
                                                 <input type="text" name="website_link" class="form-control"
                                                     value="{{ $obj->website_link }}">
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <label>Website Link Text</label>
-                                                <input type="text" name="website_link_text" class="form-control"
-                                                    value="{{ $obj->website_link_text }}">
-                                            </div>
+                                           
                                                 <div class="form-group col-md-6">
                                                     <label>Short Description</label>
                                                     <textarea name="short_description" class="form-control" rows="2" id="short_description">{{ $obj->short_description }}</textarea>
