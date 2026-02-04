@@ -12,7 +12,7 @@
       <div style="max-width:700px; margin:0px auto; position: relative; font-family: 'Roboto', sans-serif;  background-color: #f5f5f5;">
          <div>
             <div style="width:100%; text-align:center;">
-				<img src="https://dashboard.dcd.org.ae/uploads/settings/logo-black%20(2)695cd66153b5b.png" style="height:50px;" />
+				<img src="https://dashboard.dcd.org.ae/uploads/settings/Black2695cec53b63b2.svg" style="height:50px;" />
             </div>
             @section('content')
             @show
