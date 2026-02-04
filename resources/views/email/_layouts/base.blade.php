@@ -349,7 +349,7 @@
 							<tr>
 								<td class="logo" style="text-align: center;">
 									<h1>
-									    <img src="https://dashboard.dcd.org.ae/uploads/settings/Black2695cec53b63b2.svg" style="height:50px;" />
+									    <img src="{{asset('client/img/logo_black.png')}}" style="height:50px;" />
 									</h1>
 								</td>
 							</tr>
