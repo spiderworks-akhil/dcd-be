@@ -617,7 +617,7 @@
             rules: {
                 "name": "required",
                 "title": "required",
-                'short_description': "required"
+                'short_description': "required",
                 slug: {
                   required: true,
                   remote: {
