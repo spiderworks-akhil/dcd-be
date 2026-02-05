@@ -20,7 +20,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <div class="form-group">
                                 <label for="subject">Lead Type</label>
                                 
@@ -33,7 +33,7 @@
                                     @endif
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-3">
                             <div class="form-group flex items-center mt-4">
                                 <button type="button" class="btn btn-primary px-4 mr-2" onclick="dt();">Filter</button>
