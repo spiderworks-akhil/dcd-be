@@ -174,10 +174,10 @@ img {
     color: #fff !important;
 }
 .left-sidenav-menu li > a:hover {
-    color: var(--blue);
+    color: var(--blue) !important;
 }
 .left-sidenav-menu li > a:hover i {
-    color: var(--blue);
+    color: var(--blue) !important;
 }
 .left-sidenav-menu li.mm-active > a {
     color: #fff !important;
