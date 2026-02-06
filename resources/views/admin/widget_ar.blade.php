@@ -394,12 +394,19 @@
                                 target="_blank"> Live stream </a>
                         </div>
 
+                         <div class="form-group col-md-12">
+                                Title
+                                <input type="text" name="section[live_stream_title]" class="form-control"
+                                    value="@if (!empty($data['live_stream']['live_stream_title'])) {{ $data['live_stream']['live_stream_title'] }} @endif">
+                        </div>
+
                     </div>
                 </div>
-            </div>
             <div class="card-footer text-right">
                 <button class="btn btn-sm btn-primary">Update</button>
             </div>
+            </div>
+
     </div>
     </form>
 </div>
