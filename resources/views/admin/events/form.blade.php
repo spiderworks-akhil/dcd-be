@@ -1301,7 +1301,7 @@
                         slugInput.value = value
                             .toLowerCase()
                             .trim()
-                            .replace(/[^a-z0-9\s-]/g, '')
+                            .replace(/[^\u0600-\u06FFa-z0-9\s-]/g, '') 
                             .replace(/\s+/g, '-')
                             .replace(/-+/g, '-');
                     });
