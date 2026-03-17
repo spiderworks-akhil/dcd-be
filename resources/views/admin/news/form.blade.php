@@ -644,13 +644,28 @@
 @section('footer')
 
 <script>
-        $(".copy-title").keyup(function () {
-        var name = $(this).val();
-        $("input[name='slug']").val(slugify(name));
-        $("input[name='name']").val(name);
-        $("input[name='browser_title']").val(name);
-    });
+       $(".copy-title").keyup(function () {
+    var name = $(this).val();
+    $("input[name='slug']").val(generateSlug(name));
+    $("input[name='name']").val(name);
+    $("input[name='browser_title']").val(name);
+});
+
+
+function generateSlug(text) {
+    return text
+        .toString()
+        .trim()
+        .toLowerCase()
+        // Allow ALL Arabic ranges + English + numbers
+        .replace(/[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-z0-9\s-]/g, '')
+        // Replace spaces with hyphens
+        .replace(/\s+/g, '-')
+        // Remove multiple hyphens
+        .replace(/-+/g, '-');
+}
 </script>
+
     <script src="{{ asset('admin/plugins/jquery-datetimepicker/js/jquery.datetimepicker.full.min.js') }}"
         type="text/javascript"></script>
 <script>
@@ -875,35 +890,7 @@ document.getElementById('submitBtn').addEventListener('click', function() {
         }
     </script>
 
- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-    document.querySelectorAll('form[data-copy-mode="name-to-slug-only"]')
-        .forEach(function (form) {
-
-            const nameInput  = form.querySelector('input[name="name"]');
-            const slugInput  = form.querySelector('input[name="slug"]');
-
-            if (!nameInput || !slugInput) return;
-
-            nameInput.addEventListener('input', function (e) {
-
-                e.stopImmediatePropagation();
-
-                const value = this.value;
-
-                slugInput.value = value
-                    .toLowerCase()
-                    .trim()
-                    .replace(/[^\u0600-\u06FFa-z0-9\s-]/g, '') 
-                    .replace(/\s+/g, '-')
-                    .replace(/-+/g, '-');
-            });
-
-        });
-
-    });
-</script>
+ 
 
 
     @parent
