@@ -133,9 +133,17 @@ class CommonController extends Controller
                 $email_array = array_map('trim', $email_array);
                 $mail->to($email_array)->send(new \App\Mail\Contact($contact));
             }
-            if($contact->email){
-                    $thank_mail = new MailSettings;
-                    $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
+            // if($contact->email){
+            //         $thank_mail = new MailSettings;
+            //         $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
+            // }
+
+             if ($contact->email) {
+                    try {
+                        (new MailSettings)->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to send contact thank-you email: ' . $e->getMessage());
+                    }
             }
             return response()->json(['success' => true]);
 
