@@ -125,19 +125,23 @@ class CommonController extends Controller
 
             if($notif_emails && trim($notif_emails->value_text) != '')
             {
-                $mail = new MailSettings;
-                $email_array = explode(',', $notif_emails->value_text);
-                array_filter($email_array, function($value){
-                    return !is_null($value) && $value !== '';
-                });
-                $email_array = array_map('trim', $email_array);
-                $mail->to($email_array)->send(new \App\Mail\Contact($contact));
-            }
-            // if($contact->email){
-            //         $thank_mail = new MailSettings;
-            //         $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
-            // }
+                try {
+                    $mail = new MailSettings;
+                    $email_array = explode(',', $notif_emails->value_text);
 
+                    $email_array = array_filter($email_array, function($value){
+                        return !is_null($value) && $value !== '';
+                    });
+
+                    $email_array = array_map('trim', $email_array);
+
+                    $mail->to($email_array)->send(new \App\Mail\Contact($contact));
+
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send notification email: ' . $e->getMessage());
+                }
+            }
+            
              if ($contact->email) {
                     try {
                         (new MailSettings)->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
@@ -145,6 +149,67 @@ class CommonController extends Controller
                         \Log::error('Failed to send contact thank-you email: ' . $e->getMessage());
                     }
             }
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+
+            \Log::error('Error in contact_save method: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while saving the contact.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+      public function contact_save_old(ContactRequest $request)
+    {
+        try {
+            $recaptchaSecret = env('RECAPTCHA_SECRET');
+            $response = Http::withOptions(['verify' => true])->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret'   => $recaptchaSecret,
+                'response' => $request->recaptcha_token,
+            ]);
+            $recaptchaResult = $response->json();
+
+            if (!($recaptchaResult['success'] ?? false)) {
+                return response()->json(['success' => false, 'message' => 'reCAPTCHA verification failed', 'res' => $recaptchaResult, 'token' => $request->recaptcha_token, "secret" => "6Lcg5S4rAAAAAAW2aeRoynmtFyjrhxKSzUZb4jkA"], 422);
+            }
+
+            $data = $request->all();
+            $data['ip_address'] = $this->get_ip();
+            $notif_emails = Setting::where('code', 'contact_notification_email_ids')->first();
+
+            $request->validated();
+            $contact = new Lead;
+            $contact->fill($data);
+            $contact->save();
+
+           if($notif_emails && trim($notif_emails->value_text) != '')
+            {
+                try {
+                    $mail = new MailSettings;
+                    $email_array = explode(',', $notif_emails->value_text);
+
+                    $email_array = array_filter($email_array, function($value){
+                        return !is_null($value) && $value !== '';
+                    });
+
+                    $email_array = array_map('trim', $email_array);
+
+                    $mail->to($email_array)->send(new \App\Mail\Contact($contact));
+
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send notification email: ' . $e->getMessage());
+                }
+            }
+            if($contact->email){
+                    $thank_mail = new MailSettings;
+                    $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
+            }
+
+             
             return response()->json(['success' => true]);
 
         } catch (\Exception $e) {
