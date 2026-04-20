@@ -34,7 +34,7 @@ class EventController extends Controller
                     $query->where('title', 'LIKE', "%{$data['search']}%");
                 });
             }
-            $events = $events->where('type', $type)->orderBy('start_time', 'DESC')->paginate($limit);
+            $events = $events->where('type', $type)->orderBy('priority', 'DESC')->paginate($limit);
             return new EventListingCollection($events);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
