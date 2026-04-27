@@ -17,6 +17,14 @@ class News extends Model
 
     protected $dates = ['created_at','updated_at'];
 
+    protected $attributes = [
+        'is_banner' => 0,
+    ];
+
+    protected $casts = [
+        'is_banner' => 'boolean',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
@@ -36,7 +44,9 @@ public function approvalNotification()
     {
         return $this->hasOne(\App\Models\ApprovalNotification::class, 'notifiable_id')
             ->where('notifiable_type', 'News')
-            ->latestOfMany(); 
+            ->ofMany(['id' => 'max'], function ($q) {
+                $q->where('notifiable_type', 'News');
+            });
     }
 
     public function getPublicationStatusAttribute()

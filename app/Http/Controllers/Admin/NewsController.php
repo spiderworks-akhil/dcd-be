@@ -329,10 +329,11 @@ public function index(Request $request)
 
         $data['status'] = 0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
+        $data['is_banner'] = isset($data['is_banner'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
 
-        $selectedType = $request->type; 
+        $selectedType = $request->type;
 
         if (in_array($selectedType, ['en', 'en_draft'])) {
             $data['type'] = 'en_draft';
@@ -363,6 +364,7 @@ public function index(Request $request)
             $oldStatus = $obj->status;
             $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
+            $data['is_banner'] = isset($data['is_banner'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             
@@ -392,6 +394,134 @@ public function index(Request $request)
 
 
 
+public function featuredList(Request $request)
+{
+    $type = $request->query('type');
+    $excludeId = $request->query('exclude_id');
+
+    if (!in_array($type, ['en', 'en_draft', 'ar', 'ar_draft'])) {
+        return response()->json(['count' => 0, 'items' => []]);
+    }
+
+    $query = News::where('is_featured', 1)->where('type', $type);
+
+    if ($excludeId) {
+        try {
+            $excludeId = decrypt($excludeId);
+        } catch (\Throwable $e) {
+            $excludeId = (int) $excludeId;
+        }
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+    }
+
+    $items = $query->select('id', 'name', 'title', 'type')
+        ->orderBy('updated_at', 'desc')
+        ->get()
+        ->map(function ($n) {
+            return [
+                'id'       => encrypt($n->id),
+                'name'     => $n->name,
+                'title'    => $n->title,
+                'edit_url' => route('admin.news.edit', ['id' => encrypt($n->id)]),
+            ];
+        });
+
+    return response()->json([
+        'count' => $items->count(),
+        'items' => $items,
+    ]);
+}
+
+public function unfeature(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $news = News::find($id);
+    if (!$news) {
+        return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
+    }
+
+    $news->is_featured = 0;
+    $news->save();
+
+    return response()->json(['status' => 'success']);
+}
+
+public function bannerList(Request $request)
+{
+    $type = $request->query('type');
+    $excludeId = $request->query('exclude_id');
+
+    if (!in_array($type, ['en', 'en_draft', 'ar', 'ar_draft'])) {
+        return response()->json(['count' => 0, 'items' => []]);
+    }
+
+    $query = News::where('is_banner', 1)->where('type', $type);
+
+    if ($excludeId) {
+        try {
+            $excludeId = decrypt($excludeId);
+        } catch (\Throwable $e) {
+            $excludeId = (int) $excludeId;
+        }
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+    }
+
+    $items = $query->select('id', 'name', 'title', 'type')
+        ->orderBy('updated_at', 'desc')
+        ->get()
+        ->map(function ($n) {
+            return [
+                'id'       => encrypt($n->id),
+                'name'     => $n->name,
+                'title'    => $n->title,
+                'edit_url' => route('admin.news.edit', ['id' => encrypt($n->id)]),
+            ];
+        });
+
+    return response()->json([
+        'count' => $items->count(),
+        'items' => $items,
+    ]);
+}
+
+public function unbanner(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $news = News::find($id);
+    if (!$news) {
+        return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
+    }
+
+    $news->is_banner = 0;
+    $news->save();
+
+    return response()->json(['status' => 'success']);
+}
+
 public function GetType(Request $request)
 {
     $type = $request->query('type');
@@ -418,7 +548,7 @@ public function GetType(Request $request)
     } else {
         $fields = ['slug','name','title','short_description','content','bottom_content',
                         'featured_image_id','banner_image_id','browser_title',
-                        'og_title','meta_description','bottom_description','is_featured',
+                        'og_title','meta_description','bottom_description','is_featured','is_banner',
                         'published_by_author_id','meta_keywords','published_on','category_id','og_image_id','priority'];
         foreach ($fields as $field) {
             $target->$field = $source->$field;
@@ -697,7 +827,7 @@ public function submitApprovalForm(Request $request, $approvalId)
                     'News' => [
                         'slug','name','title','short_description','content','bottom_content',
                         'featured_image_id','banner_image_id','browser_title',
-                        'og_title','meta_description','bottom_description','is_featured',
+                        'og_title','meta_description','bottom_description','is_featured','is_banner',
                         'published_by_author_id','meta_keywords','published_on','category_id','og_image_id','priority'
                     ],
                     'Event' => [
@@ -801,46 +931,72 @@ protected function applyFiltering($collection)
         {
             if (!$value) continue;
 
-            $latestStatusSubquery = "
-            (
+            $latestStatus = "(
                 SELECT LOWER(status)
                 FROM approval_notifications
                 WHERE notifiable_id = news.id
                 AND notifiable_type = 'News'
                 ORDER BY id DESC
                 LIMIT 1
-            )
-        ";
+            )";
+            $hasNewsNotification = "EXISTS (
+                SELECT 1 FROM approval_notifications
+                WHERE notifiable_id = news.id
+                AND notifiable_type = 'News'
+            )";
+
+            // CUSTOM: LANGUAGE FILTER (English -> en/en_draft, Arabic -> ar/ar_draft)
+            if ($key == 'language') {
+                $langMap = [
+                    'en' => ['en', 'en_draft'],
+                    'ar' => ['ar', 'ar_draft'],
+                ];
+                if (isset($langMap[$value])) {
+                    $collection->whereIn('type', $langMap[$value]);
+                }
+                continue;
+            }
+
             // CUSTOM: PUBLICATION STATUS FILTER
            if ($key == 'publication_status') {
 
-    $collection->where(function($q) use ($value, $latestStatusSubquery) {
+    $collection->where(function($q) use ($value, $latestStatus, $hasNewsNotification) {
 
         switch ($value) {
 
             case 'Pending':
                 $q->where('type', 'like', '%_draft')
-                  ->whereDoesntHave('approvalNotification');
+                  ->whereRaw("NOT $hasNewsNotification");
                 break;
 
             case 'Waiting for approval':
-                $q->whereRaw("$latestStatusSubquery = 'pending'");
+                $q->whereRaw("$latestStatus = ?", ['pending'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Approved':
-                $q->whereRaw("$latestStatusSubquery = 'approved'");
+                $q->whereRaw("$latestStatus = ?", ['approved'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Rejected':
-                $q->whereRaw("$latestStatusSubquery = 'rejected'");
+                $q->whereRaw("$latestStatus = ?", ['rejected'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Published':
                 $q->where('type', 'not like', '%_draft')
-                  ->where(function($x) use ($latestStatusSubquery){
-                      $x->whereDoesntHave('approvalNotification')
-                        ->orWhereRaw("$latestStatusSubquery = 'approved'");
-                  });
+                  ->where('status', 1)
+                  ->whereRaw("NOT $hasNewsNotification");
                 break;
         }
     });
@@ -869,6 +1025,18 @@ protected function applyFiltering($collection)
                 $to_date   = date('Y-m-d 23:59:59', strtotime($this->formatDate($date_array[1])));
 
                 $collection->whereBetween($key, [$from_date, $to_date]);
+            }
+
+            // From date (inclusive)
+            elseif ($condition == 'from_date') {
+                $from_date = date('Y-m-d 00:00:00', strtotime($this->formatDate($value)));
+                $collection->where($key, '>=', $from_date);
+            }
+
+            // To date (inclusive)
+            elseif ($condition == 'to_date') {
+                $to_date = date('Y-m-d 23:59:59', strtotime($this->formatDate($value)));
+                $collection->where($key, '<=', $to_date);
             }
 
             // LIKE

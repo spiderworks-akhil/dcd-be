@@ -491,6 +491,70 @@ if (!$isWriter) {
  
 
 
+public function featuredList(Request $request)
+{
+    $type = $request->query('type');
+    $excludeId = $request->query('exclude_id');
+
+    if (!in_array($type, ['en', 'en_draft', 'ar', 'ar_draft'])) {
+        return response()->json(['count' => 0, 'items' => []]);
+    }
+
+    $query = Event::where('is_featured', 1)->where('type', $type);
+
+    if ($excludeId) {
+        try {
+            $excludeId = decrypt($excludeId);
+        } catch (\Throwable $e) {
+            $excludeId = (int) $excludeId;
+        }
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+    }
+
+    $items = $query->select('id', 'name', 'title', 'type')
+        ->orderBy('updated_at', 'desc')
+        ->get()
+        ->map(function ($e) {
+            return [
+                'id'       => encrypt($e->id),
+                'name'     => $e->name,
+                'title'    => $e->title,
+                'edit_url' => route('admin.events.edit', ['id' => encrypt($e->id)]),
+            ];
+        });
+
+    return response()->json([
+        'count' => $items->count(),
+        'items' => $items,
+    ]);
+}
+
+public function unfeature(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $event = Event::find($id);
+    if (!$event) {
+        return response()->json(['status' => 'error', 'message' => 'Event not found'], 404);
+    }
+
+    $event->is_featured = 0;
+    $event->save();
+
+    return response()->json(['status' => 'success']);
+}
+
 public function GetType(Request $request)
 {
     $type = $request->query('type');
@@ -616,46 +680,72 @@ protected function applyFiltering($collection)
         {
             if (!$value) continue;
 
-            $latestStatusSubquery = "
-            (
+            $latestStatus = "(
                 SELECT LOWER(status)
                 FROM approval_notifications
                 WHERE notifiable_id = events.id
                 AND notifiable_type = 'Event'
                 ORDER BY id DESC
                 LIMIT 1
-            )
-        ";
+            )";
+            $hasEventNotification = "EXISTS (
+                SELECT 1 FROM approval_notifications
+                WHERE notifiable_id = events.id
+                AND notifiable_type = 'Event'
+            )";
+
+            // CUSTOM: LANGUAGE FILTER (English -> en/en_draft, Arabic -> ar/ar_draft)
+            if ($key == 'language') {
+                $langMap = [
+                    'en' => ['en', 'en_draft'],
+                    'ar' => ['ar', 'ar_draft'],
+                ];
+                if (isset($langMap[$value])) {
+                    $collection->whereIn('type', $langMap[$value]);
+                }
+                continue;
+            }
+
             // CUSTOM: PUBLICATION STATUS FILTER
            if ($key == 'publication_status') {
 
-    $collection->where(function($q) use ($value, $latestStatusSubquery) {
+    $collection->where(function($q) use ($value, $latestStatus, $hasEventNotification) {
 
         switch ($value) {
 
             case 'Pending':
                 $q->where('type', 'like', '%_draft')
-                  ->whereDoesntHave('approvalNotification');
+                  ->whereRaw("NOT $hasEventNotification");
                 break;
 
             case 'Waiting for approval':
-                $q->whereRaw("$latestStatusSubquery = 'pending'");
+                $q->whereRaw("$latestStatus = ?", ['pending'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Approved':
-                $q->whereRaw("$latestStatusSubquery = 'approved'");
+                $q->whereRaw("$latestStatus = ?", ['approved'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Rejected':
-                $q->whereRaw("$latestStatusSubquery = 'rejected'");
+                $q->whereRaw("$latestStatus = ?", ['rejected'])
+                  ->where(function($x){
+                      $x->where('type', 'like', '%_draft')
+                        ->orWhere('status', 1);
+                  });
                 break;
 
             case 'Published':
                 $q->where('type', 'not like', '%_draft')
-                  ->where(function($x) use ($latestStatusSubquery){
-                      $x->whereDoesntHave('approvalNotification')
-                        ->orWhereRaw("$latestStatusSubquery = 'approved'");
-                  });
+                  ->where('status', 1)
+                  ->whereRaw("NOT $hasEventNotification");
                 break;
         }
     });
@@ -684,6 +774,18 @@ protected function applyFiltering($collection)
                 $to_date   = date('Y-m-d 23:59:59', strtotime($this->formatDate($date_array[1])));
 
                 $collection->whereBetween($key, [$from_date, $to_date]);
+            }
+
+            // From date (inclusive)
+            elseif ($condition == 'from_date') {
+                $from_date = date('Y-m-d 00:00:00', strtotime($this->formatDate($value)));
+                $collection->where($key, '>=', $from_date);
+            }
+
+            // To date (inclusive)
+            elseif ($condition == 'to_date') {
+                $to_date = date('Y-m-d 23:59:59', strtotime($this->formatDate($value)));
+                $collection->where($key, '<=', $to_date);
             }
 
             // LIKE

@@ -42,6 +42,8 @@ Route::get('blogs/{slug}', [BlogController::class, 'view'])->name('api.blogs.vie
 Route::get('news', [NewsController::class, 'index'])->name('api.news.index');
 Route::get('news/categories', [NewsController::class, 'categories'])->name('api.news.categories');
 Route::get('news/featured', [NewsController::class, 'featured'])->name('api.news.featured');
+Route::get('news/latest-updates', [NewsController::class, 'latestUpdates'])->name('api.news.latest-updates');
+Route::get('news/banner', [NewsController::class, 'banner'])->name('api.news.banner');
 Route::get('news/{slug}', [NewsController::class, 'view'])->name('api.news.view');
 
 // events

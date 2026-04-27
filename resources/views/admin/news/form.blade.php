@@ -392,6 +392,15 @@
                                             </div>
 
                                         </div>
+                                        <div class="form-group col-12  mb-4">
+                                            <div class="custom-control custom-switch switch-primary float-left">
+                                                <input type="checkbox" class="custom-control-input" value="1"
+                                                    id="is_banner" name="is_banner"
+                                                    @if ($obj->is_banner == 1) checked="checked" @endif>
+                                                <label class="custom-control-label" for="is_banner">Banner</label>
+                                            </div>
+
+                                        </div>
                                         <div class="form-group col-12 col-md-6   mb-4">
                                             <label for="name">Created On: </label>
                                             @if (!$obj->id)
@@ -637,6 +646,50 @@
 
         </div><!-- container -->
 
+        <!-- Featured-limit modal -->
+        <div class="modal fade" id="featuredLimitModal" tabindex="-1" role="dialog" aria-labelledby="featuredLimitModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="featuredLimitModalLabel">Featured slot limit reached</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3" id="featuredLimitMessage">You can only have 3 featured news. Unfeature one of the below to free a slot.</p>
+                        <ul class="list-group" id="featuredList"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="featuredLimitOkBtn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner-limit modal -->
+        <div class="modal fade" id="bannerLimitModal" tabindex="-1" role="dialog" aria-labelledby="bannerLimitModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bannerLimitModalLabel">Banner slot limit reached</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3" id="bannerLimitMessage">You can only have 1 banner news. Unbanner the below to free the slot.</p>
+                        <ul class="list-group" id="bannerList"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="bannerLimitOkBtn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @include('admin._partials.footer')
     </div>
     <!-- end page content -->
@@ -644,6 +697,282 @@
 @section('footer')
 
 <script>
+    (function () {
+        var MAX_FEATURED = 3;
+        var currentType = @json($obj->type ?? null);
+        var currentId   = @json($obj->id ? encrypt($obj->id) : null);
+        var listUrl      = @json(route('admin.news.featured-list'));
+        var unfeatureUrl = @json(route('admin.news.unfeature'));
+        var csrf        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        var pendingUnfeature = {};
+
+        function truncate(txt, n) {
+            txt = (txt || '').toString();
+            return txt.length > n ? txt.substring(0, n) + '...' : txt;
+        }
+
+        function renderList(items) {
+            var $list = $('#featuredList').empty();
+            pendingUnfeature = {};
+            if (!items.length) {
+                $list.append('<li class="list-group-item text-muted">No featured news left — you can close this and toggle Featured.</li>');
+                return;
+            }
+            items.forEach(function (it) {
+                var $row = $(
+                    '<li class="list-group-item d-flex align-items-center justify-content-between">' +
+                        '<a href="" class="text-primary text-truncate mr-3 featured-item-name" style="max-width: 70%;" target="_blank"></a>' +
+                        '<div class="custom-control custom-switch switch-primary">' +
+                            '<input type="checkbox" class="custom-control-input featured-item-toggle" checked>' +
+                            '<label class="custom-control-label"></label>' +
+                        '</div>' +
+                    '</li>'
+                );
+                var inputId = 'featured-item-' + it.id.replace(/[^a-zA-Z0-9]/g, '');
+                $row.find('.featured-item-name').attr('href', it.edit_url).text(truncate(it.name || it.title, 40)).attr('title', it.name || it.title);
+                $row.find('.featured-item-toggle').attr('id', inputId).data('id', it.id);
+                $row.find('.custom-control-label').attr('for', inputId);
+                $list.append($row);
+            });
+        }
+
+        function fetchAndMaybeBlock($toggle, onAllow) {
+            if (!currentType) { onAllow(); return; }
+            $.ajax({
+                url: listUrl,
+                method: 'GET',
+                data: { type: currentType, exclude_id: currentId || '' },
+                dataType: 'json'
+            }).done(function (res) {
+                if ((res.count || 0) >= MAX_FEATURED) {
+                    $toggle.prop('checked', false);
+                    renderList(res.items || []);
+                    $('#featuredLimitModal').modal('show');
+                } else {
+                    onAllow();
+                }
+            }).fail(function () {
+                onAllow();
+            });
+        }
+
+        $(document).on('change', '#is_featured', function () {
+            var $toggle = $(this);
+            if ($toggle.is(':checked')) {
+                fetchAndMaybeBlock($toggle, function () { /* allow */ });
+            }
+        });
+
+        $(document).on('change', '.featured-item-toggle', function () {
+            var $input = $(this);
+            var id = $input.data('id');
+            if ($input.is(':checked')) {
+                delete pendingUnfeature[id];
+            } else {
+                pendingUnfeature[id] = $input.closest('li');
+            }
+        });
+
+        $(document).on('click', '#featuredLimitOkBtn', function () {
+            var $okBtn = $(this);
+            var ids = Object.keys(pendingUnfeature);
+
+            if (ids.length === 0) {
+                $('#featuredLimitModal').modal('hide');
+                return;
+            }
+
+            $okBtn.prop('disabled', true);
+            $('.featured-item-toggle').prop('disabled', true);
+
+            var failed = [];
+            var completed = 0;
+
+            ids.forEach(function (id) {
+                $.ajax({
+                    url: unfeatureUrl,
+                    method: 'POST',
+                    data: { id: id },
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                }).done(function (res) {
+                    if (res && res.status === 'success') {
+                        var $li = pendingUnfeature[id];
+                        if ($li) { $li.remove(); }
+                    } else {
+                        failed.push({ id: id, message: (res && res.message) || null });
+                    }
+                }).fail(function () {
+                    failed.push({ id: id, message: null });
+                }).always(function () {
+                    completed++;
+                    if (completed !== ids.length) { return; }
+
+                    $okBtn.prop('disabled', false);
+                    $('.featured-item-toggle').prop('disabled', false);
+
+                    failed.forEach(function (f) {
+                        var $li = pendingUnfeature[f.id];
+                        if ($li) { $li.find('.featured-item-toggle').prop('checked', true); }
+                    });
+
+                    pendingUnfeature = {};
+
+                    if (failed.length > 0) {
+                        alert(failed[0].message || 'Could not unfeature some items. Please try again.');
+                    } else {
+                        if ($('#featuredList li').length === 0) {
+                            $('#featuredList').append('<li class="list-group-item text-muted">No featured news left — you can close this and toggle Featured.</li>');
+                        }
+                        $('#featuredLimitModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        $('#featuredLimitModal').on('hidden.bs.modal', function () {
+            pendingUnfeature = {};
+        });
+    })();
+
+    (function () {
+        var MAX_BANNER  = 1;
+        var currentType = @json($obj->type ?? null);
+        var currentId   = @json($obj->id ? encrypt($obj->id) : null);
+        var listUrl     = @json(route('admin.news.banner-list'));
+        var unbannerUrl = @json(route('admin.news.unbanner'));
+        var csrf        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        var pendingUnbanner = {};
+
+        function truncate(txt, n) {
+            txt = (txt || '').toString();
+            return txt.length > n ? txt.substring(0, n) + '...' : txt;
+        }
+
+        function renderList(items) {
+            var $list = $('#bannerList').empty();
+            pendingUnbanner = {};
+            if (!items.length) {
+                $list.append('<li class="list-group-item text-muted">No banner news left — you can close this and toggle Banner.</li>');
+                return;
+            }
+            items.forEach(function (it) {
+                var $row = $(
+                    '<li class="list-group-item d-flex align-items-center justify-content-between">' +
+                        '<a href="" class="text-primary text-truncate mr-3 banner-item-name" style="max-width: 70%;" target="_blank"></a>' +
+                        '<div class="custom-control custom-switch switch-primary">' +
+                            '<input type="checkbox" class="custom-control-input banner-item-toggle" checked>' +
+                            '<label class="custom-control-label"></label>' +
+                        '</div>' +
+                    '</li>'
+                );
+                var inputId = 'banner-item-' + it.id.replace(/[^a-zA-Z0-9]/g, '');
+                $row.find('.banner-item-name').attr('href', it.edit_url).text(truncate(it.name || it.title, 40)).attr('title', it.name || it.title);
+                $row.find('.banner-item-toggle').attr('id', inputId).data('id', it.id);
+                $row.find('.custom-control-label').attr('for', inputId);
+                $list.append($row);
+            });
+        }
+
+        function fetchAndMaybeBlock($toggle, onAllow) {
+            if (!currentType) { onAllow(); return; }
+            $.ajax({
+                url: listUrl,
+                method: 'GET',
+                data: { type: currentType, exclude_id: currentId || '' },
+                dataType: 'json'
+            }).done(function (res) {
+                if ((res.count || 0) >= MAX_BANNER) {
+                    $toggle.prop('checked', false);
+                    renderList(res.items || []);
+                    $('#bannerLimitModal').modal('show');
+                } else {
+                    onAllow();
+                }
+            }).fail(function () {
+                onAllow();
+            });
+        }
+
+        $(document).on('change', '#is_banner', function () {
+            var $toggle = $(this);
+            if ($toggle.is(':checked')) {
+                fetchAndMaybeBlock($toggle, function () { /* allow */ });
+            }
+        });
+
+        $(document).on('change', '.banner-item-toggle', function () {
+            var $input = $(this);
+            var id = $input.data('id');
+            if ($input.is(':checked')) {
+                delete pendingUnbanner[id];
+            } else {
+                pendingUnbanner[id] = $input.closest('li');
+            }
+        });
+
+        $(document).on('click', '#bannerLimitOkBtn', function () {
+            var $okBtn = $(this);
+            var ids = Object.keys(pendingUnbanner);
+
+            if (ids.length === 0) {
+                $('#bannerLimitModal').modal('hide');
+                return;
+            }
+
+            $okBtn.prop('disabled', true);
+            $('.banner-item-toggle').prop('disabled', true);
+
+            var failed = [];
+            var completed = 0;
+
+            ids.forEach(function (id) {
+                $.ajax({
+                    url: unbannerUrl,
+                    method: 'POST',
+                    data: { id: id },
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                }).done(function (res) {
+                    if (res && res.status === 'success') {
+                        var $li = pendingUnbanner[id];
+                        if ($li) { $li.remove(); }
+                    } else {
+                        failed.push({ id: id, message: (res && res.message) || null });
+                    }
+                }).fail(function () {
+                    failed.push({ id: id, message: null });
+                }).always(function () {
+                    completed++;
+                    if (completed !== ids.length) { return; }
+
+                    $okBtn.prop('disabled', false);
+                    $('.banner-item-toggle').prop('disabled', false);
+
+                    failed.forEach(function (f) {
+                        var $li = pendingUnbanner[f.id];
+                        if ($li) { $li.find('.banner-item-toggle').prop('checked', true); }
+                    });
+
+                    pendingUnbanner = {};
+
+                    if (failed.length > 0) {
+                        alert(failed[0].message || 'Could not unbanner some items. Please try again.');
+                    } else {
+                        if ($('#bannerList li').length === 0) {
+                            $('#bannerList').append('<li class="list-group-item text-muted">No banner news left — you can close this and toggle Banner.</li>');
+                        }
+                        $('#bannerLimitModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        $('#bannerLimitModal').on('hidden.bs.modal', function () {
+            pendingUnbanner = {};
+        });
+    })();
+
        $(".copy-title").keyup(function () {
     var name = $(this).val();
     $("input[name='slug']").val(generateSlug(name));

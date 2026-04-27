@@ -73,7 +73,7 @@
                                             <th class="table-width-10">ID</th>
                                             <th class="table-width-120">Language</th>
                                             <th class="nosort nosearch tabl-width-10">Publication Status</th>
-                                            <th class="table-width-120" width="190">Slug</th>
+                                            <!-- <th class="table-width-120" width="190">Slug</th> -->
                                             <th class="table-width-120" width="190">Name</th>
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="table-width-120">Created By</th>
@@ -113,7 +113,7 @@
     {data: 'id', name: 'id'},
     {data: 'type', name: 'type'},
     {data: 'publication_status', name: 'publication_status'},
-    {data: 'slug', name: 'slug'},
+    // {data: 'slug', name: 'slug'},
     {data: 'name', name: 'name'},
     {data: 'date', name: 'updated_at'},
     {data: 'created_user', name: 'created_user'},

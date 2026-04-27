@@ -46,6 +46,27 @@ class NewsController extends Controller
         return new NewsListingCollection($services);
     }
 
+    public function banner(Request $request){
+        $data = $request->all();
+        $type = !empty($data['language'])?$data['language']:"en";
+        $news = News::where('status', 1)->where('type',$type)->where('is_banner', 1)->orderBy('priority','DESC')->take(1)->get();
+        return new NewsListingCollection($news);
+    }
+
+    public function latestUpdates(Request $request){
+        $data = $request->all();
+        $type = !empty($data['language'])?$data['language']:"en";
+        $news = News::where('status', 1)
+            ->where('type', $type)
+            ->where('is_featured', 0)
+            ->orderBy('published_on', 'DESC')
+            ->take(4)
+            ->get()
+            ->sortByDesc('priority')
+            ->values();
+        return new NewsListingCollection($news);
+    }
+
     // public function view(Request $request, $slug){
     //     try{
     //         $data = $request->all();

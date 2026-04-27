@@ -169,6 +169,10 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('news/update', [NewsController::class, 'update'])->name('admin.news.update');
         Route::get('news/show/{id}', [NewsController::class, 'show'])->name('admin.news.show');
         Route::get('news/get-type', [NewsController::class, 'GetType'])->name('admin.news.get-type');
+        Route::get('news/featured-list', [NewsController::class, 'featuredList'])->name('admin.news.featured-list');
+        Route::post('news/unfeature', [NewsController::class, 'unfeature'])->name('admin.news.unfeature');
+        Route::get('news/banner-list', [NewsController::class, 'bannerList'])->name('admin.news.banner-list');
+        Route::post('news/unbanner', [NewsController::class, 'unbanner'])->name('admin.news.unbanner');
         Route::post('/send-approval-mail', [NewsController::class, 'sendApprovalMail'])->name('send.approval.mail');
       
         //menus
@@ -420,6 +424,8 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::get('events/media/destroy/{id}', [EventController::class, 'media_destroy'])->name('admin.events.media.destroy');
 
         Route::get('events/get-type', [EventController::class, 'GetType'])->name('admin.events.get-type');
+        Route::get('events/featured-list', [EventController::class, 'featuredList'])->name('admin.events.featured-list');
+        Route::post('events/unfeature',    [EventController::class, 'unfeature'])->name('admin.events.unfeature');
 
          //partners
         Route::get('partners', [PartnerController::class, 'index'])->name('admin.partners.index');
