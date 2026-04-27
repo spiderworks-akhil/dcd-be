@@ -773,7 +773,7 @@
                                             ])
                                         </div>
                                     </div>
-                                <div class="card">
+                                <!-- <div class="card">
                                     <div class="card-header">
                                         Logo Image
                                     </div>
@@ -786,7 +786,7 @@
                                             'holder_attr' => 'logo_image_id',
                                         ])
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="card">
                                     <div class="card-header">
                                         Video
