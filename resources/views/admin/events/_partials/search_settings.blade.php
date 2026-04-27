@@ -42,7 +42,29 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <div class="form-group flex items-center mb-0">
+                            <div class="form-group">
+                                <label for="created_by">Created By</label>
+                                <select name="created_by" class="form-control datatable-advanced-search webadmin-select2-input">
+                                    <option value="">All</option>
+                                    @foreach (($search_settings['admins'] ?? []) as $admin)
+                                        <option value="{{ $admin->id }}">{{ $admin->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="updated_by">Updated By</label>
+                                <select name="updated_by" class="form-control datatable-advanced-search webadmin-select2-input">
+                                    <option value="">All</option>
+                                    @foreach (($search_settings['admins'] ?? []) as $admin)
+                                        <option value="{{ $admin->id }}">{{ $admin->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group flex items-center mt-4">
                                 <button type="button" class="btn btn-primary px-4 mr-2" onclick="dt();">Filter</button>
                                 <button type="button" class="btn btn-secondary px-4" id="search-table-clear-btn">Clear</button>
                             </div>

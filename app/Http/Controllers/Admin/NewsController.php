@@ -267,7 +267,12 @@ public function index(Request $request)
     }
 
 
-    protected function getSearchSettings(){}
+    protected function getSearchSettings()
+    {
+        return [
+            'admins' => Admin::orderBy('name')->get(['id', 'name']),
+        ];
+    }
 
     public function create()
     {
@@ -458,6 +463,30 @@ public function unfeature(Request $request)
     return response()->json(['status' => 'success']);
 }
 
+public function feature(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $news = News::find($id);
+    if (!$news) {
+        return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
+    }
+
+    $news->is_featured = 1;
+    $news->save();
+
+    return response()->json(['status' => 'success']);
+}
+
 public function bannerList(Request $request)
 {
     $type = $request->query('type');
@@ -517,6 +546,30 @@ public function unbanner(Request $request)
     }
 
     $news->is_banner = 0;
+    $news->save();
+
+    return response()->json(['status' => 'success']);
+}
+
+public function banner(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $news = News::find($id);
+    if (!$news) {
+        return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
+    }
+
+    $news->is_banner = 1;
     $news->save();
 
     return response()->json(['status' => 'success']);

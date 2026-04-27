@@ -245,7 +245,12 @@ if (!$isWriter) {
             ->rawColumns(['type','publication_status', 'action_edit', 'action_delete', 'status','updated_user','created_user']);
     }
 
-    protected function getSearchSettings(){}
+    protected function getSearchSettings()
+    {
+        return [
+            'admins' => Admin::orderBy('name')->get(['id', 'name']),
+        ];
+    }
 
     public function create()
     {
@@ -550,6 +555,30 @@ public function unfeature(Request $request)
     }
 
     $event->is_featured = 0;
+    $event->save();
+
+    return response()->json(['status' => 'success']);
+}
+
+public function feature(Request $request)
+{
+    $id = $request->input('id');
+    if (!$id) {
+        return response()->json(['status' => 'error', 'message' => 'Missing id'], 400);
+    }
+
+    try {
+        $id = decrypt($id);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'message' => 'Invalid id'], 400);
+    }
+
+    $event = Event::find($id);
+    if (!$event) {
+        return response()->json(['status' => 'error', 'message' => 'Event not found'], 404);
+    }
+
+    $event->is_featured = 1;
     $event->save();
 
     return response()->json(['status' => 'success']);

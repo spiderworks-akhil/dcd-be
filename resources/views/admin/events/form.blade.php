@@ -729,7 +729,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card">
+                                    <!-- <div class="card">
                                         <div class="card-header">
                                             Priority
                                         </div>
@@ -740,7 +740,7 @@
                                                     value="{{ $obj->priority }}">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     {{-- @if ($obj->id)
                                         <div class="card">
                                             <div class="card-header">
@@ -873,7 +873,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="mb-3" id="featuredLimitMessage">You can only have 4 featured events. Unfeature one of the below to free a slot.</p>
+                            <p class="mb-3" id="featuredLimitMessage">Featured events must total 4. The current event (greyed) is being added — unselect existing items so the total stays at 4.</p>
                             <ul class="list-group" id="featuredList"></ul>
                         </div>
                         <div class="modal-footer">
@@ -897,22 +897,45 @@
             var currentId   = @json($obj->id ? encrypt($obj->id) : null);
             var listUrl      = @json(route('admin.events.featured-list'));
             var unfeatureUrl = @json(route('admin.events.unfeature'));
+            var featureUrl   = @json(route('admin.events.feature'));
             var csrf        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             var pendingUnfeature = {};
+            var pendingFeatureToggle = null;
 
             function truncate(txt, n) {
                 txt = (txt || '').toString();
                 return txt.length > n ? txt.substring(0, n) + '...' : txt;
             }
 
+            function getCurrentLabel() {
+                var t = ($('#InputFrm input[name="title"]').val() || '').trim();
+                var n = ($('#InputFrm input[name="name"]').val() || '').trim();
+                return t || n || '(this event)';
+            }
+
+            function updateOkState() {
+                var total = 1 + $('#featuredList .featured-item-toggle:checked').length;
+                $('#featuredLimitOkBtn').prop('disabled', total !== MAX_FEATURED);
+            }
+
             function renderList(items) {
                 var $list = $('#featuredList').empty();
                 pendingUnfeature = {};
-                if (!items.length) {
-                    $list.append('<li class="list-group-item text-muted">No featured events left — you can close this and toggle Featured.</li>');
-                    return;
-                }
+
+                var label = getCurrentLabel();
+                var $currentRow = $(
+                    '<li class="list-group-item d-flex align-items-center justify-content-between bg-light">' +
+                        '<span class="text-muted text-truncate mr-3" style="max-width: 70%;"></span>' +
+                        '<div class="custom-control custom-switch switch-primary">' +
+                            '<input type="checkbox" class="custom-control-input" id="featured-current-item" checked disabled>' +
+                            '<label class="custom-control-label" for="featured-current-item"></label>' +
+                        '</div>' +
+                    '</li>'
+                );
+                $currentRow.find('span').text(truncate(label, 40) + ' (current)').attr('title', label);
+                $list.append($currentRow);
+
                 items.forEach(function (it) {
                     var $row = $(
                         '<li class="list-group-item d-flex align-items-center justify-content-between">' +
@@ -929,32 +952,54 @@
                     $row.find('.custom-control-label').attr('for', inputId);
                     $list.append($row);
                 });
+
+                updateOkState();
             }
 
-            function fetchAndMaybeBlock($toggle, onAllow) {
-                if (!currentType) { onAllow(); return; }
+            function fetchAndShowPopup($toggle) {
+                if (!currentType) { return; }
+                pendingFeatureToggle = $toggle;
                 $.ajax({
                     url: listUrl,
                     method: 'GET',
                     data: { type: currentType, exclude_id: currentId || '' },
                     dataType: 'json'
                 }).done(function (res) {
-                    if ((res.count || 0) >= MAX_FEATURED) {
-                        $toggle.prop('checked', false);
-                        renderList(res.items || []);
-                        $('#featuredLimitModal').modal('show');
-                    } else {
-                        onAllow();
-                    }
+                    $toggle.prop('checked', false);
+                    renderList(res.items || []);
+                    $('#featuredLimitModal').modal('show');
                 }).fail(function () {
-                    onAllow();
+                    pendingFeatureToggle = null;
+                });
+            }
+
+            function enforceMinOnUncheck($toggle) {
+                if (!currentType || !currentId) { return; }
+                $.ajax({
+                    url: listUrl,
+                    method: 'GET',
+                    data: { type: currentType, exclude_id: currentId },
+                    dataType: 'json'
+                }).done(function (res) {
+                    if ((res.count || 0) < MAX_FEATURED) {
+                        $toggle.prop('checked', true);
+                        $.confirm({
+                            title: 'Cannot unfeature',
+                            content: 'There must be at least ' + MAX_FEATURED + ' featured events.',
+                            buttons: {
+                                ok: { text: 'OK', btnClass: 'btn-warning' }
+                            }
+                        });
+                    }
                 });
             }
 
             $(document).on('change', '#is_featured', function () {
                 var $toggle = $(this);
                 if ($toggle.is(':checked')) {
-                    fetchAndMaybeBlock($toggle, function () { /* allow */ });
+                    fetchAndShowPopup($toggle);
+                } else {
+                    enforceMinOnUncheck($toggle);
                 }
             });
 
@@ -966,14 +1011,52 @@
                 } else {
                     pendingUnfeature[id] = $input.closest('li');
                 }
+                updateOkState();
             });
+
+            function applyFeatureCurrent(cb) {
+                if (!currentId) { cb(true); return; }
+                $.ajax({
+                    url: featureUrl,
+                    method: 'POST',
+                    data: { id: currentId },
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                }).done(function (res) {
+                    cb(!!(res && res.status === 'success'), res && res.message);
+                }).fail(function () {
+                    cb(false);
+                });
+            }
 
             $(document).on('click', '#featuredLimitOkBtn', function () {
                 var $okBtn = $(this);
+
+                if ($okBtn.prop('disabled')) { return; }
+
                 var ids = Object.keys(pendingUnfeature);
 
+                function finishOk() {
+                    applyFeatureCurrent(function (ok, message) {
+                        if (pendingFeatureToggle) {
+                            pendingFeatureToggle.prop('checked', !!ok);
+                            pendingFeatureToggle = null;
+                        }
+                        $('#featuredLimitModal').modal('hide');
+                        if (!ok && currentId) {
+                            $.confirm({
+                                title: 'Error',
+                                content: message || 'Could not mark this event as featured. Please try again.',
+                                buttons: {
+                                    ok: { text: 'OK', btnClass: 'btn-danger' }
+                                }
+                            });
+                        }
+                    });
+                }
+
                 if (ids.length === 0) {
-                    $('#featuredLimitModal').modal('hide');
+                    $okBtn.prop('disabled', true);
+                    finishOk();
                     return;
                 }
 
@@ -1002,7 +1085,6 @@
                         completed++;
                         if (completed !== ids.length) { return; }
 
-                        $okBtn.prop('disabled', false);
                         $('.featured-item-toggle').prop('disabled', false);
 
                         failed.forEach(function (f) {
@@ -1011,14 +1093,19 @@
                         });
 
                         pendingUnfeature = {};
+                        updateOkState();
 
                         if (failed.length > 0) {
-                            alert(failed[0].message || 'Could not unfeature some items. Please try again.');
+                            $okBtn.prop('disabled', false);
+                            $.confirm({
+                                title: 'Error',
+                                content: failed[0].message || 'Could not unfeature some items. Please try again.',
+                                buttons: {
+                                    ok: { text: 'OK', btnClass: 'btn-danger' }
+                                }
+                            });
                         } else {
-                            if ($('#featuredList li').length === 0) {
-                                $('#featuredList').append('<li class="list-group-item text-muted">No featured events left — you can close this and toggle Featured.</li>');
-                            }
-                            $('#featuredLimitModal').modal('hide');
+                            finishOk();
                         }
                     });
                 });
@@ -1026,6 +1113,7 @@
 
             $('#featuredLimitModal').on('hidden.bs.modal', function () {
                 pendingUnfeature = {};
+                pendingFeatureToggle = null;
             });
         })();
     </script>

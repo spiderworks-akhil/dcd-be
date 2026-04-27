@@ -78,7 +78,7 @@
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="table-width-120">Created By</th>
                                             <th class="table-width-120">Updated By</th>
-                                            <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th>
+                                            <!-- <th class="nosearch table-width-10 text-center @fieldshow(events-priority) @else nodisplay @endfieldshow">Priority</th> -->
                                             <th class="nosort nosearch table-width-10">Status</th>
                                             <th class="nosort nosearch table-width-10">@if(auth()->user()->can($permissions['edit'])) Edit @else View @endif</th>
                                             <th class="nosort nosearch table-width-10">Delete</th>
@@ -118,7 +118,7 @@
     {data: 'date', name: 'updated_at'},
     {data: 'created_user', name: 'created_user'},
     {data: 'updated_user', name: 'updated_user'},
-    {data: 'priority', name: 'priority', className: 'text-center'},
+    // {data: 'priority', name: 'priority', className: 'text-center'},
     {data: 'status', name: 'status', visible: !hideStatus}, 
     {data: 'action_edit', name: 'action_edit', orderable: false, searchable: false},
     {data: 'action_delete', name: 'action_delete', orderable: false, searchable: false}
