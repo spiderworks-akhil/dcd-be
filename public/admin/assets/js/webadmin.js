@@ -496,6 +496,28 @@ $(function(){
                   $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
              });
         }
+
+        if($('.filter-datepicker').length)
+        {
+            $('.filter-datepicker').each(function () {
+                var $input = $(this);
+                $input.daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    autoApply: true,
+                    autoUpdateInput: false,
+                    locale: { format: 'DD-MM-YYYY', cancelLabel: 'Clear' }
+                });
+
+                $input.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD-MM-YYYY'));
+                });
+
+                $input.on('cancel.daterangepicker', function () {
+                    $(this).val('');
+                });
+            });
+        }
 });
 
 var save_order = function()

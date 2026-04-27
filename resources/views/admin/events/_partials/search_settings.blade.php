@@ -53,26 +53,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    jQuery(function ($) {
-        if ($.fn.daterangepicker) {
-            $('.filter-datepicker').each(function () {
-                $(this).daterangepicker({
-                    singleDatePicker: true,
-                    showDropdowns: true,
-                    autoUpdateInput: false,
-                    locale: { format: 'DD-MM-YYYY', cancelLabel: 'Clear' }
-                });
-            });
-
-            $(document).on('apply.daterangepicker', '.filter-datepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format('DD-MM-YYYY'));
-            });
-
-            $(document).on('cancel.daterangepicker', '.filter-datepicker', function () {
-                $(this).val('');
-            });
-        }
-    });
-</script>

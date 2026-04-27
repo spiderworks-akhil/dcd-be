@@ -21,7 +21,7 @@ class NewsController extends Controller
             if(!empty($data['category_id'])){
                 $news = $news->where('category_id', $data['category_id']);
             }
-            $news = $news->orderBy('priority', 'DESC')->paginate($limit);
+            $news = $news->orderBy('published_on', 'DESC')->paginate($limit);
             return new NewsListingCollection($news);
         }
         catch(\Exception $e){
@@ -59,6 +59,7 @@ class NewsController extends Controller
         $news = News::where('status', 1)
             ->where('type', $type)
             ->where('is_featured', 0)
+            ->where('is_banner', 0)
             ->orderBy('published_on', 'DESC')
             ->take(4)
             ->get()
