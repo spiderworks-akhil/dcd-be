@@ -679,7 +679,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p class="mb-3" id="bannerLimitMessage">Banner news must total 1. The current news (greyed) is being added — unselect the existing banner so the total stays at 1.</p>
+                        <p class="mb-3" id="bannerLimitMessage">Banner news must total 1. The current news is being added — unselect the existing banner so the total stays at 1.</p>
                         <ul class="list-group" id="bannerList"></ul>
                     </div>
                     <div class="modal-footer">
