@@ -873,7 +873,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p class="mb-3" id="featuredLimitMessage">Featured events must total 4. The current event (greyed) is being added — unselect existing items so the total stays at 4.</p>
+                            <p class="mb-3" id="featuredLimitMessage">Featured events must total 4. The current event is being added — unselect existing items so the total stays at 4.</p>
                             <ul class="list-group" id="featuredList"></ul>
                         </div>
                         <div class="modal-footer">

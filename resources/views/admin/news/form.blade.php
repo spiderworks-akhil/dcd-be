@@ -657,7 +657,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p class="mb-3" id="featuredLimitMessage">Featured news must total 3. The current news (greyed) is being added — unselect existing items so the total stays at 3.</p>
+                        <p class="mb-3" id="featuredLimitMessage">Featured news must total 3. The current news is being added — unselect existing items so the total stays at 3.</p>
                         <ul class="list-group" id="featuredList"></ul>
                     </div>
                     <div class="modal-footer">
