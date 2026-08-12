@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel as Model;
 use App\Traits\ValidationTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
@@ -53,17 +54,17 @@ class Project extends Model
         return $this->morphMany('App\Models\FaqQuestionAnswer', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
     }
 
-    public function featured_image()
+    public function featured_image(): ?BelongsTo
     {
     	return $this->belongsTo('App\Models\Media', 'featured_image_id');
     }
 
-    public function banner_image()
+    public function banner_image(): ?BelongsTo
     {
     	return $this->belongsTo('App\Models\Media', 'banner_image_id');
     }
 
-    public function og_image()
+    public function og_image(): ?BelongsTo
     {
     	return $this->belongsTo('App\Models\Media', 'og_image_id');
     }
@@ -73,12 +74,12 @@ class Project extends Model
         return $this->belongsTo('App\Models\Service', 'services_id');
     }
 
-    public function created_user()
+    public function created_user(): ?BelongsTo
     {
         return $this->belongsTo('App\Models\User', 'created_by');
     }
 
-    public function updated_user()
+    public function updated_user(): ?BelongsTo
     {
         return $this->belongsTo('App\Models\User', 'updated_by');
     }

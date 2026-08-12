@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel as Model;
 use App\Traits\ValidationTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuickTask extends Model
 {
@@ -39,12 +40,12 @@ class QuickTask extends Model
         return $this->parent_validate($data);
     }
 
-    public function created_user()
+    public function created_user(): ?BelongsTo
     {
         return $this->belongsTo('App\Models\User', 'created_by');
     }
 
-    public function updated_user()
+    public function updated_user(): ?BelongsTo
     {
         return $this->belongsTo('App\Models\User', 'updated_by');
     }
