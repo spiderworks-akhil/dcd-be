@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CacheClearController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,21 +14,10 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
 
-Route::get('cache-clear', function() {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('route:clear');
-    Artisan::call('view:clear');
-
-    return "All caches cleared.";
-
-
-});
+Route::get('cache-clear', CacheClearController::class);
 
 
 
