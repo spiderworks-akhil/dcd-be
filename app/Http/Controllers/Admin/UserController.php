@@ -42,6 +42,16 @@ class UserController extends Controller
 
     protected function getSearchSettings(){}
 
+    /**
+     * The form posts role ids as strings (checkbox values). Spatie v6 resolves a
+     * string role by NAME and only an int by id, so the ids must be cast before
+     * they are handed over or it throws RoleDoesNotExist.
+     */
+    protected function postedRoleIds($roles)
+    {
+        return array_values(array_filter(array_map('intval', (array) $roles)));
+    }
+
     public function create()
     {
         $roles = Role::all();
@@ -84,7 +94,7 @@ class UserController extends Controller
             }
             if($this->model->save())
             {
-                $this->model->assignRole($request->input('roles'));
+                $this->model->syncRoles($this->postedRoleIds($request->input('roles')));
             }
 
             if (Request::ajax())
@@ -126,8 +136,9 @@ class UserController extends Controller
             
                 if($obj->update($data))
                 {
-                    DB::table('model_has_roles')->where('model_id',$id)->delete();
-                    $obj->assignRole($request->input('roles'));
+                    // syncRoles replaces the old rows itself and scopes the delete by
+                    // model_type, unlike the manual model_id-only delete it replaces.
+                    $obj->syncRoles($this->postedRoleIds($request->input('roles')));
                 }
                 if (Request::ajax())
                     $response = response()->json(['success'=>'User details successfully saved!']);
@@ -137,7 +148,7 @@ class UserController extends Controller
             } else {
                 return Redirect::back()
                         ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
-                        ->withInput(Input::all());
+                        ->withInput($request->all());
             }
         }
     }

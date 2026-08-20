@@ -33,6 +33,107 @@ class NewsController extends Controller
 {
     use ResourceTrait;
 
+    /** Maximum number of news items that can be featured per language. */
+    const MAX_FEATURED = 3;
+
+    /**
+     * Featured slots belong to a language, not to a single type string. A draft
+     * and its published twin are the same article, so they share one slot -
+     * otherwise a new item (always stored as *_draft) would be checked against
+     * a different pool than the one the site actually shows.
+     */
+    protected function languageGroup($type)
+    {
+        return in_array($type, ['ar', 'ar_draft']) ? ['ar', 'ar_draft'] : ['en', 'en_draft'];
+    }
+
+    /** Human label for a language group, used in messages. */
+    protected function languageLabel($type)
+    {
+        return in_array($type, ['ar', 'ar_draft']) ? 'Arabic' : 'English';
+    }
+
+    /** Slug of a news id, used to keep an item's own draft/published twin out of its own count. */
+    protected function slugOfNews($id)
+    {
+        if (!$id) {
+            return null;
+        }
+        $news = News::find($id);
+        return $news ? $news->slug : null;
+    }
+
+    /**
+     * Distinct featured articles of a language. Counted by slug so an article
+     * flagged in both its draft and published row still only uses one slot.
+     */
+    protected function featuredCount($type, $excludeSlug = null)
+    {
+        $query = News::where('is_featured', 1)->whereIn('type', $this->languageGroup($type));
+        if ($excludeSlug !== null && $excludeSlug !== '') {
+            $query->where('slug', '!=', $excludeSlug);
+        }
+        return $query->distinct()->count('slug');
+    }
+
+    /** True when the language has no free featured slot left (ignoring `$excludeSlug`). */
+    protected function featuredSlotsFull($type, $excludeSlug = null)
+    {
+        return $this->featuredCount($type, $excludeSlug) >= self::MAX_FEATURED;
+    }
+
+    /**
+     * The featured articles of a language, shaped for the swap popup: one row per
+     * article, naming every version it is currently flagged in. Returned by
+     * featuredList() and embedded in feature()'s rejection so the client can draw
+     * the popup from the same response that denied it.
+     */
+    protected function featuredPayload($type, $excludeSlug = null)
+    {
+        $labels = [
+            'en' => 'English', 'en_draft' => 'English Draft',
+            'ar' => 'Arabic',  'ar_draft' => 'Arabic Draft',
+        ];
+
+        $query = News::where('is_featured', 1)->whereIn('type', $this->languageGroup($type));
+        if ($excludeSlug !== null && $excludeSlug !== '') {
+            $query->where('slug', '!=', $excludeSlug);
+        }
+
+        $items = $query->select('id', 'name', 'title', 'type', 'slug')
+            ->orderBy('updated_at', 'desc')
+            ->get()
+            ->groupBy('slug')
+            ->map(function ($rows) use ($labels) {
+                // Prefer the published row as the one the popup links to.
+                $lead = $rows->sortBy(function ($r) {
+                    return in_array($r->type, ['en', 'ar']) ? 0 : 1;
+                })->first();
+
+                return [
+                    'id'         => encrypt($lead->id),
+                    'slug'       => $lead->slug,
+                    'name'       => $lead->name,
+                    'title'      => $lead->title,
+                    'type'       => $lead->type,
+                    'type_label' => $rows->pluck('type')->map(function ($t) use ($labels) {
+                        return $labels[$t] ?? $t;
+                    })->implode(' + '),
+                    'edit_url'   => route('admin.news.edit', ['id' => encrypt($lead->id)]),
+                ];
+            })
+            ->values();
+
+        return [
+            'count'      => $items->count(),
+            'items'      => $items,
+            'type'       => $type,
+            'language'   => $this->languageLabel($type),
+            'max'        => self::MAX_FEATURED,
+            'slots_full' => $items->count() >= self::MAX_FEATURED,
+        ];
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -333,7 +434,8 @@ public function index(Request $request)
         $data = request()->all();
 
         $data['status'] = 0;
-        $data['is_featured'] = isset($data['is_featured'])?1:0;
+        // Posted by a hidden field that is always present, so read the value.
+        $data['is_featured'] = !empty($data['is_featured'])?1:0;
         $data['is_banner'] = isset($data['is_banner'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
@@ -349,6 +451,13 @@ public function index(Request $request)
         }
 
 
+        // Server-side featured-slot guard: never let a create exceed the cap.
+        $featuredLimitHit = false;
+        if ($data['is_featured'] && $this->featuredSlotsFull($data['type'], $data['slug'] ?? null)) {
+            $data['is_featured'] = 0;
+            $featuredLimitHit = true;
+        }
+
         $this->model->fill($data);
 
         if($this->model->save())
@@ -356,6 +465,11 @@ public function index(Request $request)
             if(!empty($data['tags']))
                 $this->model->tags()->attach($data['tags']);
         }
+
+        if ($featuredLimitHit) {
+            session()->flash('warning', 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($data['type']) . ' news items can be featured. The news was saved without the Featured flag.');
+        }
+
         return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('News successfully saved!');
     }
 
@@ -368,7 +482,16 @@ public function index(Request $request)
          if($obj = $this->model->find($id)){
             $oldStatus = $obj->status;
             $data['status'] = isset($data['status'])?1:0;
-            $data['is_featured'] = isset($data['is_featured'])?1:0;
+            // Posted by a hidden field that is always present, so read the value.
+            $data['is_featured'] = !empty($data['is_featured'])?1:0;
+
+            // Server-side featured-slot guard. Only newly-featured items are checked,
+            // so an already-featured article can always be re-saved.
+            $featuredLimitHit = false;
+            if ($data['is_featured'] && !$obj->is_featured && $this->featuredSlotsFull($obj->type, $obj->slug)) {
+                $data['is_featured'] = 0;
+                $featuredLimitHit = true;
+            }
             $data['is_banner'] = isset($data['is_banner'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
@@ -389,6 +512,10 @@ public function index(Request $request)
             }
             }
 
+            if ($featuredLimitHit) {
+                session()->flash('warning', 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($obj->type) . ' news items can be featured. The Featured flag was not applied.');
+            }
+
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('News successfully updated!');
         } else {
             return Redirect::back()
@@ -405,10 +532,8 @@ public function featuredList(Request $request)
     $excludeId = $request->query('exclude_id');
 
     if (!in_array($type, ['en', 'en_draft', 'ar', 'ar_draft'])) {
-        return response()->json(['count' => 0, 'items' => []]);
+        return response()->json(['count' => 0, 'items' => [], 'max' => self::MAX_FEATURED, 'slots_full' => false]);
     }
-
-    $query = News::where('is_featured', 1)->where('type', $type);
 
     if ($excludeId) {
         try {
@@ -416,27 +541,9 @@ public function featuredList(Request $request)
         } catch (\Throwable $e) {
             $excludeId = (int) $excludeId;
         }
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
     }
 
-    $items = $query->select('id', 'name', 'title', 'type')
-        ->orderBy('updated_at', 'desc')
-        ->get()
-        ->map(function ($n) {
-            return [
-                'id'       => encrypt($n->id),
-                'name'     => $n->name,
-                'title'    => $n->title,
-                'edit_url' => route('admin.news.edit', ['id' => encrypt($n->id)]),
-            ];
-        });
-
-    return response()->json([
-        'count' => $items->count(),
-        'items' => $items,
-    ]);
+    return response()->json($this->featuredPayload($type, $this->slugOfNews($excludeId ?: null)));
 }
 
 public function unfeature(Request $request)
@@ -457,8 +564,12 @@ public function unfeature(Request $request)
         return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
     }
 
-    $news->is_featured = 0;
-    $news->save();
+    // Clear the whole article, not just this row: a slot is held by the slug, so
+    // leaving a featured twin behind would not actually free one. Scoped to the
+    // same language, so the other language's version is never touched.
+    News::where('slug', $news->slug)
+        ->whereIn('type', $this->languageGroup($news->type))
+        ->update(['is_featured' => 0]);
 
     return response()->json(['status' => 'success']);
 }
@@ -479,6 +590,19 @@ public function feature(Request $request)
     $news = News::find($id);
     if (!$news) {
         return response()->json(['status' => 'error', 'message' => 'News not found'], 404);
+    }
+
+    // This endpoint is the authority for turning the flag on. The popup is drawn
+    // from the payload returned here, so the client never decides on its own.
+    if (!$news->is_featured && $this->featuredSlotsFull($news->type, $news->slug)) {
+        return response()->json(array_merge(
+            $this->featuredPayload($news->type, $news->slug),
+            [
+                'status'  => 'error',
+                'code'    => 'limit_reached',
+                'message' => 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($news->type) . ' news items can be featured. Unfeature one first.',
+            ]
+        ), 422);
     }
 
     $news->is_featured = 1;
@@ -597,6 +721,10 @@ public function GetType(Request $request)
         $target = $source->replicate();
         $target->type = $type;
         $target->title = $request->query('name');
+        // A copy into the other language claims a slot there - don't let it overflow.
+        if ($target->is_featured && $this->featuredSlotsFull($type, $source->slug)) {
+            $target->is_featured = 0;
+        }
         $target->save(); 
     } else {
         $fields = ['slug','name','title','short_description','content','bottom_content',
@@ -605,6 +733,10 @@ public function GetType(Request $request)
                         'published_by_author_id','meta_keywords','published_on','category_id','og_image_id','priority'];
         foreach ($fields as $field) {
             $target->$field = $source->$field;
+        }
+        // A copy into the other language claims a slot there - don't let it overflow.
+        if ($target->is_featured && $this->featuredSlotsFull($type, $source->slug)) {
+            $target->is_featured = 0;
         }
         $target->save(); 
 
