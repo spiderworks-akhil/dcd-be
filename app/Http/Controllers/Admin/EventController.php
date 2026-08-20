@@ -24,6 +24,86 @@ class EventController extends Controller
 {
     use ResourceTrait;
 
+    /** Maximum number of events that can be featured per language version. */
+    const MAX_FEATURED = 4;
+
+    /**
+     * Featured slots are shared by a language, not by a single type string.
+     * Draft and published rows of the same language compete for the same 4 slots,
+     * otherwise a newly created event (always stored as *_draft) would be
+     * checked against an empty pool.
+     */
+    protected function languageGroup($type)
+    {
+        return in_array($type, ['ar', 'ar_draft']) ? ['ar', 'ar_draft'] : ['en', 'en_draft'];
+    }
+
+    /** Human label for a language group, used in messages. */
+    protected function languageLabel($type)
+    {
+        return in_array($type, ['ar', 'ar_draft']) ? 'Arabic' : 'English';
+    }
+
+    /**
+     * Number of events already flagged as featured in a type's language group,
+     * optionally ignoring one event (the one being saved/toggled).
+     */
+    protected function featuredCount($type, $excludeId = null)
+    {
+        $query = Event::where('is_featured', 1)->whereIn('type', $this->languageGroup($type));
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        return $query->count();
+    }
+
+    /** True when the language has no free featured slot left (ignoring `$excludeId`). */
+    protected function featuredSlotsFull($type, $excludeId = null)
+    {
+        return $this->featuredCount($type, $excludeId) >= self::MAX_FEATURED;
+    }
+
+    /**
+     * The currently featured events of a language, shaped for the swap popup.
+     * Returned by featuredList() and embedded in feature()'s rejection so the
+     * client can draw the popup from the same response that denied it.
+     */
+    protected function featuredPayload($type, $excludeId = null)
+    {
+        $labels = [
+            'en' => 'English', 'en_draft' => 'English Draft',
+            'ar' => 'Arabic',  'ar_draft' => 'Arabic Draft',
+        ];
+
+        $query = Event::where('is_featured', 1)->whereIn('type', $this->languageGroup($type));
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        $items = $query->select('id', 'name', 'title', 'type')
+            ->orderBy('updated_at', 'desc')
+            ->get()
+            ->map(function ($e) use ($labels) {
+                return [
+                    'id'         => encrypt($e->id),
+                    'name'       => $e->name,
+                    'title'      => $e->title,
+                    'type'       => $e->type,
+                    'type_label' => $labels[$e->type] ?? $e->type,
+                    'edit_url'   => route('admin.events.edit', ['id' => encrypt($e->id)]),
+                ];
+            });
+
+        return [
+            'count'      => $items->count(),
+            'items'      => $items,
+            'type'       => $type,
+            'language'   => $this->languageLabel($type),
+            'max'        => self::MAX_FEATURED,
+            'slots_full' => $items->count() >= self::MAX_FEATURED,
+        ];
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -305,7 +385,8 @@ if (!$isWriter) {
         $request->validated();
         $data = request()->all();
         $data['status'] = 0;
-        $data['is_featured'] = isset($data['is_featured'])?1:0;
+        // Posted by a hidden field that is always present, so read the value.
+        $data['is_featured'] = !empty($data['is_featured'])?1:0;
         $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
         $data['is_featured_in_banner'] = isset($data['is_featured_in_banner'])?1:0;
         if ($data['is_featured_in_banner']) {
@@ -327,6 +408,13 @@ if (!$isWriter) {
             $data['type'] = 'en_draft';
         }
 
+        // Server-side featured-slot guard: never let a create exceed the cap.
+        $featuredLimitHit = false;
+        if ($data['is_featured'] && $this->featuredSlotsFull($data['type'])) {
+            $data['is_featured'] = 0;
+            $featuredLimitHit = true;
+        }
+
         $this->model->fill($data);
         if($this->model->save())
         {
@@ -344,6 +432,10 @@ if (!$isWriter) {
             $this->saveGalleryMedia($this->model, $data);
             $this->saveYoutube($this->model, $data);
         }
+        if ($featuredLimitHit) {
+            session()->flash('warning', 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($data['type']) . ' events can be featured. The event was saved without the Featured flag.');
+        }
+
         return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('Event successfully saved!');
     }
 
@@ -389,8 +481,17 @@ if (!$isWriter) {
          if($obj = $this->model->find($id)){
              $oldStatus = $obj->status;
             $data['status'] = isset($data['status'])?1:0;
-            $data['is_featured'] = isset($data['is_featured'])?1:0;
+            // Posted by a hidden field that is always present, so read the value.
+            $data['is_featured'] = !empty($data['is_featured'])?1:0;
             $data['is_must_attend'] = isset($data['is_must_attend'])?1:0;
+
+            // Server-side featured-slot guard. Only newly-featured events are checked,
+            // so an already-featured event can always be re-saved.
+            $featuredLimitHit = false;
+            if ($data['is_featured'] && !$obj->is_featured && $this->featuredSlotsFull($obj->type, $obj->id)) {
+                $data['is_featured'] = 0;
+                $featuredLimitHit = true;
+            }
             $obj->is_featured_in_banner = $data['is_featured_in_banner'] ?? 0;
             if ($obj->is_featured_in_banner) {
                 Event::where('is_featured_in_banner', 1)
@@ -431,6 +532,10 @@ if (!$isWriter) {
                         $obj->type               
                     );
                 }
+            }
+
+            if ($featuredLimitHit) {
+                session()->flash('warning', 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($obj->type) . ' events can be featured. The Featured flag was not applied.');
             }
 
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Event successfully updated!');
@@ -502,10 +607,8 @@ public function featuredList(Request $request)
     $excludeId = $request->query('exclude_id');
 
     if (!in_array($type, ['en', 'en_draft', 'ar', 'ar_draft'])) {
-        return response()->json(['count' => 0, 'items' => []]);
+        return response()->json(['count' => 0, 'items' => [], 'max' => self::MAX_FEATURED, 'slots_full' => false]);
     }
-
-    $query = Event::where('is_featured', 1)->where('type', $type);
 
     if ($excludeId) {
         try {
@@ -513,27 +616,9 @@ public function featuredList(Request $request)
         } catch (\Throwable $e) {
             $excludeId = (int) $excludeId;
         }
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
     }
 
-    $items = $query->select('id', 'name', 'title', 'type')
-        ->orderBy('updated_at', 'desc')
-        ->get()
-        ->map(function ($e) {
-            return [
-                'id'       => encrypt($e->id),
-                'name'     => $e->name,
-                'title'    => $e->title,
-                'edit_url' => route('admin.events.edit', ['id' => encrypt($e->id)]),
-            ];
-        });
-
-    return response()->json([
-        'count' => $items->count(),
-        'items' => $items,
-    ]);
+    return response()->json($this->featuredPayload($type, $excludeId ?: null));
 }
 
 public function unfeature(Request $request)
@@ -578,6 +663,19 @@ public function feature(Request $request)
         return response()->json(['status' => 'error', 'message' => 'Event not found'], 404);
     }
 
+    // This endpoint is the authority for turning the flag on. The popup is drawn
+    // from the payload returned here, so the client never decides on its own.
+    if (!$event->is_featured && $this->featuredSlotsFull($event->type, $event->id)) {
+        return response()->json(array_merge(
+            $this->featuredPayload($event->type, $event->id),
+            [
+                'status'  => 'error',
+                'code'    => 'limit_reached',
+                'message' => 'Only ' . self::MAX_FEATURED . ' ' . $this->languageLabel($event->type) . ' events can be featured. Unfeature one first.',
+            ]
+        ), 422);
+    }
+
     $event->is_featured = 1;
     $event->save();
 
@@ -610,6 +708,10 @@ public function GetType(Request $request)
         $target = $source->replicate();
         $target->type = $type;
         $target->title = $request->query('name');
+        // Don't let a version copy push the target language over the featured cap.
+        if ($target->is_featured && $this->featuredSlotsFull($type)) {
+            $target->is_featured = 0;
+        }
         $target->save(); 
     } else {
         $fields = ['slug','name','title','content','short_description','result','og_image_id','priority',
@@ -620,6 +722,10 @@ public function GetType(Request $request)
                         'is_featured_in_banner','meta_keywords','category_id'];
         foreach ($fields as $field) {
             $target->$field = $source->$field;
+        }
+        // Don't let a version copy push the target language over the featured cap.
+        if ($target->is_featured && $this->featuredSlotsFull($type, $target->id)) {
+            $target->is_featured = 0;
         }
         $target->save(); 
 

@@ -534,12 +534,21 @@
 
                                         </div>
                                             <div class="form-group col-md-6 p-0  mb-3">
+                                                {{-- The checkbox is only a display control: it carries no name and starts
+                                                     disabled, so it cannot be flipped before the guard script has bound
+                                                     (and cannot be submitted at all if that script never runs). The value
+                                                     actually posted is this hidden field, which is only ever written after
+                                                     the server has confirmed the change. --}}
+                                                <input type="hidden" name="is_featured" id="is_featured_value"
+                                                    value="{{ $obj->is_featured == 1 ? 1 : 0 }}">
                                                 <div class="custom-control custom-switch switch-primary float-left">
-                                                    <input type="checkbox" class="custom-control-input" value="1"
-                                                        id="is_featured" name="is_featured"
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        id="is_featured" disabled
                                                         @if ($obj->is_featured == 1) checked="checked" @endif>
                                                     <label class="custom-control-label" for="is_featured">Featured</label>
                                                 </div>
+                                                <small id="is_featured_hint" class="text-muted d-block"
+                                                    style="clear: both; padding-top: 4px;">Loading&hellip;</small>
                                             </div>
                                         <div class="form-group col-md-6 p-0  mb-3">
                                             <div style="margin-right: 5px;"
@@ -893,15 +902,38 @@
     <script>
         (function () {
             var MAX_FEATURED = 4;
-            var currentType = @json($obj->type ?? null);
+            var savedType   = @json($obj->type ?? null);
+            var isNew       = @json(!$obj->id);
             var currentId   = @json($obj->id ? encrypt($obj->id) : null);
             var listUrl      = @json(route('admin.events.featured-list'));
             var unfeatureUrl = @json(route('admin.events.unfeature'));
             var featureUrl   = @json(route('admin.events.feature'));
             var csrf        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+            var $toggle = $('#is_featured');
+            var $value  = $('#is_featured_value');
+            var $hint   = $('#is_featured_hint');
+
+            // Last state the server has confirmed. The checkbox is always snapped
+            // back to this, so the UI can never show a state the server rejected.
+            var confirmedOn = $value.val() === '1';
+            var busy = false;
             var pendingUnfeature = {};
-            var pendingFeatureToggle = null;
+
+            // On an existing event the stored type is authoritative; while creating,
+            // the language dropdown decides which pool of 4 slots we check against.
+            function getCurrentType() {
+                if (!isNew && savedType) { return savedType; }
+                return $('#languageSelect').val() || savedType || null;
+            }
+
+            function alertBox(title, content, cls) {
+                $.confirm({
+                    title: title,
+                    content: content,
+                    buttons: { ok: { text: 'OK', btnClass: cls || 'btn-warning' } }
+                });
+            }
 
             function truncate(txt, n) {
                 txt = (txt || '').toString();
@@ -913,6 +945,25 @@
                 var n = ($('#InputFrm input[name="name"]').val() || '').trim();
                 return t || n || '(this event)';
             }
+
+            // Single place that writes the flag: checkbox and posted value stay in step.
+            function setConfirmed(on) {
+                confirmedOn = !!on;
+                $toggle.prop('checked', confirmedOn);
+                $value.val(confirmedOn ? 1 : 0);
+            }
+
+            function setBusy(state) {
+                busy = state;
+                $toggle.prop('disabled', state);
+                $hint.text(state ? 'Checking…' : '').toggle(state);
+            }
+
+            function ajaxMessage(xhr, fallback) {
+                return (xhr && xhr.responseJSON && xhr.responseJSON.message) || fallback;
+            }
+
+            /* ---------------- limit popup ---------------- */
 
             function updateOkState() {
                 var total = 1 + $('#featuredList .featured-item-toggle:checked').length;
@@ -947,7 +998,8 @@
                         '</li>'
                     );
                     var inputId = 'featured-item-' + it.id.replace(/[^a-zA-Z0-9]/g, '');
-                    $row.find('.featured-item-name').attr('href', it.edit_url).text(truncate(it.name || it.title, 40)).attr('title', it.name || it.title);
+                    var rowLabel = truncate(it.name || it.title, 40) + (it.type_label ? ' (' + it.type_label + ')' : '');
+                    $row.find('.featured-item-name').attr('href', it.edit_url).text(rowLabel).attr('title', it.name || it.title);
                     $row.find('.featured-item-toggle').attr('id', inputId).data('id', it.id);
                     $row.find('.custom-control-label').attr('for', inputId);
                     $list.append($row);
@@ -956,52 +1008,14 @@
                 updateOkState();
             }
 
-            function fetchAndShowPopup($toggle) {
-                if (!currentType) { return; }
-                pendingFeatureToggle = $toggle;
-                $.ajax({
-                    url: listUrl,
-                    method: 'GET',
-                    data: { type: currentType, exclude_id: currentId || '' },
-                    dataType: 'json'
-                }).done(function (res) {
-                    $toggle.prop('checked', false);
-                    renderList(res.items || []);
-                    $('#featuredLimitModal').modal('show');
-                }).fail(function () {
-                    pendingFeatureToggle = null;
-                });
+            function showLimitPopup(items, max) {
+                $('#featuredLimitMessage').text(
+                    'Featured events must total ' + (max || MAX_FEATURED) + '. The current event is being added — ' +
+                    'unselect existing items so the total stays at ' + (max || MAX_FEATURED) + '.'
+                );
+                renderList(items || []);
+                $('#featuredLimitModal').modal('show');
             }
-
-            function enforceMinOnUncheck($toggle) {
-                if (!currentType || !currentId) { return; }
-                $.ajax({
-                    url: listUrl,
-                    method: 'GET',
-                    data: { type: currentType, exclude_id: currentId },
-                    dataType: 'json'
-                }).done(function (res) {
-                    if ((res.count || 0) < MAX_FEATURED) {
-                        $toggle.prop('checked', true);
-                        $.confirm({
-                            title: 'Cannot unfeature',
-                            content: 'There must be at least ' + MAX_FEATURED + ' featured events.',
-                            buttons: {
-                                ok: { text: 'OK', btnClass: 'btn-warning' }
-                            }
-                        });
-                    }
-                });
-            }
-
-            $(document).on('change', '#is_featured', function () {
-                var $toggle = $(this);
-                if ($toggle.is(':checked')) {
-                    fetchAndShowPopup($toggle);
-                } else {
-                    enforceMinOnUncheck($toggle);
-                }
-            });
 
             $(document).on('change', '.featured-item-toggle', function () {
                 var $input = $(this);
@@ -1014,51 +1028,141 @@
                 updateOkState();
             });
 
-            function applyFeatureCurrent(cb) {
-                if (!currentId) { cb(true); return; }
+            /* ---------------- server round trips ---------------- */
+
+            // Ask the server to feature this event. The server owns the decision:
+            // 200 means it is featured, 422 means the language is full and carries
+            // the current list so the swap popup can be drawn without a second call.
+            function requestFeature(onFull) {
+                if (!currentId) {
+                    // Creating: nothing to persist yet, so just verify a slot is free.
+                    verifySlot(onFull, function () { setConfirmed(true); setBusy(false); });
+                    return;
+                }
                 $.ajax({
                     url: featureUrl,
                     method: 'POST',
                     data: { id: currentId },
                     headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
                 }).done(function (res) {
-                    cb(!!(res && res.status === 'success'), res && res.message);
-                }).fail(function () {
-                    cb(false);
+                    if (res && res.status === 'success') {
+                        setConfirmed(true);
+                    } else {
+                        alertBox('Error', (res && res.message) || 'Could not mark this event as featured.', 'btn-danger');
+                    }
+                    setBusy(false);
+                }).fail(function (xhr) {
+                    var body = (xhr && xhr.responseJSON) || {};
+                    setBusy(false);
+                    if (body.code === 'limit_reached') {
+                        onFull(body.items || [], body.max);
+                    } else {
+                        alertBox('Error', ajaxMessage(xhr, 'Could not mark this event as featured. Please try again.'), 'btn-danger');
+                    }
                 });
             }
 
+            // Used while creating, where there is no id to POST yet.
+            function verifySlot(onFull, onFree) {
+                var type = getCurrentType();
+                if (!type) {
+                    setBusy(false);
+                    alertBox('Select a language', 'Please choose the language version before marking this event as featured.');
+                    return;
+                }
+                $.ajax({
+                    url: listUrl,
+                    method: 'GET',
+                    data: { type: type, exclude_id: currentId || '' },
+                    dataType: 'json'
+                }).done(function (res) {
+                    if (res && res.slots_full) {
+                        setBusy(false);
+                        onFull(res.items || [], res.max);
+                    } else {
+                        onFree();
+                    }
+                }).fail(function (xhr) {
+                    setBusy(false);
+                    alertBox('Could not verify featured slots', ajaxMessage(xhr, 'Please try again.'), 'btn-danger');
+                });
+            }
+
+            function requestUnfeature() {
+                if (!currentId) { setConfirmed(false); setBusy(false); return; }
+                $.ajax({
+                    url: listUrl,
+                    method: 'GET',
+                    data: { type: getCurrentType(), exclude_id: currentId },
+                    dataType: 'json'
+                }).done(function (res) {
+                    if ((res.count || 0) < MAX_FEATURED) {
+                        setBusy(false);
+                        alertBox('Cannot unfeature', 'There must be at least ' + MAX_FEATURED + ' featured events.');
+                        return;
+                    }
+                    $.ajax({
+                        url: unfeatureUrl,
+                        method: 'POST',
+                        data: { id: currentId },
+                        headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                    }).done(function (r) {
+                        if (r && r.status === 'success') { setConfirmed(false); }
+                        else { alertBox('Error', (r && r.message) || 'Could not unfeature this event.', 'btn-danger'); }
+                        setBusy(false);
+                    }).fail(function (xhr) {
+                        setBusy(false);
+                        alertBox('Error', ajaxMessage(xhr, 'Could not unfeature this event. Please try again.'), 'btn-danger');
+                    });
+                }).fail(function (xhr) {
+                    setBusy(false);
+                    alertBox('Could not verify featured slots', ajaxMessage(xhr, 'Please try again.'), 'btn-danger');
+                });
+            }
+
+            /* ---------------- toggle ---------------- */
+
+            $toggle.on('change', function () {
+                if (busy) { $toggle.prop('checked', confirmedOn); return; }
+
+                var wantOn = $toggle.is(':checked');
+                // Never leave the switch on an unconfirmed state while we ask the server.
+                $toggle.prop('checked', confirmedOn);
+                if (wantOn === confirmedOn) { return; }
+
+                setBusy(true);
+                if (wantOn) {
+                    requestFeature(showLimitPopup);
+                } else {
+                    requestUnfeature();
+                }
+            });
+
+            /* ---------------- popup confirm ---------------- */
+
             $(document).on('click', '#featuredLimitOkBtn', function () {
                 var $okBtn = $(this);
-
                 if ($okBtn.prop('disabled')) { return; }
 
                 var ids = Object.keys(pendingUnfeature);
 
                 function finishOk() {
-                    applyFeatureCurrent(function (ok, message) {
-                        if (pendingFeatureToggle) {
-                            pendingFeatureToggle.prop('checked', !!ok);
-                            pendingFeatureToggle = null;
-                        }
+                    setBusy(true);
+                    if (!currentId) {
+                        // Creating: the slot is free now, the flag is posted with the form.
+                        setConfirmed(true);
+                        setBusy(false);
                         $('#featuredLimitModal').modal('hide');
-                        if (!ok && currentId) {
-                            $.confirm({
-                                title: 'Error',
-                                content: message || 'Could not mark this event as featured. Please try again.',
-                                buttons: {
-                                    ok: { text: 'OK', btnClass: 'btn-danger' }
-                                }
-                            });
-                        }
+                        return;
+                    }
+                    requestFeature(function (items, max) {
+                        // Still full (someone else took the slot) - re-draw with fresh data.
+                        showLimitPopup(items, max);
                     });
+                    $('#featuredLimitModal').modal('hide');
                 }
 
-                if (ids.length === 0) {
-                    $okBtn.prop('disabled', true);
-                    finishOk();
-                    return;
-                }
+                if (ids.length === 0) { $okBtn.prop('disabled', true); finishOk(); return; }
 
                 $okBtn.prop('disabled', true);
                 $('.featured-item-toggle').prop('disabled', true);
@@ -1079,8 +1183,8 @@
                         } else {
                             failed.push({ id: id, message: (res && res.message) || null });
                         }
-                    }).fail(function () {
-                        failed.push({ id: id, message: null });
+                    }).fail(function (xhr) {
+                        failed.push({ id: id, message: ajaxMessage(xhr, null) });
                     }).always(function () {
                         completed++;
                         if (completed !== ids.length) { return; }
@@ -1097,13 +1201,7 @@
 
                         if (failed.length > 0) {
                             $okBtn.prop('disabled', false);
-                            $.confirm({
-                                title: 'Error',
-                                content: failed[0].message || 'Could not unfeature some items. Please try again.',
-                                buttons: {
-                                    ok: { text: 'OK', btnClass: 'btn-danger' }
-                                }
-                            });
+                            alertBox('Error', failed[0].message || 'Could not unfeature some items. Please try again.', 'btn-danger');
                         } else {
                             finishOk();
                         }
@@ -1113,8 +1211,21 @@
 
             $('#featuredLimitModal').on('hidden.bs.modal', function () {
                 pendingUnfeature = {};
-                pendingFeatureToggle = null;
+                // Cancelling leaves the flag exactly as the server last confirmed it.
+                $toggle.prop('checked', confirmedOn);
             });
+
+            // Switching language while creating means a different pool of 4 slots,
+            // so the earlier confirmation no longer applies.
+            $(document).on('change', '#languageSelect', function () {
+                if (!isNew || !confirmedOn) { return; }
+                setConfirmed(false);
+                alertBox('Featured reset', 'The language version changed. Please set Featured again for the new version.');
+            });
+
+            // Only now is the switch safe to click - this is what closes the
+            // window where the page is rendered but this script has not run yet.
+            setBusy(false);
         })();
     </script>
 
@@ -1386,7 +1497,8 @@
             }
         </script>
         <script>
-            document.getElementById('submitBtn').addEventListener('click', function() {
+            var versionSwapBtn = document.getElementById('submitBtn');
+            if (versionSwapBtn) versionSwapBtn.addEventListener('click', function() {
                 const selectedValue = document.getElementById('languageSelect').value;
                 const currentType = @json($obj->type);
                 const slug = @json($obj->slug);
