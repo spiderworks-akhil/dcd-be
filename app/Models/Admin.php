@@ -21,5 +21,10 @@ class Admin extends Authenticatable
         'password'
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
    
 }

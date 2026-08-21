@@ -100,7 +100,7 @@
                                                                         class="form-control" 
                                                                         id="password" 
                                                                         name="password" 
-                                                                          @if($obj->id) value="{{ $obj->password }}" @endif>
+                                                                        autocomplete="new-password">
                                                                         <input type="hidden" id="hasPassword" value="{{ $obj->password ? 1 : 0 }}">
 
                                                                    @if($obj->password)

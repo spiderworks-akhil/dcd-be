@@ -128,10 +128,14 @@ class UserController extends Controller
         {
             if($obj = $this->model->find($id)){
 
-                if(!empty($request->password)){
-                    $data['password'] = bcrypt($request->password);
+                $posted = (string) $request->input('password');
+
+                // Never accept the stored hash back from the form: a save that did not
+                // touch the password must not rotate the credential.
+                if ($posted === '' || $posted === (string) $obj->password) {
+                    unset($data['password']);
                 } else {
-                     unset($data['password']);
+                    $data['password'] = bcrypt($posted);
                 }
             
                 if($obj->update($data))
