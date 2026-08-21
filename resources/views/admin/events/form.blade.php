@@ -1,5 +1,14 @@
 @extends('admin._layouts.fileupload')
 
+@php
+    // Content writers author copy; placement on the public site (Featured /
+    // Featured In Banner) stays with administrators. Defined at file level so
+    // both the form section and the footer script can read it.
+    $isWriter = auth()->user()
+        && auth()->user()->roles->pluck('name')
+            ->intersect(['English Content Writer', 'Arabic Content Writer'])->isNotEmpty();
+@endphp
+
 @section('header')
     @parent
     <link href="{{ asset('admin/plugins/jquery-datetimepicker/css/jquery.datetimepicker.css') }}" rel="stylesheet"
@@ -564,15 +573,27 @@
                                         </div>
 
                                         <div class="form-group col-md-6 p-0  mb-3">
+                                            {{-- A disabled checkbox posts nothing, and update() reads
+                                                 `$data['is_featured_in_banner'] ?? 0`, so without this hidden field a
+                                                 writer's save would silently clear the flag an admin had set. --}}
+                                            @if ($isWriter)
+                                                <input type="hidden" name="is_featured_in_banner"
+                                                    value="{{ $obj->is_featured_in_banner == 1 ? 1 : 0 }}">
+                                            @endif
                                             <div style="margin-right: 5px;"
                                                 class="custom-control custom-switch switch-primary float-left">
                                                 <input type="checkbox" class="custom-control-input" value="1"
                                                     id="is_featured_in_banner" name="is_featured_in_banner"
+                                                    @if ($isWriter) disabled @endif
                                                     @if ($obj->is_featured_in_banner == 1) checked="checked" @endif>
                                                 <label class="custom-control-label" for="is_featured_in_banner">Featured
                                                     In Banner</label>
                                             </div>
-
+                                            @if ($isWriter)
+                                                <small class="text-muted d-block"
+                                                    style="clear: both; padding-top: 4px;">Only an administrator can
+                                                    change this.</small>
+                                            @endif
                                         </div>
 
 
@@ -913,6 +934,16 @@
             var $toggle = $('#is_featured');
             var $value  = $('#is_featured_value');
             var $hint   = $('#is_featured_hint');
+
+            // Content writers do not control placement. Leave the switch disabled
+            // exactly as rendered and bind nothing below, so the feature/unfeature
+            // AJAX is unreachable from this page. The hidden field still carries the
+            // stored value through their save.
+            if (@json($isWriter)) {
+                $toggle.prop('disabled', true).prop('checked', $value.val() === '1');
+                $hint.text('Only an administrator can change this.');
+                return;
+            }
 
             // Last state the server has confirmed. The checkbox is always snapped
             // back to this, so the UI can never show a state the server rejected.
