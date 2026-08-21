@@ -182,6 +182,8 @@ class EventController extends Controller
             $type = !empty($data['language']) ? $data['language'] : "en";
             $slugs = Event::where('status', 1)
                 ->where('type', $type)
+                ->orderBy('start_time', 'DESC')
+                ->orderBy('created_at', 'DESC')
                 ->pluck('slug');
 
             return response()->json(['slugs' => $slugs], 200);
