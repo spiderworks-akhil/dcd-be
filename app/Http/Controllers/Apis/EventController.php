@@ -34,7 +34,10 @@ class EventController extends Controller
                     $query->where('title', 'LIKE', "%{$data['search']}%");
                 });
             }
-            $events = $events->where('type', $type)->orderBy('start_time', 'DESC')->paginate($limit);
+            $events = $events->where('type', $type)
+                ->orderBy('start_time', 'DESC')
+                ->orderBy('created_at', 'DESC')
+                ->paginate($limit);
             return new EventListingCollection($events);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -63,6 +66,8 @@ class EventController extends Controller
         }
 
         $events = $events->orderBy('priority', 'DESC')
+            ->orderBy('start_time', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
         return new EventListingCollection($events);
     }
@@ -121,6 +126,7 @@ class EventController extends Controller
                 ->where('status', 1)
                 ->where('type', $baseType)
                 ->orderBy('start_time', 'DESC')
+                ->orderBy('created_at', 'DESC')
                 ->take(5)
                 ->get();
             $event->must_attend = Event::where('id', '!=', $event->id)
@@ -128,6 +134,7 @@ class EventController extends Controller
                 ->where('is_must_attend', 1)
                 ->where('status', 1)
                 ->orderBy('start_time', 'DESC')
+                ->orderBy('created_at', 'DESC')
                 ->take(5)
                 ->get();
             return new EventResource($event);
@@ -156,6 +163,7 @@ class EventController extends Controller
                     ->whereIn('category_id', $allCategoryIds)
                     ->where('type', $type)
                     ->orderBy('start_time', 'DESC')
+                    ->orderBy('created_at', 'DESC')
                     ->get();
 
                 return $category;

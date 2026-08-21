@@ -21,7 +21,7 @@ class NewsController extends Controller
             if(!empty($data['category_id'])){
                 $news = $news->where('category_id', $data['category_id']);
             }
-            $news = $news->orderBy('published_on', 'DESC')->paginate($limit);
+            $news = $news->orderBy('published_on', 'DESC')->orderBy('created_at', 'DESC')->paginate($limit);
             return new NewsListingCollection($news);
         }
         catch(\Exception $e){
@@ -42,14 +42,14 @@ class NewsController extends Controller
     public function featured(Request $request){
         $data = $request->all();
         $type = !empty($data['language'])?$data['language']:"en";
-        $services = News::where('status', 1)->where('type',$type)->where('is_featured', 1)->orderBy('priority','DESC')->get();
+        $services = News::where('status', 1)->where('type',$type)->where('is_featured', 1)->orderBy('priority','DESC')->orderBy('published_on','DESC')->orderBy('created_at','DESC')->get();
         return new NewsListingCollection($services);
     }
 
     public function banner(Request $request){
         $data = $request->all();
         $type = !empty($data['language'])?$data['language']:"en";
-        $news = News::where('status', 1)->where('type',$type)->where('is_banner', 1)->orderBy('priority','DESC')->take(1)->get();
+        $news = News::where('status', 1)->where('type',$type)->where('is_banner', 1)->orderBy('priority','DESC')->orderBy('published_on','DESC')->orderBy('created_at','DESC')->take(1)->get();
         return new NewsListingCollection($news);
     }
 
@@ -61,6 +61,7 @@ class NewsController extends Controller
             ->where('is_featured', 0)
             ->where('is_banner', 0)
             ->orderBy('published_on', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->take(4)
             ->get()
             ->sortByDesc('priority')
@@ -100,7 +101,7 @@ class NewsController extends Controller
                 if(!$news)
                     return response()->json(['error' => 'Not found'], 404);
 
-                $news->related_news = News::where('id', '!=', $news->id)->orderBy('published_on', 'DESC')->where('status', 1)->take(5)->get();
+                $news->related_news = News::where('id', '!=', $news->id)->where('status', 1)->orderBy('published_on', 'DESC')->orderBy('created_at', 'DESC')->take(5)->get();
                 return new NewsResource($news);
             }
             catch(\Exception $e){
