@@ -65,8 +65,7 @@ class EventController extends Controller
             $events = $events->where('end_time', '<', now());
         }
 
-        $events = $events->orderBy('priority', 'DESC')
-            ->orderBy('start_time', 'DESC')
+        $events = $events->orderBy('start_time', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->get();
         return new EventListingCollection($events);
